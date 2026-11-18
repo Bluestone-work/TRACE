@@ -1,11 +1,13 @@
 {
   "status": "pass",
-  "steps": 2,
+  "steps": 1,
   "physics_dt": 0.004166666666666667,
   "policy_dt": 0.03333333333333333,
   "physics_substeps": 8,
   "num_vehicles": 3,
   "failures": [],
   "csv": "results/psto_scene/psto_scene.csv",
-  "screenshot": "results/psto_scene/psto_scene.png"
+  "screenshot": "results/psto_scene/psto_scene.png",
+  "screenshot_status": "black_or_unavailable",
+  "screenshot_error": null
 }

@@ -12,15 +12,17 @@ def generate_trajectory_heatmap(observer_pos,observer_quat,trajectories,value_si
 def heatmap(observer_pos,observer_quat,evader_pos,evader_future=None,teammate_pos=None,teammate_future=None,shape=(6,120),max_range=10.,visibility=None):
  """Convenience builder with official signs/decays; future data is caller-supplied only."""
  B=observer_pos.shape[0]; P=1 if observer_pos.ndim==2 else observer_pos.shape[1]; op=observer_pos if observer_pos.ndim==3 else observer_pos.unsqueeze(1); oq=observer_quat if observer_quat.ndim==3 else observer_quat.unsqueeze(1); entities=[]; signs=[]; gammas=[]
- def add(x,s,g):
+ def add(x,s,g,evader=False):
   if x is None:return
   if x.ndim==op.ndim-1:x=x.unsqueeze(-2)
   if x.ndim==3:x=x.unsqueeze(1).expand(-1,P,-1,-1)
-  entities.append(x); signs.append(torch.full(x.shape[:-1],s,device=x.device,dtype=x.dtype)); gammas.append(g)
- add(evader_pos,2.,1.); add(evader_future,1.5,.95); add(teammate_pos,-2.,1.); add(teammate_future,-1.5,.9)
+  sign=torch.full(x.shape[:-1],s,device=x.device,dtype=x.dtype)
+  if evader and visibility is not None:
+   vm=visibility.to(dtype=x.dtype).reshape(-1,1,1).expand(x.shape[0],x.shape[1],x.shape[2]); sign=sign*vm
+  entities.append(x); signs.append(sign); gammas.append(g)
+ add(evader_pos,2.,1.,True); add(evader_future,1.5,.95,True); add(teammate_pos,-2.,1.); add(teammate_future,-1.5,.9)
  if not entities:return torch.zeros((*op.shape[:-1],*shape),device=op.device)
  traj=torch.cat(entities,2); sg=torch.cat(signs,2); gm=[]
  for x,g in zip(entities,gammas): gm.append(torch.full(x.shape[:-1],g,device=x.device,dtype=x.dtype) if x.shape[2]==1 else g**torch.arange(x.shape[2],device=x.device,dtype=x.dtype).view(1,1,-1).expand(B,P,-1))
  out=generate_trajectory_heatmap(op,oq,traj,sg,torch.cat(gm,2));
- if visibility is not None: out=out*(visibility.unsqueeze(-1).unsqueeze(-1).to(out.dtype))
  return out[:,0] if observer_pos.ndim==2 else out

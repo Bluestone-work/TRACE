@@ -8,7 +8,7 @@ def main():
  ap=argparse.ArgumentParser(); ap.add_argument('--steps',type=int,default=6); ap.add_argument('--out',default='results/psto_scene'); ap.add_argument('--headless',action='store_true'); args=ap.parse_args(); out=Path(args.out); out.mkdir(parents=True,exist_ok=True)
  from isaacsim import SimulationApp
  app=SimulationApp({'headless':bool(args.headless),'multi_gpu':False,'width':1280,'height':720})
- scene=None; rows=[]; failures=[]
+ scene=None; rows=[]; failures=[]; screenshot_error=None; screenshot_path=out/'psto_scene.png'; screenshot_path.unlink(missing_ok=True); (out/'screenshot_error.txt').unlink(missing_ok=True)
  try:
   from trace.pursuit.scene import PSTOPursuitScene
   scene=PSTOPursuitScene(); scene.reset()
@@ -28,11 +28,19 @@ def main():
    product=rep.create.render_product('/World/PSTOCamera',(1280,720)); annotator=rep.AnnotatorRegistry.get_annotator('rgb'); annotator.attach([product]); scene.world.render(); rep.orchestrator.step(delta_time=0.,rt_subframes=2,pause_timeline=False); data=annotator.get_data();
    from PIL import Image
    Image.fromarray(np.asarray(data)[...,:3]).save(out/'psto_scene.png'); annotator.detach([product]); product.destroy()
-  except Exception as exc: (out/'screenshot_error.txt').write_text(repr(exc))
+  except Exception as exc:
+   screenshot_error=repr(exc); (out/'screenshot_error.txt').write_text(screenshot_error)
   status='pass' if not failures else 'fail'
  except Exception as exc:
   status='blocked'; failures.append(type(exc).__name__+': '+str(exc)); (out/'exception.txt').write_text(repr(exc))
- result={'status':status,'steps':args.steps,'physics_dt':1/240,'policy_dt':1/30,'physics_substeps':8,'num_vehicles':3,'failures':failures,'csv':str(out/'psto_scene.csv'),'screenshot':str(out/'psto_scene.png')}
+
+ if not screenshot_path.is_file(): screenshot_status='missing'
+ else:
+  try:
+   from PIL import Image
+   screenshot_status='black_or_unavailable' if float(np.asarray(Image.open(screenshot_path))[...,:3].mean())<1.0 else 'file_created'
+  except Exception: screenshot_status='file_created_unchecked'
+ result={'status':status,'steps':args.steps,'physics_dt':1/240,'policy_dt':1/30,'physics_substeps':8,'num_vehicles':3,'failures':failures,'csv':str(out/'psto_scene.csv'),'screenshot':str(screenshot_path),'screenshot_status':screenshot_status,'screenshot_error':screenshot_error}
  with (out/'psto_scene.csv').open('w',newline='') as f:
   fields=rows[0].keys() if rows else ['step']; w=csv.DictWriter(f,fieldnames=fields); w.writeheader(); w.writerows(rows)
  (out/'psto_scene.json').write_text(json.dumps(result,indent=2));

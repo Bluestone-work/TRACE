@@ -1,4 +1,5 @@
 import torch
+import numpy as np
 from trace.pursuit.action import beta_action_to_velocity
 from trace.pursuit.lidar import PSTOLidarAdapter
 from trace.pursuit.models import FullModel
@@ -36,3 +37,41 @@ def test_real_parameter_update_and_checkpoint(tmp_path):
 
 def test_heatmap_visibility_gate_and_no_future_actor_input():
  vis=torch.tensor([False]); h=heatmap(torch.zeros(1,3),torch.tensor([[1.,0,0,0.]]),torch.tensor([[1.,0,0.]]),torch.ones(1,10,3),visibility=vis); assert torch.allclose(h,torch.zeros_like(h))
+
+
+def test_global_state_layout_is_84():
+ from trace.pursuit.env import build_global_state_84
+ p=torch.arange(9,dtype=torch.float32).reshape(3,3).numpy(); q=torch.zeros(3,4).numpy(); q[:,0]=1; v=torch.ones(3,3).numpy(); w=torch.full((3,3),2.).numpy(); a=torch.full((3,3),3.).numpy(); lidar=torch.arange(2*6*120,dtype=torch.float32).reshape(2,6,120).numpy()
+ s=build_global_state_84(p,q,v,w,a,lidar); assert s.shape==(84,); assert torch.allclose(torch.as_tensor(s[39:48]),torch.full((9,),3.)); assert torch.allclose(torch.as_tensor(s[16:19]),torch.full((3,),2.)); assert torch.allclose(torch.as_tensor(s[26:29]),torch.full((3,),2.))
+
+
+def test_visibility_occluded_and_reacquired():
+ from trace.pursuit.visibility import target_visible
+ pos=np.array([0.,0.,2.]); q=np.array([1.,0,0,0.]); target=np.array([5.,0.,2.]); clear=np.zeros((24,480),np.float32)
+ assert target_visible(pos,q,target,clear)
+ blocked=clear.copy(); blocked[7:11,0]=6.5  # hit distance 3.5 m, before target at 5 m
+ assert not target_visible(pos,q,target,blocked)
+ assert target_visible(pos,q,target,clear)
+
+
+def test_official_reward_terms_and_escape_or():
+ from trace.pursuit.rewards import official_reward
+ pp=torch.tensor([[0.,-2.,2.],[0.,2.,2.]]); pv=torch.tensor([[1.,0.,0.],[1.,0.,0.]]); ev=torch.tensor([8.,0.,2.]); evv=torch.zeros(3); prox=torch.full((2,6,120),8.)
+ r,c,e,d,t=official_reward(pp,pv,ev,prox,evader_vel=evv,step=201); assert bool(e) and bool(d); assert float(t['formation'])!=0.; assert torch.isfinite(r)
+
+
+def test_actor_action_shape_and_yaw_conversion():
+ from trace.pursuit.algorithm.mappo import PSTOMAPPO
+ a=torch.tensor([[0.,0.],[1.,1.]]); q=torch.tensor([[1.,0,0,0],[.7071068,0,0,.7071068]])
+ v=PSTOMAPPO.action_to_velocity(a,q); assert v.shape==(2,3) and torch.isfinite(v).all(); assert torch.allclose(torch.linalg.vector_norm(v[:,:2],dim=-1),torch.tensor([.72,.8]),atol=1e-3); assert v[1,1]<0
+
+
+def test_reward_component_reference_values():
+ from trace.pursuit.rewards import official_reward
+ pp=torch.tensor([[0.,-2.,2.],[0.,2.,2.]]); pv=torch.tensor([[1.,0.,0.],[1.,0.,0.]]); ev=torch.tensor([8.,0.,2.]); prox=torch.full((2,6,120),8.)
+ r,c,e,d,t=official_reward(pp,pv,ev,prox,evader_vel=torch.zeros(3),step=201)
+ assert abs(float(t['pursuit'])-1.9402857)<1e-4
+ assert abs(float(t['coordination'])-1.)<1e-6
+ assert abs(float(t['obstacle'])-.4843306)<1e-4
+ assert abs(float(t['formation'])-(-.3438776))<1e-4
+ assert abs(float(r)-(-697.8105))<2e-3 and bool(e) and bool(d)

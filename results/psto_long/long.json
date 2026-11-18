@@ -1,0 +1,13 @@
+{
+  "status": "pass",
+  "hover_seconds": 10,
+  "independent_seconds": 30,
+  "physics_hz": 240,
+  "policy_hz": 30,
+  "physics_substeps": 8,
+  "position_response_m": 14.776363372802734,
+  "stationary_drone_displacement_m": 2.2939650079933926e-05,
+  "peak_speed_mps": 0.5048314929008484,
+  "failures": [],
+  "csv": "results/psto_long/long.csv"
+}
