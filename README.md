@@ -67,3 +67,18 @@ Isaac Sim、CUDA、Torch 和 Isaac Lab 运行时仍使用机器上的安装；�
 ## 版本来源
 
 创建日期：2026-11-18。原始工程：`/home/wj/桌面/无人机/TRACE_baseline`。具体文件清单和源仓库 commit 见 `ARCHIVE_MANIFEST.json`。
+
+## PSTO-AAV-Pursuit port
+
+The pinned official PSTO source is archived in `upstream/psto-aav-pursuit/`; the Isaac Sim
+6 adapter is isolated in `trace/pursuit/`. Run the dependency smoke test with:
+
+```bash
+PYTHONPATH=$PWD conda run --no-capture-output -n trace_isaac python scripts/smoke_psto.py --steps 3
+PYTHONPATH=$PWD conda run --no-capture-output -n trace_isaac pytest -q tests/psto
+```
+
+The physical scene uses three Hummingbird articulations in one 240 Hz PhysX World. The
+existing NavRL baseline is unchanged. Training is enabled only after the physical rollout
+storage and checkpoint path are validated; the current entry point refuses to report
+fabricated training metrics.
