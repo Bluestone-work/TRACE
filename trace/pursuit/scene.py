@@ -44,11 +44,23 @@ class PSTOVehicle(RotorFlight):
   self.rotor_joint_indices=np.array([self.drone.get_dof_index(f'rotor_{i}_joint') for i in range(4)])
   self.drone.set_world_pose(position=np.asarray(pos),orientation=np.array([1.,0,0,0])); self.drone.set_linear_velocity(np.zeros(3)); self.drone.set_angular_velocity(np.zeros(3)); self.actuator.reset(); self.drone.set_joint_positions(np.zeros(4),joint_indices=self.rotor_joint_indices); self.drone.set_joint_velocities(self.actuator.rotor_speeds.astype(np.float32),joint_indices=self.rotor_joint_indices); self._read_physics_state()
 class PSTOPursuitScene:
- def __init__(self,positions=None,physics_dt=1/240,policy_hz=30.):
+ def __init__(self,positions=None,physics_dt=1/240,policy_hz=30.,num_obstacles=18,seed=4348):
   from isaacsim.core.api import World
   self.physics_dt=physics_dt; self.policy_dt=1/policy_hz; self.physics_substeps=round(self.policy_dt/physics_dt); self.world=World(physics_dt=physics_dt,rendering_dt=self.policy_dt,stage_units_in_meters=1.)
-  if positions is None: positions=((0,2.3,2), (0,-2.3,2), (8,0,2))
-  self.vehicles=[PSTOVehicle(self.world,f'/World/Pursuit/Drone_{i}',physics_dt) for i in range(3)]; self.positions=np.asarray(positions,dtype=np.float32); self.world.reset()
+  if positions is None: positions=((-3,2,2), (-3,-2,2), (0,0,2))
+  self.vehicles=[PSTOVehicle(self.world,f'/World/Pursuit/Drone_{i}',physics_dt) for i in range(3)]
+  from isaacsim.core.api.objects import FixedCuboid
+  from pxr import UsdLux
+  UsdLux.DomeLight.Define(self.world.stage,'/World/PursuitLight').CreateIntensityAttr(1200.)
+  self.ground=FixedCuboid('/World/Pursuit/Ground','pursuit_ground',position=np.array([0.,0.,-.05]),scale=np.array([100.,100.,.1]),size=1.,color=np.array([.15,.15,.15])); self.world.scene.add(self.ground)
+  self.obstacles=[]; rng=np.random.default_rng(seed)
+  for oi in range(int(num_obstacles)):
+   for _ in range(100):
+    op=np.array([rng.uniform(-7.,7.),rng.uniform(-5.5,5.5),1.5],np.float32)
+    if all(np.linalg.norm(op[:2]-np.asarray(x)[:2])>1.5 for x in positions): break
+   scale=np.array([rng.uniform(.35,.7),rng.uniform(.35,.7),rng.uniform(2.,3.5)],np.float32)
+   obstacle=FixedCuboid(f'/World/Pursuit/Obstacle_{oi}',f'pursuit_obstacle_{oi}',position=op,scale=scale,size=1.,color=np.array([.28,.20,.12])); self.world.scene.add(obstacle); self.obstacles.append(obstacle)
+  self.positions=np.asarray(positions,dtype=np.float32); self.world.reset()
   for v,p in zip(self.vehicles,self.positions): v.reset(p)
   self.world.render()
  def reset(self,positions=None):

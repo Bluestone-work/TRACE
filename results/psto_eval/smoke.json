@@ -1,0 +1,26 @@
+{
+  "status": "pass",
+  "episodes": 1,
+  "capture_success_rate": 0.0,
+  "average_capture_time_s": null,
+  "escape_rate": 0.0,
+  "collision_rate": 0.0,
+  "target_visibility_ratio": 0.5,
+  "lstm_ade": null,
+  "lstm_fde": null,
+  "episode_reward": 0.6681096851825714,
+  "episodes_detail": [
+    {
+      "episode": 0,
+      "steps": 2,
+      "reward": 0.6681096851825714,
+      "capture": false,
+      "escaped": false,
+      "collision": false,
+      "visibility_ratio": 0.5,
+      "reacquisition_time_s": null,
+      "lstm_ade": null,
+      "lstm_fde": null
+    }
+  ]
+}

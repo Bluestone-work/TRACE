@@ -5,9 +5,9 @@
   "physics_hz": 240,
   "policy_hz": 30,
   "physics_substeps": 8,
-  "position_response_m": 14.776363372802734,
-  "stationary_drone_displacement_m": 2.2939650079933926e-05,
-  "peak_speed_mps": 0.5048314929008484,
+  "position_response_m": 12.670008659362793,
+  "stationary_drone_displacement_m": 0.0,
+  "peak_speed_mps": 1.5598177909851074,
   "failures": [],
   "csv": "results/psto_long/long.csv"
 }

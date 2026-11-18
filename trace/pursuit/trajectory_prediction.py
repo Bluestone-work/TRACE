@@ -21,7 +21,7 @@ class TrajectoryPredictor(nn.Module):
             batch_size = mask.shape[0]
             first_valid_indices = torch.argmax(mask.to(torch.int), dim=1)
             start_pos = historical_pos_abs[
-                torch.arange(batch_size), first_valid_indices
+                torch.arange(batch_size, device=historical_pos_abs.device), first_valid_indices.to(historical_pos_abs.device)
             ].unsqueeze(1)
         else:
             start_pos = historical_pos_abs[:, 0:1, :]
@@ -44,8 +44,8 @@ class TrajectoryPredictor(nn.Module):
                 total_length=historical_data_abs.shape[1],
             )
             batch_size = lstm_out.shape[0]
-            last_seq_idxs = lengths - 1
-            last_timestep_output = lstm_out[torch.arange(batch_size), last_seq_idxs]
+            last_seq_idxs = (lengths - 1).to(lstm_out.device)
+            last_timestep_output = lstm_out[torch.arange(batch_size, device=lstm_out.device), last_seq_idxs]
         else:
             lstm_out, _ = self.lstm(lstm_input)
             last_timestep_output = lstm_out[:, -1, :]
@@ -54,6 +54,10 @@ class TrajectoryPredictor(nn.Module):
         predicted_trajectory_rel = predicted_trajectory_rel.view(
             predicted_trajectory_rel.shape[0], num_future_steps, 3
         )
-        last_known_pos = historical_pos_abs[:, -1:, :]
+        if mask is not None and mask.any():
+            valid_lengths = mask.sum(dim=1).to(historical_pos_abs.device).clamp(min=1)
+            last_known_pos = historical_pos_abs[torch.arange(historical_pos_abs.shape[0], device=historical_pos_abs.device), valid_lengths - 1].unsqueeze(1)
+        else:
+            last_known_pos = historical_pos_abs[:, -1:, :]
         predicted_trajectory_abs = predicted_trajectory_rel + last_known_pos
         return predicted_trajectory_abs.flatten(start_dim=1)

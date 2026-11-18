@@ -75,3 +75,9 @@ def test_reward_component_reference_values():
  assert abs(float(t['obstacle'])-.4843306)<1e-4
  assert abs(float(t['formation'])-(-.3438776))<1e-4
  assert abs(float(r)-(-697.8105))<2e-3 and bool(e) and bool(d)
+
+
+def test_lstm_right_padded_mask_uses_last_valid_position():
+ from trace.pursuit.trajectory_prediction import TrajectoryPredictor
+ m=TrajectoryPredictor(4,8,6); x=torch.zeros(1,10,4); x[0,:3,:3]=torch.tensor([[1.,0,0],[2.,0,0],[3.,0,0]]); mask=torch.tensor([[True,True,True,False,False,False,False,False,False,False]])
+ y=m(x,mask=mask); assert y.shape==(1,6) and torch.isfinite(y).all()

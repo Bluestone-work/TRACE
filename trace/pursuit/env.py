@@ -17,7 +17,7 @@ def build_global_state_84(positions,quaternions,velocities,angular_velocities,pr
  return out
 class PSTOPursuitEnv:
  def __init__(self,scene=None,max_episode_steps=280,seed=4348,with_lidar=True):
-  self.scene=scene or PSTOPursuitScene(); self.max_episode_steps=max_episode_steps; self.with_lidar=with_lidar; self.lidar_adapter=PSTOLidarAdapter(); self.rng=np.random.default_rng(seed); self.step_count=0; self.prev_actions=np.zeros((3,3),np.float32); self.observed_evader_history=[]; self.ground_truth_evader_history=[]; self.policy_lstm=None; self.last_lidar=np.zeros((2,24,480),np.float32); self.last_evader_lidar=np.zeros((24,480),np.float32)
+  self.scene=scene or PSTOPursuitScene(); self.max_episode_steps=max_episode_steps; self.with_lidar=with_lidar; self.lidar_adapter=PSTOLidarAdapter(); self.rng=np.random.default_rng(seed); self.step_count=0; self.prev_actions=np.zeros((3,3),np.float32); self.observed_evader_history=[]; self.ground_truth_evader_history=[]; self.policy_lstm=None; self.last_lidar=np.zeros((2,24,480),np.float32); self.last_lidar_down=np.zeros((2,6,120),np.float32); self.last_evader_lidar=np.zeros((24,480),np.float32)
  def set_policy_lstm(self,module): self.policy_lstm=module
  def reset(self): self.step_count=0; self.prev_actions.fill(0); self.observed_evader_history=[]; self.ground_truth_evader_history=[]; self.scene.reset(); return self.observe()
  def _root(self):
@@ -27,7 +27,7 @@ class PSTOPursuitEnv:
  def _visibility(self,p,q,scans): return np.asarray([target_visible(p[i],q[i],p[2],scans[i],max_distance=15.) for i in range(2)],dtype=bool)
  def _history_tensors(self):
   n=len(self.observed_evader_history); h=np.zeros((10,3),np.float32); mask=np.zeros(10,dtype=bool)
-  if n: h[-min(n,10):]=np.asarray(self.observed_evader_history[-10:],np.float32)[-10:]; mask[-min(n,10):]=True
+  if n: h[:min(n,10)]=np.asarray(self.observed_evader_history[-10:],np.float32)[-10:]; mask[:min(n,10)]=True
   return torch.as_tensor(h),torch.as_tensor(mask)
  def observe(self):
   p,q,v,w=self._root(); scans=np.stack([drone._raycast_lidar() if self.with_lidar else np.zeros((24,480),np.float32) for drone in self.scene.vehicles[:2]]); ev_scan=self.scene.vehicles[2]._raycast_lidar() if self.with_lidar else np.zeros((24,480),np.float32); self.last_lidar=scans; self.last_evader_lidar=ev_scan; vis=self._visibility(p,q,scans)
@@ -37,22 +37,29 @@ class PSTOPursuitEnv:
   if self.policy_lstm is not None and mask.any():
    with torch.no_grad(): pred=self.policy_lstm(torch.cat((h[None],torch.full((1,10,1),1/30.)), -1),mask=mask[None]).view(1,10,3)[0].numpy()
   else: pred=np.repeat(h[-1].numpy()[None],10,axis=0)
-  down=self.lidar_adapter.downsample(torch.as_tensor(scans)); obs_states=[]; heat=[]
+  down=self.lidar_adapter.downsample(torch.as_tensor(scans)); self.last_lidar_down=down.numpy(); obs_states=[]; heat=[]
   for i in range(2):
    body_v=world_to_body(torch.as_tensor(v[i]),torch.as_tensor(q[i])).numpy(); obs_states.append(np.concatenate([q[i],body_v,w[i],self.prev_actions[i]]))
    teammate=1-i; team_future=(p[teammate][None]+v[teammate][None]*np.arange(1,11,dtype=np.float32)[:,None]/30.)[None]
    hm=heatmap(torch.as_tensor(p[i:i+1]),torch.as_tensor(q[i:i+1]),torch.as_tensor(p[2:3]),torch.as_tensor(pred[None]),torch.as_tensor(p[teammate:teammate+1]),torch.as_tensor(team_future),visibility=torch.as_tensor([vis[i]])); heat.append(hm[0].numpy())
   fused=np.stack([np.stack([down[i].numpy(),heat[i]]) for i in range(2)]).astype(np.float32); central=self._central(p,q,v,w,down)
   assert fused.shape==(2,2,6,120) and np.asarray(obs_states).shape==(2,13)
-  return {'fused_image':fused,'state':np.asarray(obs_states,np.float32),'central_state':central,'visibility':vis.astype(np.float32),'history':h.numpy(),'history_mask':mask,'future_ground_truth':np.asarray(self.ground_truth_evader_history[-10:],np.float32)}
+  # Supervised data is delayed by ten policy steps: the LSTM sees the older
+  # ten ground-truth samples and predicts the newer ten.  It is kept in a
+  # separate key and never enters the actor observation above.
+  if len(self.ground_truth_evader_history)>=20:
+   sl_h=np.asarray(self.ground_truth_evader_history[-20:-10],np.float32); sl_f=np.asarray(self.ground_truth_evader_history[-10:],np.float32); sl_m=np.ones(10,dtype=bool)
+  else:
+   sl_h=np.zeros((10,3),np.float32); sl_f=np.zeros((10,3),np.float32); sl_m=np.zeros(10,dtype=bool)
+  return {'fused_image':fused,'state':np.asarray(obs_states,np.float32),'central_state':central,'visibility':vis.astype(np.float32),'history':h.numpy(),'history_mask':mask,'future_ground_truth':sl_f,'lstm_history':sl_h,'lstm_history_mask':sl_m,'lstm_target_available':bool(sl_m.any())}
  def step(self,actions,actions_are_normalized=True):
   actions=np.asarray(actions,np.float32)
   if actions_are_normalized:
    if actions.shape!=(2,2): raise ValueError(f'PSTO actor action must be [2,2], got {actions.shape}')
    from .algorithm.mappo import PSTOMAPPO
-   p,q,v,w=self._root(); body=PSTOMAPPO.action_to_velocity(torch.as_tensor(actions),torch.as_tensor(q[:2])).numpy(); world=body
+   p,q,v,w=self._root(); body=PSTOMAPPO.action_to_body_velocity(torch.as_tensor(actions)).numpy(); world=PSTOMAPPO.action_to_velocity(torch.as_tensor(actions),torch.as_tensor(q[:2])).numpy()
   else:
    if actions.shape!=(2,3): raise ValueError('explicit 3-D commands require actions_are_normalized=False')
    world=actions; body=np.stack([world_to_body(torch.as_tensor(world[i]),torch.as_tensor(q[i])).numpy() for i in range(2)])
-  p,q,v,w=self._root(); ev_target=evader_policy(torch.as_tensor(p[:2]),torch.as_tensor(p[2])).numpy(); self.prev_actions[:2]=body; self.prev_actions[2]=world_to_body(torch.as_tensor(ev_target),torch.as_tensor(q[2])).numpy(); self.scene.step(np.vstack([world,ev_target])); self.step_count+=1; p,q,v,w=self._root(); obs=self.observe(); prox=torch.as_tensor(self.last_lidar); ev_collision=bool(np.max(self.last_evader_lidar)>.0 and np.max(self.last_evader_lidar)>10.-.32); reward,captured,escaped,done,terms=official_reward(torch.as_tensor(p[:2]),torch.as_tensor(v[:2]),torch.as_tensor(p[2]),prox,step=self.step_count,evader_vel=torch.as_tensor(v[2]),evader_collision=torch.tensor(ev_collision),below_bound_altitude=.5); timeout=self.step_count>=self.max_episode_steps; done=bool(done.item() or timeout); return obs,float(reward.item()),done,{'capture':bool(captured.item()),'escaped':bool(escaped.item()),'collision':bool(terms['pursuer_collision'].item() or ev_collision),'timeout':timeout,'distance':float(torch.linalg.vector_norm(torch.as_tensor(p[:2])-torch.as_tensor(p[2]),dim=-1).min()),'visibility_ratio':float(np.mean(obs['visibility'])),'reward_terms':{k:float(v.item()) for k,v in terms.items() if torch.is_tensor(v) and v.numel()==1}}
+  p,q,v,w=self._root(); ev_target=evader_policy(torch.as_tensor(p[:2]),torch.as_tensor(p[2])).numpy(); self.prev_actions[:2]=body; self.prev_actions[2]=world_to_body(torch.as_tensor(ev_target),torch.as_tensor(q[2])).numpy(); self.scene.step(np.vstack([world,ev_target])); self.step_count+=1; p,q,v,w=self._root(); obs=self.observe(); prox=torch.as_tensor(self.last_lidar_down); ev_collision=bool(np.max(self.last_evader_lidar)>.0 and np.max(self.last_evader_lidar)>10.-.32); reward,captured,escaped,done,terms=official_reward(torch.as_tensor(p[:2]),torch.as_tensor(v[:2]),torch.as_tensor(p[2]),prox,step=self.step_count,evader_vel=torch.as_tensor(v[2]),evader_collision=torch.tensor(ev_collision),below_bound_altitude=.5); timeout=self.step_count>=self.max_episode_steps; done=bool(done.item() or timeout); return obs,float(reward.item()),done,{'capture':bool(captured.item()),'escaped':bool(escaped.item()),'collision':bool(terms['pursuer_collision'].item() or ev_collision),'timeout':timeout,'distance':float(torch.linalg.vector_norm(torch.as_tensor(p[:2])-torch.as_tensor(p[2]),dim=-1).min()),'visibility_ratio':float(np.mean(obs['visibility'])),'reward_terms':{k:float(v.item()) for k,v in terms.items() if torch.is_tensor(v) and v.numel()==1}}
  def close(self): self.scene.close()

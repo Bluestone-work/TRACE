@@ -20,7 +20,16 @@ def main():
    assert action.shape==(2,2) and torch.isfinite(action).all() and torch.isfinite(value).all()
    # Ground-truth future labels exist only in info; they are intentionally never passed to act().
    next_obs,reward,done,info=env.step(action.cpu().numpy(),actions_are_normalized=True); assert next_obs['central_state'].shape==(84,); assert np.isfinite(next_obs['fused_image']).all(); assert np.isfinite(next_obs['central_state']).all()
-   rows.append({'step':k,'reward':reward,'done':done,'visibility_ratio':info['visibility_ratio'],'distance':info['distance'],'action_max':float(action.max()),'value':float(value.mean())}); obs=env.reset() if done else next_obs
+   pos,quat,vel,ang=env._root()
+   if not np.isfinite(np.concatenate((pos.reshape(-1),quat.reshape(-1),vel.reshape(-1),ang.reshape(-1)))).all(): failures.append(f'nonfinite_state_{k}')
+   row={'step':k,'reward':reward,'done':done,'visibility_ratio':info['visibility_ratio'],'distance':info['distance'],'action_max':float(action.max()),'value':float(value.mean())}
+   for i in range(3):
+    row.update({f'drone{i}_x':float(pos[i,0]),f'drone{i}_y':float(pos[i,1]),f'drone{i}_z':float(pos[i,2]),f'drone{i}_vx':float(vel[i,0]),f'drone{i}_vy':float(vel[i,1]),f'drone{i}_vz':float(vel[i,2]),f'drone{i}_qw':float(quat[i,0]),f'drone{i}_qx':float(quat[i,1]),f'drone{i}_qy':float(quat[i,2]),f'drone{i}_qz':float(quat[i,3]),f'drone{i}_wx':float(ang[i,0]),f'drone{i}_wy':float(ang[i,1]),f'drone{i}_wz':float(ang[i,2])})
+   rows.append(row)
+   if done and k < args.steps - 1:
+    failures.append(f'episode_ended_before_requested_steps_at_{k}')
+    break
+   obs=next_obs
   status='pass' if not failures else 'fail'
  except Exception as exc:
   import traceback; traceback.print_exc()
