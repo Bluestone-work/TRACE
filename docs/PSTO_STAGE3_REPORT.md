@@ -10,6 +10,7 @@
 - Observation history now contains only actually visible target samples. During occlusion no duplicate or zero position is appended; `history_mask` marks valid entries and `history_dt` records elapsed time between observations. Evaluation reports separate teacher-forced and observation-only ADE/FDE values.
 - ADE/FDE evaluation is delayed by ten policy steps: each prediction is queued at time `t`, and only at `t+10` is it compared with the measured PhysX positions `t+1...t+10`. The previous `future_ground_truth` buffer is no longer used as an online prediction target.
 - LSTM supervised batches apply random point dropout and contiguous occlusion spans, compact valid observations, and accumulate the corresponding irregular `dt` intervals. This exposes the predictor to the same sparse-history distribution used online.
+- Environment step info now separates `terminated`, `truncated`, and `episode_end`. GAE uses `terminated` for TD bootstrap and `episode_end` for recursive advantage masking, so a timeout bootstraps the final state without propagating advantages across the reset.
 
 ## Commands and observed results
 
@@ -46,6 +47,8 @@ The physical evaluation entry point was launched against this checkpoint with on
 With delayed targets, a 20-step physical evaluation produced teacher-forced ADE/FDE `0.1858/0.3335 m` and observation-only ADE/FDE `0.1467/0.2431 m`. The latter uses only `history`, `history_mask`, and `history_dt` as predictor input; ground truth is used only as the delayed evaluation target. The JSON is `results/psto_eval/delayed_metrics.json`.
 
 A 20-frame physical training smoke run with occlusion augmentation completed one PPO update with finite values (`sl_loss=0.0122`); its log is `results/psto_train/occlusion_smoke.json`.
+
+A dedicated real Isaac Sim timeout smoke run used `--max_episode_steps 1` for two steps and reported `terminated_steps=0`, `truncated_steps=2`, with a finite PPO update. This verifies that timeout transitions are kept distinct from true terminal transitions.
 
 ## Remaining limitations
 

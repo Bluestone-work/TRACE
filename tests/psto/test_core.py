@@ -24,6 +24,10 @@ def test_gae_uses_nonterminal_next_value_and_masks_terminal_bootstrap():
  gae=GAE(1.,1.); r=torch.zeros(1,2,1); v=torch.zeros(1,2,1); nv=torch.tensor([[[2.],[3.]]]); done=torch.tensor([[[0.],[1.]]]); adv,_=gae(r,done,v,nv)
  assert torch.allclose(adv,torch.tensor([[[2.],[0.]]]))
 
+def test_gae_bootstraps_timeout_but_stops_recursive_propagation():
+ gae=GAE(1.,1.); r=torch.zeros(1,3,1); v=torch.zeros(1,3,1); nv=torch.tensor([[[2.],[5.],[7.]]]); terminated=torch.zeros(1,3,1); episode_end=torch.tensor([[[0.],[1.],[0.]]]); adv,_=gae(r,terminated,v,nv,episode_end)
+ assert torch.allclose(adv,torch.tensor([[[7.],[5.],[7.]]]))
+
 def test_psto_heatmap_projection():
  h=heatmap(torch.zeros(2,3),torch.tensor([[1.,0,0,0]]*2),torch.tensor([[1.,0,0],[0,1,0.]])); assert h.shape==(2,6,120) and torch.isfinite(h).all() and h.abs().sum()>0
 

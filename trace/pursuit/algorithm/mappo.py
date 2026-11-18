@@ -39,11 +39,14 @@ class BetaActor(nn.Module):
 
 class GAE:
  def __init__(self,gamma=.995,lmbda=.95): self.gamma=gamma; self.lmbda=lmbda
- def __call__(self,reward,terminated,value,next_value):
-  # reward/value: [B,T,1], next_value [B,T,1]
-  adv=torch.zeros_like(reward); gae=torch.zeros_like(reward[:,0]); alive=1-terminated.float()
+ def __call__(self,reward,terminated,value,next_value,episode_end=None):
+  # ``terminated`` controls TD bootstrap; ``episode_end`` controls recursive
+  # GAE propagation.  A timeout therefore bootstraps V(s_next) but does not
+  # carry advantage information into the next episode.
+  if episode_end is None: episode_end=terminated
+  adv=torch.zeros_like(reward); gae=torch.zeros_like(reward[:,0]); bootstrap=1-terminated.float(); alive=1-episode_end.float()
   for t in reversed(range(reward.shape[1])):
-   delta=reward[:,t]+self.gamma*next_value[:,t]*alive[:,t]-value[:,t]; gae=delta+self.gamma*self.lmbda*alive[:,t]*gae; adv[:,t]=gae
+   delta=reward[:,t]+self.gamma*next_value[:,t]*bootstrap[:,t]-value[:,t]; gae=delta+self.gamma*self.lmbda*alive[:,t]*gae; adv[:,t]=gae
   return adv,adv+value
 
 def _orthogonal(m):
@@ -109,14 +112,14 @@ class PSTOMAPPO(nn.Module):
   image=rollout['image'].to(self.device); state=rollout['state'].to(self.device)
   central=rollout['central'].to(self.device); action=rollout['action'].to(self.device)
   old_lp=rollout['log_prob'].to(self.device); reward=rollout['reward'].to(self.device)
-  done=rollout['terminated'].to(self.device); old_v=rollout['value'].to(self.device)
+  done=rollout['terminated'].to(self.device); episode_end=rollout.get('episode_end',done).to(self.device); old_v=rollout['value'].to(self.device)
   next_v=rollout.get('next_value',torch.zeros_like(old_v)).to(self.device)
   T,B=image.shape[:2]; N=T*B
   # GAE is evaluated in [B,T,1] order, then restored to rollout order.
   adv_bt,ret_bt=self.gae(
    reward.permute(1,0).unsqueeze(-1), done.permute(1,0).unsqueeze(-1),
    self.value_norm.denormalize(old_v.permute(1,0,2)),
-   self.value_norm.denormalize(next_v.permute(1,0,2)))
+   self.value_norm.denormalize(next_v.permute(1,0,2)), episode_end.permute(1,0).unsqueeze(-1))
   adv=adv_bt.permute(1,0,2); ret=ret_bt.permute(1,0,2)
   # ``unbiased=False`` keeps a one-transition smoke rollout finite.
   adv=(adv-adv.mean())/(adv.std(unbiased=False)+1e-8)

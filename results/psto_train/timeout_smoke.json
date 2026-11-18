@@ -1,0 +1,22 @@
+{
+  "status": "pass",
+  "frames": 2,
+  "updates": 1,
+  "terminated_steps": 0,
+  "truncated_steps": 2,
+  "checkpoint": "results/psto_train/timeout_smoke.pt",
+  "logs": [
+    {
+      "frames": 2,
+      "update": 1,
+      "policy_loss": 0.013077884912490845,
+      "value_loss": 2.552773952484131,
+      "entropy": -0.12674249708652496,
+      "sl_loss": 0.0,
+      "encoder_grad_norm": 5.0900115966796875,
+      "actor_grad_norm": 1.5496076345443726,
+      "critic_grad_norm": 22.951169967651367,
+      "lstm_grad_norm": 0.0
+    }
+  ]
+}
