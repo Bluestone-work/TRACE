@@ -8,6 +8,8 @@
 - `scripts/train_psto.py` is a real physical rollout/update/checkpoint entry point (`num_envs=1` currently). `scripts/eval_psto.py` performs gradient-free physical evaluation and writes the requested metrics.
 - Rollout collection now evaluates the critic on every nonterminal next observation and passes the resulting per-step `next_value` to GAE; terminal transitions receive zero bootstrap. Both train and eval connect `policy.lstm` through `env.set_policy_lstm()` before reset. The evader now converts its own physical LiDAR hits to world points and passes them to the official obstacle-repulsion policy.
 - Observation history now contains only actually visible target samples. During occlusion no duplicate or zero position is appended; `history_mask` marks valid entries and `history_dt` records elapsed time between observations. Evaluation reports separate teacher-forced and observation-only ADE/FDE values.
+- ADE/FDE evaluation is delayed by ten policy steps: each prediction is queued at time `t`, and only at `t+10` is it compared with the measured PhysX positions `t+1...t+10`. The previous `future_ground_truth` buffer is no longer used as an online prediction target.
+- LSTM supervised batches apply random point dropout and contiguous occlusion spans, compact valid observations, and accumulate the corresponding irregular `dt` intervals. This exposes the predictor to the same sparse-history distribution used online.
 
 ## Commands and observed results
 
@@ -41,7 +43,9 @@ After the next-value/LSTM/evader fixes, a 20-frame real Isaac Sim rollout comple
 
 The physical evaluation entry point was launched against this checkpoint with one episode and two steps. It returned `pass`, visibility ratio `0.5`, episode reward `0.6681`, and no capture/escape/collision; the result is in `results/psto_eval/smoke.json`. This is an entry-point smoke evaluation, not a trained-policy claim.
 
-With the new split metrics, a 20-step physical evaluation produced teacher-forced ADE/FDE `0.1792/0.3215 m` and observation-only ADE/FDE `0.2102/0.1912 m`. The latter uses only `history`, `history_mask`, and `history_dt` as predictor input; ground truth is used only as the evaluation target.
+With delayed targets, a 20-step physical evaluation produced teacher-forced ADE/FDE `0.1858/0.3335 m` and observation-only ADE/FDE `0.1467/0.2431 m`. The latter uses only `history`, `history_mask`, and `history_dt` as predictor input; ground truth is used only as the delayed evaluation target. The JSON is `results/psto_eval/delayed_metrics.json`.
+
+A 20-frame physical training smoke run with occlusion augmentation completed one PPO update with finite values (`sl_loss=0.0122`); its log is `results/psto_train/occlusion_smoke.json`.
 
 ## Remaining limitations
 

@@ -30,7 +30,10 @@ class PSTOPursuitEnv:
   n=min(len(self.observed_evader_history),10); h=np.zeros((10,3),np.float32); mask=np.zeros(10,dtype=bool); dt=np.zeros((10,1),np.float32)
   if n:
    h[:n]=np.asarray(self.observed_evader_history[-n:],np.float32); mask[:n]=True
-   times=np.asarray(self.observed_evader_times[-n:],np.float32); intervals=np.full(n,1.,np.float32) if n==1 else np.r_[np.diff(times),max(float(getattr(self,'step_count',times[-1]))-times[-1],1.)]; dt[:n,0]=intervals/30.
+   times=np.asarray(self.observed_evader_times[-n:],np.float32); intervals=np.empty(n,np.float32)
+   if n>1: intervals[:-1]=np.diff(times)
+   intervals[-1]=max(float(getattr(self,'step_count',times[-1]))-float(times[-1]),1.)
+   dt[:n,0]=intervals/30.
   return torch.as_tensor(h),torch.as_tensor(mask),torch.as_tensor(dt)
  def observe(self):
   p,q,v,w=self._root(); scans=np.stack([drone._raycast_lidar() if self.with_lidar else np.zeros((24,480),np.float32) for drone in self.scene.vehicles[:2]]); ev_scan=self.scene.vehicles[2]._raycast_lidar() if self.with_lidar else np.zeros((24,480),np.float32); self.last_lidar=scans; self.last_evader_lidar=ev_scan; vis=self._visibility(p,q,scans)
@@ -58,7 +61,11 @@ class PSTOPursuitEnv:
   else:
    sl_h=np.zeros((10,3),np.float32); sl_f=np.zeros((10,3),np.float32); sl_m=np.zeros(10,dtype=bool)
   sl_dt=np.full((10,1),1/30.,np.float32)
-  return {'fused_image':fused,'state':np.asarray(obs_states,np.float32),'central_state':central,'visibility':vis.astype(np.float32),'history':h.numpy(),'history_mask':mask.numpy(),'history_dt':h_dt.numpy(),'future_ground_truth':sl_f,'lstm_history':sl_h,'lstm_history_mask':sl_m,'lstm_history_dt':sl_dt,'lstm_target_available':bool(sl_m.any())}
+  if len(self.ground_truth_evader_history)>=10:
+   tf_h=np.asarray(self.ground_truth_evader_history[-10:],np.float32); tf_m=np.ones(10,dtype=bool)
+  else:
+   tf_h=np.zeros((10,3),np.float32); tf_m=np.zeros(10,dtype=bool)
+  return {'fused_image':fused,'state':np.asarray(obs_states,np.float32),'central_state':central,'visibility':vis.astype(np.float32),'history':h.numpy(),'history_mask':mask.numpy(),'history_dt':h_dt.numpy(),'future_ground_truth':sl_f,'lstm_history':sl_h,'lstm_history_mask':sl_m,'lstm_history_dt':sl_dt,'lstm_target_available':bool(sl_m.any()),'teacher_history':tf_h,'teacher_history_mask':tf_m,'teacher_history_dt':sl_dt}
  def step(self,actions,actions_are_normalized=True):
   actions=np.asarray(actions,np.float32)
   if actions_are_normalized:

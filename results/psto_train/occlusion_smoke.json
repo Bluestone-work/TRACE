@@ -1,0 +1,20 @@
+{
+  "status": "pass",
+  "frames": 20,
+  "updates": 1,
+  "checkpoint": "results/psto_train/occlusion_smoke.pt",
+  "logs": [
+    {
+      "frames": 20,
+      "update": 1,
+      "policy_loss": 0.032744355499744415,
+      "value_loss": 2.7385401725769043,
+      "entropy": -0.15783508121967316,
+      "sl_loss": 0.012205352075397968,
+      "encoder_grad_norm": 3.2455739974975586,
+      "actor_grad_norm": 1.116558313369751,
+      "critic_grad_norm": 20.8703670501709,
+      "lstm_grad_norm": 0.04838090017437935
+    }
+  ]
+}

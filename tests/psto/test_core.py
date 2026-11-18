@@ -90,3 +90,4 @@ def test_observation_history_does_not_fill_occlusions_and_keeps_dt():
  from trace.pursuit.env import PSTOPursuitEnv
  e=PSTOPursuitEnv.__new__(PSTOPursuitEnv); e.step_count=6; e.observed_evader_history=[np.array([1.,0.,2.]),np.array([2.,0.,2.])]; e.observed_evader_times=[0.,3.]
  h,m,dt=e._history_tensors(); assert m[:2].all() and not m[2:].any(); assert np.allclose(h[1].numpy(),[2.,0.,2.]); assert np.allclose(dt[:2].numpy().ravel(),[3/30.,3/30.])
+ e.observed_evader_history=e.observed_evader_history[:1]; e.observed_evader_times=e.observed_evader_times[:1]; _,_,single_dt=e._history_tensors(); assert np.isclose(float(single_dt[0,0]),6/30.)

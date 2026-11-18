@@ -51,7 +51,7 @@ def _orthogonal(m):
 
 @dataclass
 class MAPPOConfig:
- gamma:float=.995; gae_lambda:float=.95; clip_ratio:float=.1; value_clip_ratio:float=.1; entropy_coef:float=.01; actor_lr:float=6e-5; critic_lr:float=6e-5; encoder_lr:float=6e-5; sl_lr:float=8e-5; max_grad_norm:float=1.; lstm_max_grad_norm:float=1.; training_epoch_num:int=4; num_minibatches:int=1; sl_future_len:int=10; action_limit:float=.8; scheduler_steps:int=600
+ gamma:float=.995; gae_lambda:float=.95; clip_ratio:float=.1; value_clip_ratio:float=.1; entropy_coef:float=.01; actor_lr:float=6e-5; critic_lr:float=6e-5; encoder_lr:float=6e-5; sl_lr:float=8e-5; max_grad_norm:float=1.; lstm_max_grad_norm:float=1.; training_epoch_num:int=4; num_minibatches:int=1; sl_future_len:int=10; action_limit:float=.8; scheduler_steps:int=600; lstm_observation_drop_prob:float=.25; lstm_occlusion_prob:float=.35; lstm_max_occlusion_len:int=4
 
 class RolloutStorage:
  """Explicit on-policy storage used by train_psto and unit tests."""
@@ -80,6 +80,23 @@ class PSTOMAPPO(nn.Module):
  @staticmethod
  def action_to_velocity(action,quat,max_speed=.8):
   body=PSTOMAPPO.action_to_body_velocity(action,max_speed); q=quat/torch.linalg.vector_norm(quat,dim=-1,keepdim=True).clamp_min(1e-9); w,x,y,z=q.unbind(-1); yaw=torch.atan2(2*(w*z+x*y),1-2*(y*y+z*z)); c=torch.cos(yaw); s=torch.sin(yaw); return torch.stack((c*body[...,0]-s*body[...,1],s*body[...,0]+c*body[...,1],body[...,2]),-1)
+ def _augment_lstm_history(self,h,mask,dt):
+  """Simulate sparse observations while preserving elapsed-time intervals."""
+  if not self.training: return h,mask,dt
+  out_h=torch.zeros_like(h); out_m=torch.zeros_like(mask); out_dt=torch.zeros_like(dt)
+  drop=float(self.cfg.lstm_observation_drop_prob); occ=float(self.cfg.lstm_occlusion_prob); max_len=max(int(self.cfg.lstm_max_occlusion_len),1)
+  for i in range(h.shape[0]):
+   valid=torch.nonzero(mask[i],as_tuple=False).flatten(); n=int(valid.numel())
+   if n==0: continue
+   keep=torch.rand(n,device=h.device)>=drop
+   if n>1 and torch.rand((),device=h.device)<occ:
+    start=int(torch.randint(0,n,(),device=h.device)); length=int(torch.randint(1,min(max_len,n-start)+1,(),device=h.device)); keep[start:start+length]=False
+   if not bool(keep.any()): keep[-1]=True
+   selected=torch.nonzero(keep,as_tuple=False).flatten(); k=int(selected.numel()); out_h[i,:k]=h[i,valid[selected]]; out_m[i,:k]=True
+   src_dt=dt[i,valid,0]
+   for j in range(k-1): out_dt[i,j,0]=src_dt[selected[j]:selected[j+1]].sum()
+   out_dt[i,k-1,0]=src_dt[selected[-1]:].sum()
+  return out_h,out_m,out_dt
  def update(self,rollout):
   """Run the complete on-policy PPO update.
 
@@ -129,7 +146,7 @@ class PSTOMAPPO(nn.Module):
     self.encoder_opt.step(); self.actor_opt.step(); self.critic_encoder_opt.step(); self.critic_opt.step()
     sl=torch.tensor(0.,device=self.device); lg=torch.tensor(0.,device=self.device)
     if 'history' in rollout and 'future' in rollout:
-     h=rollout['history'].to(self.device); f=rollout['future'].to(self.device); mask=rollout.get('history_mask',torch.ones(h.shape[:2],dtype=torch.bool,device=self.device)).to(self.device); dt=rollout.get('agent_dt',torch.full((h.shape[0],1),1/30,device=self.device)).to(self.device); dt=dt.unsqueeze(1) if dt.ndim==2 else dt; dt=dt.expand(-1,h.shape[1],-1); pred=self.lstm(torch.cat((h,dt),-1),mask=mask); sl=F.mse_loss(pred,f.reshape(f.shape[0],-1)); self.lstm_opt.zero_grad(set_to_none=True); sl.backward(); lg=nn.utils.clip_grad_norm_(self.lstm.parameters(),self.cfg.lstm_max_grad_norm); self.lstm_opt.step(); self._last_lstm_update=True; last_sl,last_lg=sl.detach(),lg.detach()
+     h=rollout['history'].to(self.device); f=rollout['future'].to(self.device); mask=rollout.get('history_mask',torch.ones(h.shape[:2],dtype=torch.bool,device=self.device)).to(self.device); dt=rollout.get('agent_dt',torch.full((h.shape[0],1),1/30,device=self.device)).to(self.device); dt=dt.unsqueeze(1) if dt.ndim==2 else dt; dt=dt.expand(-1,h.shape[1],-1); h,mask,dt=self._augment_lstm_history(h,mask,dt); pred=self.lstm(torch.cat((h,dt),-1),mask=mask); sl=F.mse_loss(pred,f.reshape(f.shape[0],-1)); self.lstm_opt.zero_grad(set_to_none=True); sl.backward(); lg=nn.utils.clip_grad_norm_(self.lstm.parameters(),self.cfg.lstm_max_grad_norm); self.lstm_opt.step(); self._last_lstm_update=True; last_sl,last_lg=sl.detach(),lg.detach()
     logs.append((policy_loss.detach(),value_loss.detach(),entropy.detach(),eg,ag,ceg,cg))
   vals=torch.stack([x[0] for x in logs]); vls=torch.stack([x[1] for x in logs]); ents=torch.stack([x[2] for x in logs]); grads=[x[3:] for x in logs]
   return {'policy_loss':float(vals.mean()),'value_loss':float(vls.mean()),'entropy':float(ents.mean()),'sl_loss':float(last_sl),'encoder_grad_norm':float(torch.stack([x[0] for x in grads]).mean()),'actor_grad_norm':float(torch.stack([x[1] for x in grads]).mean()),'critic_grad_norm':float(torch.stack([x[3] for x in grads]).mean()),'lstm_grad_norm':float(last_lg)}
