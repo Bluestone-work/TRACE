@@ -13,7 +13,7 @@ def main():
   import torch
   from trace.pursuit.env import PSTOPursuitEnv
   from trace.pursuit.algorithm.mappo import PSTOMAPPO
-  device='cuda' if torch.cuda.is_available() else 'cpu'; policy=PSTOMAPPO(device=device); policy.load_model_weights(args.checkpoint,load_optimizers=False); policy.eval(); env=PSTOPursuitEnv(max_episode_steps=args.max_steps,seed=args.seed)
+  device='cuda' if torch.cuda.is_available() else 'cpu'; policy=PSTOMAPPO(device=device); policy.load_model_weights(args.checkpoint,load_optimizers=False); policy.eval(); env=PSTOPursuitEnv(max_episode_steps=args.max_steps,seed=args.seed); env.set_policy_lstm(policy.lstm)
   rows=[]
   for ep in range(args.episodes):
    obs=env.reset(); total=0.; vis=0.; ade=[]; fde=[]; terminal={}; done=False; lost_at=None; reacq=[]

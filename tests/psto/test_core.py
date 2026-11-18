@@ -20,6 +20,10 @@ def test_model_and_mappo_forward():
 def test_official_value_norm_and_gae():
  vn=ValueNorm(1); x=torch.tensor([[2.],[4.]]); vn.update(x); assert torch.isfinite(vn.normalize(x)).all(); adv,ret=GAE(.995,.95)(torch.ones(1,3,1),torch.zeros(1,3,1),torch.zeros(1,3,1),torch.zeros(1,3,1)); assert adv.shape==ret.shape==(1,3,1)
 
+def test_gae_uses_nonterminal_next_value_and_masks_terminal_bootstrap():
+ gae=GAE(1.,1.); r=torch.zeros(1,2,1); v=torch.zeros(1,2,1); nv=torch.tensor([[[2.],[3.]]]); done=torch.tensor([[[0.],[1.]]]); adv,_=gae(r,done,v,nv)
+ assert torch.allclose(adv,torch.tensor([[[2.],[0.]]]))
+
 def test_psto_heatmap_projection():
  h=heatmap(torch.zeros(2,3),torch.tensor([[1.,0,0,0]]*2),torch.tensor([[1.,0,0],[0,1,0.]])); assert h.shape==(2,6,120) and torch.isfinite(h).all() and h.abs().sum()>0
 

@@ -40,6 +40,18 @@ class PSTOVehicle(RotorFlight):
      return True
     self._query.raycast_all(tuple(float(x) for x in origin),direction,10.,report,True)
   return 10.-distances
+ def _raycast_lidar_hit_points(self):
+  """Return world-space points for the rays that hit geometry.
+
+  The native adapter stores proximity (``range - hit_distance``), so convert
+  only non-zero hits back to points.  Zero-valued no-hit beams are excluded;
+  this is the representation consumed by the official evader repulsion term.
+  """
+  scan=self._raycast_lidar(); hit=np.argwhere(scan>1e-5)
+  if hit.size==0: return np.zeros((0,3),np.float32)
+  vi,hi=hit[:,0],hit[:,1]; pitch=np.deg2rad(np.linspace(-10.,20.,self.vertical,dtype=np.float32))[vi]; yaw=2.*np.pi*hi/self.horizontal+self.lidar_yaw
+  direction=np.stack((np.cos(pitch)*np.cos(yaw),np.cos(pitch)*np.sin(yaw),np.sin(pitch)),axis=-1); distance=(10.-scan[vi,hi])[:,None]
+  return (self.position[None,:]+direction*distance).astype(np.float32)
  def reset(self,pos):
   self.rotor_joint_indices=np.array([self.drone.get_dof_index(f'rotor_{i}_joint') for i in range(4)])
   self.drone.set_world_pose(position=np.asarray(pos),orientation=np.array([1.,0,0,0])); self.drone.set_linear_velocity(np.zeros(3)); self.drone.set_angular_velocity(np.zeros(3)); self.actuator.reset(); self.drone.set_joint_positions(np.zeros(4),joint_indices=self.rotor_joint_indices); self.drone.set_joint_velocities(self.actuator.rotor_speeds.astype(np.float32),joint_indices=self.rotor_joint_indices); self._read_physics_state()
