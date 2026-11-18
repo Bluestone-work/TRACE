@@ -11,6 +11,7 @@ _NAV=_ROOT/'upstream/NavRL/isaac6-training'
 if str(_NAV) not in sys.path: sys.path.insert(0,str(_NAV))
 from quadrotor_dynamics import QuadrotorActuator
 from rotor_flight import RotorFlight
+import math
 class PSTOVehicle(RotorFlight):
  def __init__(self,world,path,physics_dt):
   from isaacsim.core.prims import RigidPrim,SingleArticulation
@@ -25,6 +26,20 @@ class PSTOVehicle(RotorFlight):
   name=path.rsplit('/',1)[-1]; self.drone=SingleArticulation(path,name=name); self.base_view=RigidPrim(path+'/base_link',name=name+'_body'); self.rotor_view=RigidPrim(path+'/rotor_[0-3]',name=name+'_rotors')
   for x in (self.drone,self.base_view,self.rotor_view): world.scene.add(x)
   self.actuator=QuadrotorActuator(physics_dt)
+  self.vertical=24; self.horizontal=480
+  import omni.physics.core
+  self._query=omni.physics.core.get_physics_scene_query_interface()
+ def _raycast_lidar(self):
+  distances=np.full((self.vertical,self.horizontal),10.,dtype=np.float32); origin=self.position.astype(np.float64); vertical=np.deg2rad(np.linspace(-10.,20.,self.vertical))
+  for hi in range(self.horizontal):
+   yaw=2.*math.pi*hi/self.horizontal+self.lidar_yaw
+   for vi,pitch in enumerate(vertical):
+    direction=(math.cos(pitch)*math.cos(yaw),math.cos(pitch)*math.sin(yaw),math.sin(pitch))
+    def report(hit):
+     if hit.rigid_body not in self._self_query_ids and hit.collision not in self._self_query_ids: distances[vi,hi]=min(distances[vi,hi],float(hit.distance))
+     return True
+    self._query.raycast_all(tuple(float(x) for x in origin),direction,10.,report,True)
+  return 10.-distances
  def reset(self,pos):
   self.rotor_joint_indices=np.array([self.drone.get_dof_index(f'rotor_{i}_joint') for i in range(4)])
   self.drone.set_world_pose(position=np.asarray(pos),orientation=np.array([1.,0,0,0])); self.drone.set_linear_velocity(np.zeros(3)); self.drone.set_angular_velocity(np.zeros(3)); self.actuator.reset(); self.drone.set_joint_positions(np.zeros(4),joint_indices=self.rotor_joint_indices); self.drone.set_joint_velocities(self.actuator.rotor_speeds.astype(np.float32),joint_indices=self.rotor_joint_indices); self._read_physics_state()

@@ -1,0 +1,15 @@
+{
+  "status": "pass",
+  "parameter_changed": true,
+  "checkpoint": "results/psto_update/checkpoint.pt",
+  "log": {
+    "policy_loss": -0.014157861471176147,
+    "value_loss": 0.5843304395675659,
+    "entropy": -0.06259981542825699,
+    "sl_loss": 0.17665448784828186,
+    "encoder_grad_norm": 0.4755724370479584,
+    "actor_grad_norm": 0.2694387435913086,
+    "critic_grad_norm": 3.847614288330078,
+    "lstm_grad_norm": 0.09675885736942291
+  }
+}

@@ -38,3 +38,26 @@ isolated so the NavRL baseline defaults are unchanged.
 - Isaac Sim 6 three-vehicle physical scene: in progress.
 - PPO rollout/training and checkpoint compatibility: in progress.
 - Paper-level training/metrics: not claimed until a real run completes.
+
+## Second-stage acceptance results (2026-11-18)
+
+A physical acceptance run was executed with `/home/wj/isaacsim/python.sh` and its kit
+Python (`isaacsim.exp.base.python-6.0.1`), rather than the conda package that reports
+Isaac 5.1. Command:
+
+```bash
+PYTHONEXE=/home/wj/isaacsim/kit/python/bin/python3 PYTHONPATH=$PWD \
+  /home/wj/isaacsim/python.sh scripts/test_psto_scene.py --steps 2 --headless
+```
+
+The run passed for three independent Hummingbirds, one shared 240 Hz World, eight
+physics substeps per 30 Hz policy step, finite state/rotor/LiDAR values, and independent
+rotor control. Artifacts are in `results/psto_scene/`.
+
+The pure Torch observation/MAPPO/LSTM suite passes 7 tests. `scripts/test_psto_update.py`
+performed a real PPO and LSTM backward update, changed actor parameters, and restored all
+module and optimizer states from `results/psto_update/checkpoint.pt`.
+
+The RGB viewport file is produced by Isaac's render product but is black in headless mode
+because no active viewport/display is available over SSH. The non-black, data-derived
+three-dimensional physical trajectory plot is `results/psto_scene/psto_trajectory.png`.

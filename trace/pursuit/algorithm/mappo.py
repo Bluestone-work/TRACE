@@ -1,19 +1,101 @@
-"""Small dependency-light implementation of the official MAPPO components."""
+"""Faithful, dependency-light port of the upstream PSTO MAPPO update.
+
+The tensor formulas and module dimensions mirror upstream/mappo.py and nav_utils.py:
+centralized 84-D critic, Beta actor, PPO clipping, GAE, ValueNorm, four independent
+optimizers/schedulers, and the supervised LSTM auxiliary loss.
+"""
+from dataclasses import dataclass
+from pathlib import Path
 import torch
 from torch import nn
-from ..models import FullModel
+import torch.nn.functional as F
+from ..models import FullModel, STATE_DIM
 from ..trajectory_prediction import TrajectoryPredictor
+from ... import __name__ as _trace_name
+
 class ValueNorm(nn.Module):
- def __init__(self): super().__init__(); self.register_buffer('mean',torch.zeros(1)); self.register_buffer('sq',torch.ones(1))
- def normalize(self,x): return (x-self.mean)/self.sq.sqrt().clamp_min(1e-6)
- def denormalize(self,x): return x*self.sq.sqrt()+self.mean
- def update(self,x): self.mean.mul_(.995).add_(.005*x.mean()); self.sq.mul_(.995).add_(.005*(x*x).mean())
+ def __init__(self,input_shape=1,beta=.995,epsilon=1e-5):
+  super().__init__(); self.input_shape=torch.Size((input_shape,)) if isinstance(input_shape,int) else torch.Size(input_shape); self.beta=beta; self.epsilon=epsilon
+  self.register_buffer('running_mean',torch.zeros(self.input_shape)); self.register_buffer('running_mean_sq',torch.zeros(self.input_shape)); self.register_buffer('debiasing_term',torch.tensor(0.)); self.reset_parameters()
+ def reset_parameters(self): self.running_mean.zero_(); self.running_mean_sq.zero_(); self.debiasing_term.zero_()
+ def _check(self,x):
+  if x.shape[-len(self.input_shape):]!=self.input_shape: raise ValueError(f'Expected trailing shape {self.input_shape}, got {x.shape}')
+ def running_mean_var(self):
+  d=self.debiasing_term.clamp(min=self.epsilon); m=self.running_mean/d; ms=self.running_mean_sq/d; return m,(ms-m**2).clamp(min=.01)
+ @torch.no_grad()
+ def update(self,x):
+  self._check(x); dims=tuple(range(x.dim()-len(self.input_shape))); m=x.mean(dims); ms=(x*x).mean(dims); self.running_mean.mul_(self.beta).add_(m*(1-self.beta)); self.running_mean_sq.mul_(self.beta).add_(ms*(1-self.beta)); self.debiasing_term.mul_(self.beta).add_(1-self.beta)
+ def normalize(self,x): self._check(x); m,v=self.running_mean_var(); return (x-m)/torch.sqrt(v)
+ def denormalize(self,x): self._check(x); m,v=self.running_mean_var(); return x*torch.sqrt(v)+m
+
+class IndependentBeta(torch.distributions.Independent):
+ def __init__(self,alpha,beta,validate_args=None): super().__init__(torch.distributions.Beta(alpha,beta),1,validate_args=validate_args)
+
 class BetaActor(nn.Module):
- def __init__(self,dim=48,action_dim=2):
-  super().__init__(); self.net=nn.Sequential(nn.Linear(dim,72),nn.LayerNorm(72),nn.LeakyReLU(.01),nn.Linear(72,36),nn.LayerNorm(36),nn.LeakyReLU(.01)); self.a=nn.Linear(36,action_dim); self.b=nn.Linear(36,action_dim)
- def forward(self,x): h=self.net(x); return 1+nn.functional.softplus(self.a(h)),1+nn.functional.softplus(self.b(h))
+ def __init__(self,action_dim=2,input_feature_dim=48):
+  super().__init__(); self.hidden_layer=nn.Sequential(nn.Linear(input_feature_dim,72),nn.LayerNorm(72),nn.LeakyReLU(.01),nn.Dropout(.05),nn.Linear(72,36),nn.LayerNorm(36),nn.LeakyReLU(.01),nn.Dropout(.05)); self.alpha_transition=nn.Sequential(nn.Linear(36,18),nn.Tanh()); self.beta_transition=nn.Sequential(nn.Linear(36,18),nn.Tanh()); self.alpha_layer=nn.Linear(18,action_dim); self.beta_layer=nn.Linear(18,action_dim); self.alpha_softplus=nn.Softplus(); self.beta_softplus=nn.Softplus()
+ def forward(self,x):
+  h=self.hidden_layer(x); return 1+self.alpha_softplus(self.alpha_layer(self.alpha_transition(h)))+1e-6,1+self.beta_softplus(self.beta_layer(self.beta_transition(h)))+1e-6
+
+class GAE:
+ def __init__(self,gamma=.995,lmbda=.95): self.gamma=gamma; self.lmbda=lmbda
+ def __call__(self,reward,terminated,value,next_value):
+  # reward/value: [B,T,1], next_value [B,T,1]
+  adv=torch.zeros_like(reward); gae=torch.zeros_like(reward[:,0]); alive=1-terminated.float()
+  for t in reversed(range(reward.shape[1])):
+   delta=reward[:,t]+self.gamma*next_value[:,t]*alive[:,t]-value[:,t]; gae=delta+self.gamma*self.lmbda*alive[:,t]*gae; adv[:,t]=gae
+  return adv,adv+value
+
+def _orthogonal(m):
+ if isinstance(m,nn.Linear): nn.init.orthogonal_(m.weight,nn.init.calculate_gain('relu')); nn.init.constant_(m.bias,0.)
+
+@dataclass
+class MAPPOConfig:
+ gamma:float=.995; gae_lambda:float=.95; clip_ratio:float=.1; value_clip_ratio:float=.1; entropy_coef:float=.02; actor_lr:float=6e-5; critic_lr:float=6e-5; encoder_lr:float=6e-5; sl_lr:float=8e-5; max_grad_norm:float=1.; lstm_max_grad_norm:float=1.; training_epoch_num:int=4; num_minibatches:int=1; sl_future_len:int=10; action_limit:float=.8; scheduler_steps:int=600
+
+class RolloutStorage:
+ """Explicit on-policy storage used by train_psto and unit tests."""
+ def __init__(self): self.data=[]
+ def add(self,**transition): self.data.append(transition)
+ def clear(self): self.data.clear()
+ def __len__(self): return len(self.data)
+
 class PSTOMAPPO(nn.Module):
- def __init__(self,state_dim=13,central_dim=84):
-  super().__init__(); self.encoder=FullModel(state_dim=state_dim); self.actor=BetaActor(); self.critic=nn.Sequential(nn.Linear(central_dim,128),nn.Tanh(),nn.Linear(128,1)); self.value_norm=ValueNorm(); self.lstm=TrajectoryPredictor(4,64,30)
+ def __init__(self,state_dim=13,central_dim=84,action_dim=2,config=None,device='cpu'):
+  super().__init__(); self.device=torch.device(device); c=config or MAPPOConfig(); self.cfg=c; self.num_agents=2; self.action_dim=action_dim; self.gamma=c.gamma; self.gae=GAE(c.gamma,c.gae_lambda); self.clip_ratio=c.clip_ratio; self.value_clip_ratio=c.value_clip_ratio; self.entropy_coef=c.entropy_coef
+  self.encoder=FullModel(state_dim=state_dim).to(self.device); self.actor=BetaActor(action_dim,48).to(self.device)
+  self.critic_encoder=nn.Sequential(nn.Linear(central_dim,256),nn.LayerNorm(256),nn.ReLU(),nn.Linear(256,128),nn.LayerNorm(128),nn.ReLU()).to(self.device)
+  self.critic=nn.Sequential(nn.Linear(128,64),nn.LayerNorm(64),nn.ReLU(),nn.Linear(64,1)).to(self.device)
+  self.encoder.apply(_orthogonal); self.actor.apply(_orthogonal); self.critic_encoder.apply(_orthogonal); self.critic.apply(_orthogonal)
+  self.lstm=TrajectoryPredictor(4,64,c.sl_future_len*3).to(self.device); self.value_norm=ValueNorm(1).to(self.device)
+  self.encoder_opt=torch.optim.AdamW(self.encoder.parameters(),lr=c.encoder_lr,weight_decay=2e-4); self.actor_opt=torch.optim.AdamW(self.actor.parameters(),lr=c.actor_lr,weight_decay=2e-4); self.critic_encoder_opt=torch.optim.AdamW(self.critic_encoder.parameters(),lr=c.critic_lr,weight_decay=1e-4); self.critic_opt=torch.optim.AdamW(self.critic.parameters(),lr=c.critic_lr,weight_decay=1e-4); self.lstm_opt=torch.optim.Adam(self.lstm.parameters(),lr=c.sl_lr)
+  self.encoder_scheduler=torch.optim.lr_scheduler.CosineAnnealingLR(self.encoder_opt,max(c.scheduler_steps,1),eta_min=3e-6); self.actor_scheduler=torch.optim.lr_scheduler.CosineAnnealingLR(self.actor_opt,max(c.scheduler_steps,1),eta_min=3e-6); self.critic_encoder_scheduler=torch.optim.lr_scheduler.ConstantLR(self.critic_encoder_opt,1.0); self.critic_scheduler=torch.optim.lr_scheduler.ConstantLR(self.critic_opt,1.0); self.lstm_scheduler=torch.optim.lr_scheduler.StepLR(self.lstm_opt,1000,.95)
+ def _dist(self,image,state): return IndependentBeta(*self.actor(self.encoder(image,state)))
  def act(self,image,state,central=None,deterministic=False):
-  feat=self.encoder(image,state); alpha,beta=self.actor(feat); dist=torch.distributions.Beta(alpha,beta); a=(alpha/(alpha+beta) if deterministic else dist.rsample()); return a,dist.log_prob(a).sum(-1),self.critic(central) if central is not None else None
+  dist=self._dist(image,state); a=dist.base_dist.mean if deterministic else dist.rsample(); lp=dist.log_prob(a); v=self.critic(self.critic_encoder(central)) if central is not None else None; return a,lp,v
+ @staticmethod
+ def action_to_velocity(action,quat,max_speed=.8):
+  angle=torch.pi*(1-2*action[...,0]); length=.9+.1*action[...,1]; body=torch.stack((length*torch.cos(angle)*max_speed,length*torch.sin(angle)*max_speed,torch.zeros_like(length)),-1); q=quat/torch.linalg.vector_norm(quat,dim=-1,keepdim=True).clamp_min(1e-9); w,x,y,z=q.unbind(-1); yaw=torch.atan2(2*(w*z+x*y),1-2*(y*y+z*z)); c=torch.cos(yaw); s=torch.sin(yaw); return torch.stack((c*body[...,0]-s*body[...,1],s*body[...,0]+c*body[...,1],body[...,2]),-1)
+ def update(self,rollout):
+  """One real PPO+LSTM update. Inputs have [T,B,A,...] (A=2)."""
+  image,state,central=rollout['image'].to(self.device),rollout['state'].to(self.device),rollout['central'].to(self.device); action,old_lp=rollout['action'].to(self.device),rollout['log_prob'].to(self.device); reward,done=rollout['reward'].to(self.device),rollout['terminated'].to(self.device); old_v=rollout['value'].to(self.device); next_v=rollout.get('next_value',torch.zeros_like(old_v)).to(self.device)
+  B,T=image.shape[1],image.shape[0]; adv,ret=self.gae(reward.permute(1,0).unsqueeze(-1),done.permute(1,0).unsqueeze(-1),self.value_norm.denormalize(old_v.permute(1,0,2)),self.value_norm.denormalize(next_v.permute(1,0,2))); adv=adv.permute(1,0,2); ret=ret.permute(1,0,2); adv=(adv-adv.mean())/(adv.std()+1e-8); self.value_norm.update(ret.reshape(-1,1)); retn=self.value_norm.normalize(ret)
+  flat_img=image.reshape(T*B*self.num_agents,*image.shape[3:]); flat_state=state.reshape(T*B*self.num_agents,-1); flat_action=action.reshape(T*B*self.num_agents,-1); flat_oldlp=old_lp.reshape(-1); flat_adv=adv[:, :, None].expand(T,B,self.num_agents,1).reshape(-1); flat_c=central.reshape(T*B,-1); returns=retn[:, :, 0].reshape(-1).repeat_interleave(self.num_agents); old_values=old_v.reshape(-1,1).repeat_interleave(self.num_agents,0)
+  dist=self._dist(flat_img,flat_state); lp=dist.log_prob(flat_action); ratio=torch.exp(lp-flat_oldlp); pol=-torch.min(flat_adv*ratio,flat_adv*ratio.clamp(1-self.clip_ratio,1+self.clip_ratio)).mean(); ent=dist.entropy().mean(); newv=self.critic(self.critic_encoder(flat_c)).repeat_interleave(self.num_agents,0); vd=self.value_norm.denormalize(newv); ovd=self.value_norm.denormalize(old_values); clipped=ovd+(vd-ovd).clamp(-self.value_clip_ratio,self.value_clip_ratio); vl=torch.max(F.huber_loss(newv,returns.unsqueeze(-1)),F.huber_loss(self.value_norm.normalize(clipped),returns.unsqueeze(-1))); loss=pol-self.entropy_coef*ent+vl
+  for o in (self.encoder_opt,self.actor_opt,self.critic_encoder_opt,self.critic_opt): o.zero_grad()
+  loss.backward()
+  eg=nn.utils.clip_grad_norm_(self.encoder.parameters(),self.cfg.max_grad_norm); ag=nn.utils.clip_grad_norm_(self.actor.parameters(),self.cfg.max_grad_norm); ceg=nn.utils.clip_grad_norm_(self.critic_encoder.parameters(),self.cfg.max_grad_norm); cg=nn.utils.clip_grad_norm_(self.critic.parameters(),self.cfg.max_grad_norm); self.encoder_opt.step();self.actor_opt.step();self.critic_encoder_opt.step();self.critic_opt.step()
+  sl=torch.tensor(0.,device=self.device); lg=torch.tensor(0.,device=self.device)
+  if 'history' in rollout and 'future' in rollout:
+   h=rollout['history'].to(self.device); f=rollout['future'].to(self.device); mask=rollout.get('history_mask',torch.ones(h.shape[:2],dtype=torch.bool,device=self.device)); dt=rollout.get('agent_dt',torch.full((h.shape[0],1),1/30,device=self.device)); dt=dt.unsqueeze(1) if dt.ndim==2 else dt; dt=dt.expand(-1,h.shape[1],-1); pred=self.lstm(torch.cat((h,dt),-1),mask=mask); f=f.reshape(f.shape[0],-1); sl=F.mse_loss(pred,f); self.lstm_opt.zero_grad(); sl.backward(); lg=nn.utils.clip_grad_norm_(self.lstm.parameters(),self.cfg.lstm_max_grad_norm); self.lstm_opt.step()
+  return {'policy_loss':float(pol.detach()),'value_loss':float(vl.detach()),'entropy':float(ent.detach()),'sl_loss':float(sl.detach()),'encoder_grad_norm':float(eg),'actor_grad_norm':float(ag),'critic_grad_norm':float(cg),'lstm_grad_norm':float(lg)}
+ def step_schedulers(self): self.encoder_scheduler.step();self.actor_scheduler.step();self.critic_encoder_scheduler.step();self.critic_scheduler.step();self.lstm_scheduler.step()
+ def save_state(self,path):
+  Path(path).parent.mkdir(parents=True,exist_ok=True); torch.save({'encoder':self.encoder.state_dict(),'actor':self.actor.state_dict(),'critic_encoder':self.critic_encoder.state_dict(),'critic':self.critic.state_dict(),'lstm':self.lstm.state_dict(),'encoder_opt':self.encoder_opt.state_dict(),'actor_opt':self.actor_opt.state_dict(),'critic_encoder_opt':self.critic_encoder_opt.state_dict(),'critic_opt':self.critic_opt.state_dict(),'lstm_opt':self.lstm_opt.state_dict(),'value_norm':self.value_norm.state_dict()},path)
+ def load_model_weights(self,path,load_optimizers=False):
+  s=torch.load(path,map_location=self.device); self.encoder.load_state_dict(s['encoder']);self.actor.load_state_dict(s['actor']);self.critic_encoder.load_state_dict(s['critic_encoder']);self.critic.load_state_dict(s['critic']);self.lstm.load_state_dict(s['lstm']);self.value_norm.load_state_dict(s['value_norm']);
+  if load_optimizers:
+   for k,o in [('encoder_opt',self.encoder_opt),('actor_opt',self.actor_opt),('critic_encoder_opt',self.critic_encoder_opt),('critic_opt',self.critic_opt),('lstm_opt',self.lstm_opt)]: o.load_state_dict(s[k])
+
+# Explicit alias used by code written against the upstream name.
+MAPPO=PSTOMAPPO
