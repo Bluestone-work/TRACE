@@ -1,0 +1,15 @@
+{
+  "archive": "TRACE_baseline_foundation",
+  "created_from": "/home/wj/桌面/无人机/TRACE_baseline",
+  "created_at": "2026-11-18",
+  "source_git_commit": "not-a-git-worktree",
+  "isaac_sim_runtime": "/home/wj/isaacsim (6.0.1)",
+  "contents": {
+    "trace": "custom 3D occupancy/frontier/MARL code",
+    "navrl6": "Isaac Sim 6.0.1 rotor dynamics, single-agent NavRL and two-drone RGB tracking/forest demo",
+    "marvel": "2D MARVEL baseline source, maps_test and pretrained load_model",
+    "ir2": "communication-constrained multi-robot reference source",
+    "isaaclab": "Isaac Lab source/config snapshot; runtime is external",
+    "results": "compact JSON verification records; large frame sequences remain in original project"
+  }
+}

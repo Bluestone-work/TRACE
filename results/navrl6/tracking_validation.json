@@ -1,0 +1,15 @@
+{
+  "status": "passed",
+  "checks": {
+    "visual_demo_accepted": true,
+    "hidden_marker_not_detected": true,
+    "dropout_demo_accepted": true,
+    "target_seen_before_dropout": true,
+    "dropout_pixels_no_detections": true,
+    "coast_during_dropout": true,
+    "search_during_dropout": true,
+    "reacquired_after_dropout": true,
+    "original_physics_regression": true,
+    "pixel_and_tracker_checks": true
+  }
+}

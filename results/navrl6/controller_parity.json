@@ -1,0 +1,7 @@
+{
+  "status": "passed",
+  "controller_samples": 100,
+  "max_controller_force_error_N": 2.082812835313419e-06,
+  "motor_samples": 100,
+  "max_motor_force_or_moment_error": 6.590936383332746e-07
+}

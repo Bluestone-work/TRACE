@@ -1,0 +1,52 @@
+{
+  "status": "passed",
+  "seed": 7,
+  "speed_limit_A_mps": 2.0,
+  "speed_limit_B_mps": 2.0,
+  "equal_dynamics": true,
+  "A_algorithm": "released NavRL PPO / random goals / mean action",
+  "B_algorithm": "rendered RGB marker / alpha-beta filter / search-track / LiDAR avoidance",
+  "B_privileged_target_state": false,
+  "physics_hz": 240,
+  "policy_hz": 30,
+  "camera_hz": 10,
+  "camera_resolution": [
+    640,
+    360
+  ],
+  "initial_separation_m": 10.0,
+  "frames": 20,
+  "detections": 0,
+  "mode_counts": {
+    "SEARCH": 20
+  },
+  "failures": [],
+  "max_command_speed_A": 1.878127662616342,
+  "max_command_speed_B": 0.0005420275731012226,
+  "peak_actual_speed_A": 1.8792197704315186,
+  "peak_actual_speed_B": 0.0004814649873878807,
+  "scene": "forest",
+  "simulation_seconds": 2.0,
+  "measured_physics_seconds": 2.0000001043081284,
+  "first_acquisition_s": null,
+  "acquisitions": 0,
+  "A_waypoints_reached": 0,
+  "A_goal_history": [
+    [
+      9.0,
+      -1.0,
+      2.0
+    ]
+  ],
+  "final_separation_m": 12.339375495910645,
+  "minimum_separation_m": 10.0,
+  "detection_fraction": 0.0,
+  "median_visual_position_error_m": null,
+  "final_10s_mean_separation_m": 10.918787002563477,
+  "trajectory_log": "/home/wj/\u684c\u9762/\u65e0\u4eba\u673a/TRACE_baseline_foundation/upstream/NavRL/isaac6-training/artifacts/archive_smoke_tracking.jsonl",
+  "acceptance_checks": {
+    "equal_command_limits": true,
+    "no_flight_failures": true,
+    "one_shared_physics_clock": true
+  }
+}

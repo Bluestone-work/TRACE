@@ -1,0 +1,9 @@
+{
+  "dynamics": "rotor",
+  "steps": 360,
+  "reached_goal": 2,
+  "collisions": 0,
+  "failed": 0,
+  "timeouts": 0,
+  "peak_tilt_degrees": 21.017687628560388
+}

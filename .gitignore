@@ -1,0 +1,15 @@
+# Runtime and generated artifacts
+__pycache__/
+*.py[cod]
+*.log
+*.jsonl
+artifacts/
+outputs/
+logs/
+trace_explore_marl/
+upstream/IsaacLab/_isaac_sim/
+upstream/IsaacLab/.vscode/
+# Local experiment checkpoints and generated training outputs
+upstream/MARVEL/model/
+upstream/MARVEL/train/
+upstream/MARVEL/results/

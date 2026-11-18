@@ -1,0 +1,83 @@
+{
+  "status": "passed",
+  "seed": 7,
+  "speed_limit_A_mps": 2.0,
+  "speed_limit_B_mps": 2.0,
+  "equal_dynamics": true,
+  "A_algorithm": "released NavRL PPO / random goals / mean action",
+  "B_algorithm": "rendered RGB marker / alpha-beta filter / search-track / LiDAR avoidance",
+  "B_privileged_target_state": false,
+  "physics_hz": 240,
+  "policy_hz": 30,
+  "camera_hz": 10,
+  "camera_resolution": [
+    640,
+    360
+  ],
+  "initial_separation_m": 10.0,
+  "frames": 200,
+  "detections": 139,
+  "mode_counts": {
+    "SEARCH": 49,
+    "TRACK": 139,
+    "COAST": 12
+  },
+  "failures": [],
+  "max_command_speed_A": 2.0,
+  "max_command_speed_B": 2.0,
+  "peak_actual_speed_A": 1.939346432685852,
+  "peak_actual_speed_B": 2.02606463432312,
+  "scene": "forest",
+  "simulation_seconds": 20.0,
+  "measured_physics_seconds": 20.000001043081284,
+  "first_acquisition_s": 3.3,
+  "acquisitions": 2,
+  "A_waypoints_reached": 5,
+  "A_goal_history": [
+    [
+      9.0,
+      -1.0,
+      2.0
+    ],
+    [
+      6.376431999070004,
+      2.780496606787028,
+      2.475685690245194
+    ],
+    [
+      0.3781078498588779,
+      -1.3988360056214217,
+      2.573553445396262
+    ],
+    [
+      -2.921020431516379,
+      2.248598928679364,
+      2.4970694287520465
+    ],
+    [
+      4.0190242926558115,
+      -1.3787730122648054,
+      1.9784256121007733
+    ],
+    [
+      5.302460281117387,
+      3.468501984040749,
+      2.492661919213753
+    ]
+  ],
+  "final_separation_m": 5.921684265136719,
+  "minimum_separation_m": 2.8213140964508057,
+  "detection_fraction": 0.695,
+  "median_visual_position_error_m": 0.35487965596962556,
+  "final_10s_mean_separation_m": 4.300122063159943,
+  "trajectory_log": "/home/wj/\u684c\u9762/\u65e0\u4eba\u673a/TRACE_baseline/upstream/NavRL/isaac6-training/artifacts/forest_20s_corridor_report.jsonl",
+  "acceptance_checks": {
+    "equal_command_limits": true,
+    "no_flight_failures": true,
+    "one_shared_physics_clock": true,
+    "visual_acquisition": true,
+    "visual_tracking_majority": true,
+    "following_distance": true,
+    "A_random_navigation": true
+  }
+}
