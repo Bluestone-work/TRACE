@@ -17,26 +17,31 @@ def build_global_state_84(positions,quaternions,velocities,angular_velocities,pr
  return out
 class PSTOPursuitEnv:
  def __init__(self,scene=None,max_episode_steps=280,seed=4348,with_lidar=True):
-  self.scene=scene or PSTOPursuitScene(); self.max_episode_steps=max_episode_steps; self.with_lidar=with_lidar; self.lidar_adapter=PSTOLidarAdapter(); self.rng=np.random.default_rng(seed); self.step_count=0; self.prev_actions=np.zeros((3,3),np.float32); self.observed_evader_history=[]; self.ground_truth_evader_history=[]; self.policy_lstm=None; self.last_lidar=np.zeros((2,24,480),np.float32); self.last_lidar_down=np.zeros((2,6,120),np.float32); self.last_evader_lidar=np.zeros((24,480),np.float32)
+  self.scene=scene or PSTOPursuitScene(); self.max_episode_steps=max_episode_steps; self.with_lidar=with_lidar; self.lidar_adapter=PSTOLidarAdapter(); self.rng=np.random.default_rng(seed); self.step_count=0; self.prev_actions=np.zeros((3,3),np.float32); self.observed_evader_history=[]; self.observed_evader_times=[]; self.ground_truth_evader_history=[]; self.policy_lstm=None; self.last_lidar=np.zeros((2,24,480),np.float32); self.last_lidar_down=np.zeros((2,6,120),np.float32); self.last_evader_lidar=np.zeros((24,480),np.float32)
  def set_policy_lstm(self,module): self.policy_lstm=module
- def reset(self): self.step_count=0; self.prev_actions.fill(0); self.observed_evader_history=[]; self.ground_truth_evader_history=[]; self.scene.reset(); return self.observe()
+ def reset(self): self.step_count=0; self.prev_actions.fill(0); self.observed_evader_history=[]; self.observed_evader_times=[]; self.ground_truth_evader_history=[]; self.scene.reset(); return self.observe()
  def _root(self):
   p=np.stack([v.position for v in self.scene.vehicles]); q=np.stack([v.orientation for v in self.scene.vehicles]); v=np.stack([v.velocity for v in self.scene.vehicles]); w=np.stack([v.angular_velocity for v in self.scene.vehicles]); return p,q,v,w
  def _central(self,p,q,v,w,down):
   return build_global_state_84(p,q,v,w,self.prev_actions,down)
  def _visibility(self,p,q,scans): return np.asarray([target_visible(p[i],q[i],p[2],scans[i],max_distance=15.) for i in range(2)],dtype=bool)
  def _history_tensors(self):
-  n=len(self.observed_evader_history); h=np.zeros((10,3),np.float32); mask=np.zeros(10,dtype=bool)
-  if n: h[:min(n,10)]=np.asarray(self.observed_evader_history[-10:],np.float32)[-10:]; mask[:min(n,10)]=True
-  return torch.as_tensor(h),torch.as_tensor(mask)
+  """Pack only real target observations and retain their elapsed intervals."""
+  n=min(len(self.observed_evader_history),10); h=np.zeros((10,3),np.float32); mask=np.zeros(10,dtype=bool); dt=np.zeros((10,1),np.float32)
+  if n:
+   h[:n]=np.asarray(self.observed_evader_history[-n:],np.float32); mask[:n]=True
+   times=np.asarray(self.observed_evader_times[-n:],np.float32); intervals=np.full(n,1.,np.float32) if n==1 else np.r_[np.diff(times),max(float(getattr(self,'step_count',times[-1]))-times[-1],1.)]; dt[:n,0]=intervals/30.
+  return torch.as_tensor(h),torch.as_tensor(mask),torch.as_tensor(dt)
  def observe(self):
   p,q,v,w=self._root(); scans=np.stack([drone._raycast_lidar() if self.with_lidar else np.zeros((24,480),np.float32) for drone in self.scene.vehicles[:2]]); ev_scan=self.scene.vehicles[2]._raycast_lidar() if self.with_lidar else np.zeros((24,480),np.float32); self.last_lidar=scans; self.last_evader_lidar=ev_scan; vis=self._visibility(p,q,scans)
   self.ground_truth_evader_history.append(p[2].copy()); self.ground_truth_evader_history=self.ground_truth_evader_history[-20:]
-  self.observed_evader_history.append(p[2].copy() if vis.any() else (self.observed_evader_history[-1].copy() if self.observed_evader_history else np.zeros(3,np.float32))); self.observed_evader_history=self.observed_evader_history[-10:]
-  h,mask=self._history_tensors()
+  if vis.any():
+   self.observed_evader_history.append(p[2].copy()); self.observed_evader_times.append(float(self.step_count))
+   self.observed_evader_history=self.observed_evader_history[-10:]; self.observed_evader_times=self.observed_evader_times[-10:]
+  h,mask,h_dt=self._history_tensors()
   if self.policy_lstm is not None and mask.any():
    lstm_device=next(self.policy_lstm.parameters()).device
-   with torch.no_grad(): pred=self.policy_lstm(torch.cat((h[None].to(lstm_device),torch.full((1,10,1),1/30.,device=lstm_device)), -1),mask=mask[None].to(lstm_device)).view(1,10,3)[0].cpu().numpy()
+   with torch.no_grad(): pred=self.policy_lstm(torch.cat((h[None].to(lstm_device),h_dt[None].to(lstm_device)), -1),mask=mask[None].to(lstm_device)).view(1,10,3)[0].cpu().numpy()
   else: pred=np.repeat(h[-1].numpy()[None],10,axis=0)
   down=self.lidar_adapter.downsample(torch.as_tensor(scans)); self.last_lidar_down=down.numpy(); obs_states=[]; heat=[]
   for i in range(2):
@@ -52,7 +57,8 @@ class PSTOPursuitEnv:
    sl_h=np.asarray(self.ground_truth_evader_history[-20:-10],np.float32); sl_f=np.asarray(self.ground_truth_evader_history[-10:],np.float32); sl_m=np.ones(10,dtype=bool)
   else:
    sl_h=np.zeros((10,3),np.float32); sl_f=np.zeros((10,3),np.float32); sl_m=np.zeros(10,dtype=bool)
-  return {'fused_image':fused,'state':np.asarray(obs_states,np.float32),'central_state':central,'visibility':vis.astype(np.float32),'history':h.numpy(),'history_mask':mask,'future_ground_truth':sl_f,'lstm_history':sl_h,'lstm_history_mask':sl_m,'lstm_target_available':bool(sl_m.any())}
+  sl_dt=np.full((10,1),1/30.,np.float32)
+  return {'fused_image':fused,'state':np.asarray(obs_states,np.float32),'central_state':central,'visibility':vis.astype(np.float32),'history':h.numpy(),'history_mask':mask.numpy(),'history_dt':h_dt.numpy(),'future_ground_truth':sl_f,'lstm_history':sl_h,'lstm_history_mask':sl_m,'lstm_history_dt':sl_dt,'lstm_target_available':bool(sl_m.any())}
  def step(self,actions,actions_are_normalized=True):
   actions=np.asarray(actions,np.float32)
   if actions_are_normalized:

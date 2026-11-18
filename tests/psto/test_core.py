@@ -85,3 +85,8 @@ def test_lstm_right_padded_mask_uses_last_valid_position():
  from trace.pursuit.trajectory_prediction import TrajectoryPredictor
  m=TrajectoryPredictor(4,8,6); x=torch.zeros(1,10,4); x[0,:3,:3]=torch.tensor([[1.,0,0],[2.,0,0],[3.,0,0]]); mask=torch.tensor([[True,True,True,False,False,False,False,False,False,False]])
  y=m(x,mask=mask); assert y.shape==(1,6) and torch.isfinite(y).all()
+
+def test_observation_history_does_not_fill_occlusions_and_keeps_dt():
+ from trace.pursuit.env import PSTOPursuitEnv
+ e=PSTOPursuitEnv.__new__(PSTOPursuitEnv); e.step_count=6; e.observed_evader_history=[np.array([1.,0.,2.]),np.array([2.,0.,2.])]; e.observed_evader_times=[0.,3.]
+ h,m,dt=e._history_tensors(); assert m[:2].all() and not m[2:].any(); assert np.allclose(h[1].numpy(),[2.,0.,2.]); assert np.allclose(dt[:2].numpy().ravel(),[3/30.,3/30.])

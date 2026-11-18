@@ -7,6 +7,7 @@
 - `trace/pursuit/algorithm/mappo.py` now runs configured PPO epochs and shuffled minibatches, with GAE, value normalization/clipping, independent optimizers, schedulers, supervised LSTM updates, and scheduler/optimizer checkpoint state.
 - `scripts/train_psto.py` is a real physical rollout/update/checkpoint entry point (`num_envs=1` currently). `scripts/eval_psto.py` performs gradient-free physical evaluation and writes the requested metrics.
 - Rollout collection now evaluates the critic on every nonterminal next observation and passes the resulting per-step `next_value` to GAE; terminal transitions receive zero bootstrap. Both train and eval connect `policy.lstm` through `env.set_policy_lstm()` before reset. The evader now converts its own physical LiDAR hits to world points and passes them to the official obstacle-repulsion policy.
+- Observation history now contains only actually visible target samples. During occlusion no duplicate or zero position is appended; `history_mask` marks valid entries and `history_dt` records elapsed time between observations. Evaluation reports separate teacher-forced and observation-only ADE/FDE values.
 
 ## Commands and observed results
 
@@ -39,6 +40,8 @@ Result: `pass`; one real rollout/update, finite policy/value/LSTM losses and non
 After the next-value/LSTM/evader fixes, a 20-frame real Isaac Sim rollout completed with one PPO update (`policy_loss=0.0255`, `value_loss=2.7385`, `sl_loss=0.0122`, finite gradients). The nonzero supervised loss confirms that delayed LSTM labels are being used while the environment prediction path is active.
 
 The physical evaluation entry point was launched against this checkpoint with one episode and two steps. It returned `pass`, visibility ratio `0.5`, episode reward `0.6681`, and no capture/escape/collision; the result is in `results/psto_eval/smoke.json`. This is an entry-point smoke evaluation, not a trained-policy claim.
+
+With the new split metrics, a 20-step physical evaluation produced teacher-forced ADE/FDE `0.1792/0.3215 m` and observation-only ADE/FDE `0.2102/0.1912 m`. The latter uses only `history`, `history_mask`, and `history_dt` as predictor input; ground truth is used only as the evaluation target.
 
 ## Remaining limitations
 

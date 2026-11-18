@@ -1,0 +1,31 @@
+{
+  "status": "pass",
+  "episodes": 1,
+  "capture_success_rate": 0.0,
+  "average_capture_time_s": null,
+  "escape_rate": 0.0,
+  "collision_rate": 0.0,
+  "target_visibility_ratio": 0.5,
+  "reacquisition_time_s": null,
+  "teacher_forced_ade": 0.1792147159576416,
+  "teacher_forced_fde": 0.3214866518974304,
+  "observation_only_ade": 0.21020236611366272,
+  "observation_only_fde": 0.19115079939365387,
+  "episode_reward": 9.120149493217468,
+  "episodes_detail": [
+    {
+      "episode": 0,
+      "steps": 20,
+      "reward": 9.120149493217468,
+      "capture": false,
+      "escaped": false,
+      "collision": false,
+      "visibility_ratio": 0.5,
+      "reacquisition_time_s": null,
+      "teacher_forced_ade": 0.1792147159576416,
+      "teacher_forced_fde": 0.3214866518974304,
+      "observation_only_ade": 0.21020236611366272,
+      "observation_only_fde": 0.19115079939365387
+    }
+  ]
+}
