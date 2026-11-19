@@ -1,0 +1,2 @@
+episode,seed,steps,reward,capture,escaped,collision,timeout,terminated,truncated,visibility_ratio,reacquisition_time_steps
+0,4348,1,-0.5887569189071655,False,False,False,True,False,True,0.0,

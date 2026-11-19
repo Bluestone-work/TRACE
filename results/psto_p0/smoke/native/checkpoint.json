@@ -1,0 +1,43 @@
+{
+  "experiment_name": "trace_native",
+  "config": "/home/wj/\u684c\u9762/\u65e0\u4eba\u673a/TRACE_baseline_foundation/configs/psto/trace_native.yaml",
+  "seed": 4348,
+  "git_sha": "f0304db8d0228731e36c87faf247d72bfd65bbde",
+  "physics_dt": 0.004166666666666667,
+  "policy_hz": 30.0,
+  "policy_dt": 0.03333333333333333,
+  "episode_duration": 9.333333333333334,
+  "max_episode_steps": 280,
+  "frame_skip": 8,
+  "num_envs": 1,
+  "total_frames": 1,
+  "rollout_steps": 1,
+  "ppo_epochs": 1,
+  "num_minibatches": 1,
+  "python": "3.12.13 (tags/v3.12.13-dirty:3bb231a, Apr 22 2026, 14:10:08) [GCC 11.4.0]",
+  "platform": "Linux-7.0.0-31-generic-x86_64-with-glibc2.39",
+  "torch": "2.11.0+cu128",
+  "cuda": "12.8",
+  "cuda_seeded": true,
+  "isaac_sim_version": "110.1.2+production.326809.f9bf0dda.gl",
+  "status": "pass",
+  "frames": 1,
+  "updates": 1,
+  "terminated_steps": 0,
+  "truncated_steps": 0,
+  "checkpoint": "results/psto_p0/smoke/native/checkpoint.pt",
+  "logs": [
+    {
+      "frames": 1,
+      "update": 1,
+      "policy_loss": 0.0,
+      "value_loss": 0.2795426845550537,
+      "entropy": -0.1277337223291397,
+      "sl_loss": 0.0,
+      "encoder_grad_norm": 0.04367833212018013,
+      "actor_grad_norm": 0.011965903453528881,
+      "critic_grad_norm": 7.527157783508301,
+      "lstm_grad_norm": 0.0
+    }
+  ]
+}

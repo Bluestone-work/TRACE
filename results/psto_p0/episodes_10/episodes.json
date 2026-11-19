@@ -1,0 +1,16 @@
+{
+  "status": "pass",
+  "episodes_requested": 10,
+  "episodes_completed": 10,
+  "steps_per_episode_limit": 280,
+  "policy_hz": 30.0,
+  "episode_duration_s": 9.333333333333334,
+  "failures": [],
+  "episodes_csv": "results/psto_p0/episodes_10/episodes.csv",
+  "trajectories_csv": "results/psto_p0/episodes_10/trajectories.csv",
+  "capture_count": 0,
+  "escape_count": 0,
+  "collision_count": 10,
+  "timeout_count": 0,
+  "mean_steps": 64.3
+}

@@ -1,0 +1,16 @@
+{
+  "status": "pass",
+  "episodes_requested": 1,
+  "episodes_completed": 1,
+  "steps_per_episode_limit": 1,
+  "policy_hz": 30.0,
+  "episode_duration_s": 0.03333333333333333,
+  "failures": [],
+  "episodes_csv": "results/psto_p0/seed_contract/episodes.csv",
+  "trajectories_csv": "results/psto_p0/seed_contract/trajectories.csv",
+  "capture_count": 0,
+  "escape_count": 0,
+  "collision_count": 0,
+  "timeout_count": 1,
+  "mean_steps": 1.0
+}

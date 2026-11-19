@@ -1,0 +1,35 @@
+{
+  "status": "pass",
+  "config": "/home/wj/\u684c\u9762/\u65e0\u4eba\u673a/TRACE_baseline_foundation/configs/psto/trace_native.yaml",
+  "git_sha": "8d0c4362a938416955fa8e6f4c0a38d577862d35",
+  "seed": 100,
+  "episodes": 1,
+  "capture_success_rate": 0.0,
+  "average_capture_time_s": null,
+  "escape_rate": 0.0,
+  "collision_rate": 0.0,
+  "target_visibility_ratio": 0.5,
+  "reacquisition_time_s": null,
+  "teacher_forced_ade": null,
+  "teacher_forced_fde": null,
+  "observation_only_ade": null,
+  "observation_only_fde": null,
+  "episode_reward": 0.14631249010562897,
+  "episodes_detail": [
+    {
+      "episode": 0,
+      "seed": 100,
+      "steps": 2,
+      "reward": 0.14631249010562897,
+      "capture": false,
+      "escaped": false,
+      "collision": false,
+      "visibility_ratio": 0.5,
+      "reacquisition_time_s": null,
+      "teacher_forced_ade": null,
+      "teacher_forced_fde": null,
+      "observation_only_ade": null,
+      "observation_only_fde": null
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "status": "pass",
+  "steps": 1,
+  "requested_steps": 1,
+  "seed": 4348,
+  "raw_lidar_shape": [
+    24,
+    480
+  ],
+  "downsampled_shape": [
+    6,
+    120
+  ],
+  "failures": [],
+  "semantic_note": "raw proximity = range - hit_distance; zero means no hit",
+  "csv": "results/psto_p0/lidar_profile_cached/lidar_profile.csv",
+  "mean_scan_s": 2.5192974135279655e-05,
+  "mean_observe_s": 0.003561716992408037,
+  "mean_env_step_s": 0.17741687200032175,
+  "mean_env_step_fps": 5.63644251375476
+}

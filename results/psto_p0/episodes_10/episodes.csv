@@ -1,0 +1,11 @@
+episode,seed,steps,reward,capture,escaped,collision,timeout,terminated,truncated,visibility_ratio,reacquisition_time_steps
+0,4348,55,-925.5740920044482,False,False,True,False,True,False,0.6545454545454545,
+1,4349,64,-963.6251332014799,False,False,True,False,True,False,0.5,
+2,4350,60,-936.097682878375,False,False,True,False,True,False,0.5,
+3,4351,57,-946.2705835476518,False,False,True,False,True,False,0.5,
+4,4352,76,-936.0387264713645,False,False,True,False,True,False,0.5,
+5,4353,60,-939.3097850307822,False,False,True,False,True,False,0.5,
+6,4354,74,-942.4027219861746,False,False,True,False,True,False,0.5,
+7,4355,67,-944.6344393640757,False,False,True,False,True,False,0.5223880597014925,
+8,4356,59,-962.8218461424112,False,False,True,False,True,False,0.5,
+9,4357,71,-948.4961027726531,False,False,True,False,True,False,0.5,

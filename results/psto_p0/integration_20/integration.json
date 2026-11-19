@@ -1,0 +1,10 @@
+{
+  "status": "pass",
+  "steps_requested": 20,
+  "steps_completed": 20,
+  "failures": [],
+  "no_future_label_to_actor": true,
+  "central_state_dim": 84,
+  "actor_action_dim": 2,
+  "csv": "results/psto_p0/integration_20/integration.csv"
+}

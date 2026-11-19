@@ -1,0 +1,9 @@
+{
+  "status": "pass",
+  "physics_dt": 0.004166666666666667,
+  "policy_dt": 0.03333333333333333,
+  "hover_seconds": 10.0,
+  "independent_seconds": 30.0,
+  "failures": [],
+  "csv": "results/psto_p0/physics_long/physics.csv"
+}
