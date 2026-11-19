@@ -114,7 +114,7 @@ MAPPO 控制器也已实际接入脚本：
 
 轨迹预览 GIF 已保存为 `results/psto_p0/episodes_10_collision_audit/psto_episode0.gif` 和 `results/psto_p0/mappo_episode_smoke/psto_mappo_smoke.gif`。这是由真实 PhysX 状态 CSV 生成的俯视/高度轨迹动画，不代表 Isaac Sim 相机渲染质量。
 
-真实 Isaac Sim RTX 相机录制也已通过：`scripts/record_psto_render.py --headless --steps 30 --resolution 1280 720` 生成 `results/psto_p0/isaac_render/psto_close.gif`。该 GIF 直接来自 Isaac Sim Replicator RGB，画面中的 Hummingbird 为真实 USD articulation，物理推进仍使用 240 Hz PhysX/30 Hz policy；录制控制器是便于观察的短时速度控制器，不用于 MAPPO 性能结论。
+真实 Isaac Sim RTX 相机录制也已通过：`scripts/record_psto_render.py --headless --steps 30 --resolution 1280 720` 生成 `results/psto_p0/isaac_render/psto_close.gif`（30 个策略步即 1 秒仿真时间）。长录制使用 `--steps 180`，即 6 秒仿真时间，结果见 `results/psto_p0/isaac_render/psto_long.gif` 和同名 JSON。GIF 直接来自 Isaac Sim Replicator RGB，画面中的 Hummingbird 为真实 USD articulation，物理推进仍使用 240 Hz PhysX/30 Hz policy；录制控制器是便于观察的短时速度控制器，不用于 MAPPO 性能结论，录制结束原因是固定步数上限。
 
 ## 尚未完成
 

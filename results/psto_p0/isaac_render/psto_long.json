@@ -1,0 +1,12 @@
+{
+  "status": "pass",
+  "frames": 180,
+  "policy_hz": 30.0,
+  "sim_duration_s": 6.0,
+  "playback_fps": 10,
+  "playback_duration_s": 18.0,
+  "controller": "visual_velocity_playback",
+  "termination": "fixed_step_limit",
+  "isaac_sim_render": true,
+  "gif": "results/psto_p0/isaac_render/psto_long.gif"
+}

@@ -12,6 +12,7 @@ Run with Isaac Sim 6.0.1, for example:
         --headless --steps 60 --out results/psto_p0/isaac_render/psto_demo
 """
 import argparse
+import json
 import os
 from pathlib import Path
 
@@ -53,7 +54,7 @@ def _visual_commands(positions, step):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--steps", type=int, default=60)
+    parser.add_argument("--steps", type=int, default=180, help="policy steps; at 30 Hz, 180 steps = 6 s")
     parser.add_argument("--fps", type=int, default=10)
     parser.add_argument("--seed", type=int, default=4348)
     parser.add_argument("--out", default="results/psto_p0/isaac_render/psto_demo")
@@ -118,7 +119,24 @@ def main():
             print(f"[{step + 1}/{args.steps}] rendered", flush=True)
         gif_path = out.with_suffix(".gif")
         imageio.mimsave(gif_path, frames, duration=1.0 / max(args.fps, 1), loop=0)
-        print(f"[OK] Isaac Sim render GIF: {gif_path} ({gif_path.stat().st_size / 1e6:.2f} MB)", flush=True)
+        metadata = {
+            "status": "pass",
+            "frames": int(args.steps),
+            "policy_hz": 30.0,
+            "sim_duration_s": float(args.steps / 30.0),
+            "playback_fps": int(args.fps),
+            "playback_duration_s": float(args.steps / max(args.fps, 1)),
+            "controller": "visual_velocity_playback",
+            "termination": "fixed_step_limit",
+            "isaac_sim_render": True,
+            "gif": str(gif_path),
+        }
+        out.with_suffix(".json").write_text(json.dumps(metadata, indent=2), encoding="utf-8")
+        print(
+            f"[OK] Isaac Sim render GIF: {gif_path} ({gif_path.stat().st_size / 1e6:.2f} MB); "
+            f"sim_time={args.steps / 30.0:.2f}s, playback_time={args.steps / max(args.fps, 1):.2f}s",
+            flush=True,
+        )
         print(f"[OK] first/last PNG frames: {frame_dir}", flush=True)
     finally:
         if annotator is not None and product is not None:
