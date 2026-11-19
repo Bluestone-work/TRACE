@@ -39,8 +39,17 @@ def test_real_parameter_update_and_checkpoint(tmp_path):
  for t in range(T):
   aa,ll,vv=p.act(image[t,0],state[t,0],central[t,0]); acts.append(aa); lps.append(ll); vals.append(vv)
  rollout={'image':image,'state':state,'central':central,'action':torch.stack(acts)[:,None],'log_prob':torch.stack(lps)[:,None],'value':torch.stack(vals)[:,None].detach(),'next_value':torch.zeros(T,B,1),'reward':torch.ones(T,B),'terminated':torch.zeros(T,B),'history':torch.rand(4,10,3),'future':torch.rand(4,10,3),'history_mask':torch.ones(4,10,dtype=torch.bool),'agent_dt':torch.full((4,1),1/30.)}
- before={k:v.detach().clone() for k,v in p.actor.state_dict().items()}; log=p.update(rollout); assert all(torch.isfinite(torch.tensor(v)) for v in log.values()); assert any(not torch.equal(before[k],v) for k,v in p.actor.state_dict().items()); p.step_schedulers(); ck=tmp_path/'p.pt'; p.save_state(ck); q=PSTOMAPPO(config=MAPPOConfig(training_epoch_num=1)); q.load_model_weights(ck,load_optimizers=True)
+ before={k:v.detach().clone() for k,v in p.actor.state_dict().items()}; log=p.update(rollout); assert all(torch.isfinite(torch.tensor(v)) for v in log.values() if not isinstance(v,int)); assert any(not torch.equal(before[k],v) for k,v in p.actor.state_dict().items()); p.step_schedulers(); ck=tmp_path/'p.pt'; p.save_state(ck,progress={'frames':7,'updates':2}); q=PSTOMAPPO(config=MAPPOConfig(training_epoch_num=1)); progress=q.load_model_weights(ck,load_optimizers=True,restore_rng=True); assert progress['frames']==7 and progress['updates']==2
  for k,v in p.actor.state_dict().items(): assert torch.equal(v,q.actor.state_dict()[k])
+ payload=torch.load(ck,map_location='cpu',weights_only=False); assert isinstance(payload['numpy_rng_state'],dict); assert isinstance(payload['numpy_rng_state']['state'],list)
+
+def test_lstm_frequency_counts_minibatches():
+ torch.manual_seed(4); p=PSTOMAPPO(config=MAPPOConfig(training_epoch_num=4,num_minibatches=2,lstm_update_frequency=3)); T,B,A=2,1,2
+ image=torch.rand(T,B,A,2,6,120); state=torch.rand(T,B,A,13); central=torch.rand(T,B,84); acts=[]; lps=[]; vals=[]
+ for t in range(T):
+  aa,ll,vv=p.act(image[t,0],state[t,0],central[t,0]); acts.append(aa); lps.append(ll); vals.append(vv)
+ rollout={'image':image,'state':state,'central':central,'action':torch.stack(acts)[:,None].detach(),'log_prob':torch.stack(lps)[:,None].detach(),'value':torch.stack(vals)[:,None].detach(),'next_value':torch.zeros(T,B,1),'reward':torch.ones(T,B),'terminated':torch.zeros(T,B),'history':torch.rand(T,10,3),'future':torch.rand(T,10,3),'history_mask':torch.ones(T,10,dtype=torch.bool),'agent_dt':torch.full((T,1),1/30.),'supervised_valid':torch.ones(T,dtype=torch.bool)}
+ log=p.update(rollout); assert log['minibatches']==8 and log['lstm_updates']==3
 
 
 def test_heatmap_visibility_gate_and_no_future_actor_input():

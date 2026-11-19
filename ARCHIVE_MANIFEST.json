@@ -10,6 +10,7 @@
     "marvel": "2D MARVEL baseline source, maps_test and pretrained load_model",
     "ir2": "communication-constrained multi-robot reference source",
     "isaaclab": "Isaac Lab source/config snapshot; runtime is external",
-    "results": "compact JSON verification records; large frame sequences remain in original project"
+    "results": "compact JSON verification records; PSTO P0 CSV/JSON/screenshots are under results/psto_p0; large frame sequences remain in original project",
+    "psto": "PSTO-AAV-Pursuit PhysX adapter, MAPPO/LSTM training and acceptance artifacts"
   }
 }

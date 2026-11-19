@@ -79,6 +79,9 @@ PYTHONPATH=$PWD conda run --no-capture-output -n trace_isaac pytest -q tests/pst
 ```
 
 The physical scene uses three Hummingbird articulations in one 240 Hz PhysX World. The
-existing NavRL baseline is unchanged. Training is enabled only after the physical rollout
-storage and checkpoint path are validated; the current entry point refuses to report
-fabricated training metrics.
+existing NavRL baseline is unchanged. `scripts/train_psto.py` performs real MAPPO rollout,
+PPO/LSTM updates, checkpoint save/resume and metadata recording; use
+`docs/PSTO_P0_ACCEPTANCE_REPORT.md` for the current evidence. The fixed-action episode
+script is an environment safety check only. To evaluate a learned policy, pass
+`--controller mappo --checkpoint <path>` to `scripts/test_psto_episodes.py` or use
+`scripts/eval_psto.py`.

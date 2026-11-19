@@ -115,13 +115,18 @@ def main():
         except Exception:
             metadata["isaac_sim_version"] = "unavailable"
         print(json.dumps(metadata, indent=2), flush=True)
+        resume_progress = {}
         if args.resume:
             if not checkpoint.exists():
                 raise FileNotFoundError(f"checkpoint not found: {checkpoint}")
-            policy.load_model_weights(checkpoint, load_optimizers=True)
+            resume_progress = policy.load_model_weights(checkpoint, load_optimizers=True, restore_rng=True)
+            if resume_progress.get("env_state") is not None:
+                env.load_state_dict(resume_progress["env_state"])
 
-        obs = env.reset()
-        frames = updates = terminated_count = truncated_count = 0
+        obs = env.observe() if args.resume and resume_progress.get("env_state") is not None else env.reset()
+        frames = int(resume_progress.get("frames", 0)) if args.resume else 0
+        updates = int(resume_progress.get("updates", policy._update_count)) if args.resume else 0
+        terminated_count = truncated_count = 0
         logs = []
         while frames < total_frames:
             images, states, centrals, actions = [], [], [], []
@@ -160,12 +165,11 @@ def main():
                 "terminated": torch.tensor(terminateds, dtype=torch.float32)[:, None],
                 "episode_end": torch.tensor(episode_ends, dtype=torch.float32)[:, None],
                 "next_value": torch.stack(next_values)[:, None]}
-            if any(supervised_valid):
-                keep = torch.as_tensor(supervised_valid, dtype=torch.bool)
-                rollout.update({"history": torch.stack(histories)[keep], "future": torch.stack(futures)[keep],
-                    "history_mask": torch.stack(masks)[keep], "agent_dt": torch.stack(dts)[keep]})
+            rollout.update({"history": torch.stack(histories), "future": torch.stack(futures),
+                "history_mask": torch.stack(masks), "agent_dt": torch.stack(dts),
+                "supervised_valid": torch.as_tensor(supervised_valid, dtype=torch.bool)})
             log = policy.update(rollout); policy.step_schedulers(); updates += 1
-            logs.append({"frames": frames, "update": updates, **log}); policy.save_state(checkpoint)
+            logs.append({"frames": frames, "update": updates, **log}); policy.save_state(checkpoint, progress={"frames":frames,"updates":updates,"env_state":env.state_dict()})
             print(json.dumps(logs[-1]), flush=True)
         result = {**metadata, "status": "pass", "frames": frames, "updates": updates,
             "terminated_steps": terminated_count, "truncated_steps": truncated_count,

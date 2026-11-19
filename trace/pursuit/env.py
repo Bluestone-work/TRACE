@@ -28,6 +28,27 @@ class PSTOPursuitEnv:
   p=np.stack([v.position for v in self.scene.vehicles]); q=np.stack([v.orientation for v in self.scene.vehicles]); v=np.stack([v.velocity for v in self.scene.vehicles]); w=np.stack([v.angular_velocity for v in self.scene.vehicles]); return p,q,v,w
  def _central(self,p,q,v,w,down):
   return build_global_state_84(p,q,v,w,self.prev_actions,down)
+ def _collision_flags(self,p):
+  """Classify geometric contacts for diagnostics and reward termination.
+
+  The LiDAR proximity threshold alone cannot distinguish a pursuer-pursuer hit
+  from a vehicle-obstacle hit.  Use the PhysX poses and the known obstacle AABBs
+  as a deterministic contact fallback, while retaining the raw collision classes
+  in ``step`` info for auditing.
+  """
+  p=np.asarray(p,dtype=np.float32)
+  pursuer_pair=bool(np.linalg.norm(p[0]-p[1])<.35)
+  pursuer_evader=bool(np.min(np.linalg.norm(p[:2]-p[2],axis=-1))<.32)
+  obstacle_hits=np.zeros(3,dtype=bool)
+  for center,scale in zip(getattr(self.scene,'obstacle_positions',[]),getattr(self.scene,'obstacle_scales',[])):
+   half=np.asarray(scale,dtype=np.float32)/2.; delta=np.maximum(np.abs(p-np.asarray(center,dtype=np.float32))-half[None,:],0.)
+   obstacle_hits |= np.linalg.norm(delta,axis=-1)<.32
+  pursuer_obstacle=bool(obstacle_hits[:2].any()); evader_obstacle=bool(obstacle_hits[2])
+  return {'pursuer_pursuer':pursuer_pair,'pursuer_evader':pursuer_evader,
+          'pursuer_obstacle':pursuer_obstacle,'evader_obstacle':evader_obstacle,
+          'pursuer_collision':pursuer_pair or pursuer_obstacle,
+          'evader_collision':pursuer_evader or evader_obstacle,
+          'obstacle_collision':pursuer_obstacle or evader_obstacle}
  def _visibility(self,p,q,scans): return np.asarray([target_visible(p[i],q[i],p[2],scans[i],max_distance=15.) for i in range(2)],dtype=bool)
  def _history_tensors(self):
   """Pack only real target observations and retain their elapsed intervals."""
@@ -79,5 +100,26 @@ class PSTOPursuitEnv:
   else:
    if actions.shape!=(2,3): raise ValueError('explicit 3-D commands require actions_are_normalized=False')
    world=actions; body=np.stack([world_to_body(torch.as_tensor(world[i]),torch.as_tensor(q[i])).numpy() for i in range(2)])
-  p,q,v,w=self._root(); evader_hits=self.scene.vehicles[2]._raycast_lidar_hit_points() if self.with_lidar else None; ev_target=evader_policy(torch.as_tensor(p[:2]),torch.as_tensor(p[2]),obstacle_hits=torch.as_tensor(evader_hits) if evader_hits is not None else None).numpy(); self.prev_actions[:2]=body; self.prev_actions[2]=world_to_body(torch.as_tensor(ev_target),torch.as_tensor(q[2])).numpy(); self.scene.step(np.vstack([world,ev_target])); self.step_count+=1; p,q,v,w=self._root(); obs=self.observe(); prox=torch.as_tensor(self.last_lidar_down); ev_collision=bool(np.max(self.last_evader_lidar)>.0 and np.max(self.last_evader_lidar)>10.-.32); reward,captured,escaped,terminated_tensor,terms=official_reward(torch.as_tensor(p[:2]),torch.as_tensor(v[:2]),torch.as_tensor(p[2]),prox,step=self.step_count,evader_vel=torch.as_tensor(v[2]),evader_collision=torch.tensor(ev_collision),below_bound_altitude=.5); terminated=bool(terminated_tensor.item()); timeout=self.step_count>=self.max_episode_steps; truncated=bool(timeout and not terminated); episode_end=bool(terminated or truncated); return obs,float(reward.item()),episode_end,{'capture':bool(captured.item()),'escaped':bool(escaped.item()),'collision':bool(terms['pursuer_collision'].item() or ev_collision),'timeout':timeout,'terminated':terminated,'truncated':truncated,'episode_end':episode_end,'distance':float(torch.linalg.vector_norm(torch.as_tensor(p[:2])-torch.as_tensor(p[2]),dim=-1).min()),'visibility_ratio':float(np.mean(obs['visibility'])),'reward_terms':{k:float(v.item()) for k,v in terms.items() if torch.is_tensor(v) and v.numel()==1}}
+  p,q,v,w=self._root(); evader_hits=self.scene.vehicles[2]._raycast_lidar_hit_points() if self.with_lidar else None; ev_target=evader_policy(torch.as_tensor(p[:2]),torch.as_tensor(p[2]),obstacle_hits=torch.as_tensor(evader_hits) if evader_hits is not None else None).numpy(); self.prev_actions[:2]=body; self.prev_actions[2]=world_to_body(torch.as_tensor(ev_target),torch.as_tensor(q[2])).numpy(); self.scene.step(np.vstack([world,ev_target])); self.step_count+=1; p,q,v,w=self._root(); obs=self.observe(); prox=torch.as_tensor(self.last_lidar_down); collisions=self._collision_flags(p); reward,captured,escaped,terminated_tensor,terms=official_reward(torch.as_tensor(p[:2]),torch.as_tensor(v[:2]),torch.as_tensor(p[2]),prox,step=self.step_count,evader_vel=torch.as_tensor(v[2]),pursuer_collision=torch.tensor(collisions['pursuer_collision']),evader_collision=torch.tensor(collisions['evader_collision']),below_bound_altitude=.5); terminated=bool(terminated_tensor.item()); timeout=self.step_count>=self.max_episode_steps; truncated=bool(timeout and not terminated); episode_end=bool(terminated or truncated); return obs,float(reward.item()),episode_end,{'capture':bool(captured.item()),'escaped':bool(escaped.item()),'collision':bool(collisions['pursuer_collision'] or collisions['evader_collision']),'pursuer_collision':collisions['pursuer_collision'],'pursuer_pursuer_collision':collisions['pursuer_pursuer'],'pursuer_evader_collision':collisions['pursuer_evader'],'pursuer_obstacle_collision':collisions['pursuer_obstacle'],'evader_collision':collisions['evader_collision'],'evader_obstacle_collision':collisions['evader_obstacle'],'obstacle_collision':collisions['obstacle_collision'],'timeout':timeout,'terminated':terminated,'truncated':truncated,'episode_end':episode_end,'distance':float(torch.linalg.vector_norm(torch.as_tensor(p[:2])-torch.as_tensor(p[2]),dim=-1).min()),'visibility_ratio':float(np.mean(obs['visibility'])),'reward_terms':{k:float(v.item()) for k,v in terms.items() if torch.is_tensor(v) and v.numel()==1}}
  def close(self): self.scene.close()
+ def state_dict(self):
+  p,q,v,w=self._root()
+  return {'step_count':int(self.step_count),'episode_index':int(self.episode_index),
+   'seed':int(self.seed),'prev_actions':self.prev_actions.copy(),
+   'positions':p.copy(),'quaternions':q.copy(),'velocities':v.copy(),'angular_velocities':w.copy(),
+   'rotor_speeds':[np.asarray(x.actuator.rotor_speeds).copy() for x in self.scene.vehicles],
+   'observed_evader_history':[x.copy() for x in self.observed_evader_history],
+   'observed_evader_times':list(self.observed_evader_times),
+   'ground_truth_evader_history':[x.copy() for x in self.ground_truth_evader_history], 'rng_state':self.rng.bit_generator.state,
+   'obstacle_positions':np.asarray(getattr(self.scene,'obstacle_positions',[]),np.float32).copy()}
+ def load_state_dict(self,state):
+  positions=np.asarray(state['positions'],np.float32); self.scene.reset(positions=positions,randomize=False,randomize_obstacles=False)
+  if state.get('obstacle_positions') is not None:
+   self.scene.obstacle_positions=np.asarray(state['obstacle_positions'],np.float32).copy()
+   for obstacle,op in zip(self.scene.obstacles,self.scene.obstacle_positions): obstacle.set_world_pose(position=op)
+  for vehicle,q,v,w,speeds in zip(self.scene.vehicles,state['quaternions'],state['velocities'],state['angular_velocities'],state['rotor_speeds']):
+   vehicle.drone.set_world_pose(position=vehicle.position,orientation=np.asarray(q,np.float32)); vehicle.drone.set_linear_velocity(np.asarray(v,np.float32)); vehicle.drone.set_angular_velocity(np.asarray(w,np.float32)); vehicle.drone.set_joint_velocities(np.asarray(speeds,np.float32),joint_indices=vehicle.rotor_joint_indices)
+   throttle=np.asarray(speeds,np.float64)/(vehicle.actuator.omega_max*vehicle.actuator.directions)
+   vehicle.actuator.throttle=np.clip(throttle,-1.,1.); vehicle._read_physics_state()
+  self.step_count=int(state['step_count']); self.episode_index=int(state.get('episode_index',0)); self.seed=int(state.get('seed',self.seed)); self.prev_actions=np.asarray(state['prev_actions'],np.float32).copy(); self.observed_evader_history=[np.asarray(x,np.float32).copy() for x in state.get('observed_evader_history',[])]; self.observed_evader_times=list(state.get('observed_evader_times',[])); self.ground_truth_evader_history=[np.asarray(x,np.float32).copy() for x in state.get('ground_truth_evader_history',[])];
+  if state.get('rng_state') is not None: self.rng.bit_generator.state=state['rng_state']

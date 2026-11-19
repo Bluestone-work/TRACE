@@ -72,9 +72,9 @@ class PSTOPursuitScene:
   self.obstacles=[]; self.obstacle_positions=[]; self.obstacle_scales=[]; rng=np.random.default_rng(seed)
   for oi in range(int(num_obstacles)):
    for _ in range(100):
-    op=np.array([rng.uniform(-7.,7.),rng.uniform(-5.5,5.5),1.5],np.float32)
+    op=np.array([rng.uniform(-7.,7.),rng.uniform(-5.5,5.5),0.],np.float32)
     if all(np.linalg.norm(op[:2]-np.asarray(x)[:2])>1.5 for x in positions): break
-   self.obstacle_positions.append(op.copy()); scale=np.array([rng.uniform(.35,.7),rng.uniform(.35,.7),rng.uniform(2.,3.5)],np.float32); self.obstacle_scales.append(scale.copy())
+   scale=np.array([rng.uniform(.35,.7),rng.uniform(.35,.7),rng.uniform(2.,3.5)],np.float32); op[2]=scale[2]/2.; self.obstacle_positions.append(op.copy()); self.obstacle_scales.append(scale.copy())
    obstacle=FixedCuboid(f'/World/Pursuit/Obstacle_{oi}',f'pursuit_obstacle_{oi}',position=op,scale=scale,size=1.,color=np.array([.28,.20,.12])); self.world.scene.add(obstacle); self.obstacles.append(obstacle)
   self.positions=np.asarray(positions,dtype=np.float32); self.initial_positions=self.positions.copy(); self.seed=int(seed); self.randomize_resets=bool(randomize_resets); self.randomize_obstacles=bool(randomize_obstacles); self.rng=np.random.default_rng(self.seed); self.obstacle_layout=[{'seed':self.seed,'positions':[op.tolist() for op in self.obstacle_positions]}]
   self.world.reset()
@@ -91,7 +91,7 @@ class PSTOPursuitScene:
   if do_obstacle_randomize and self.obstacles:
    for obstacle,scale in zip(self.obstacles,self.obstacle_scales):
     for _ in range(100):
-     candidate=np.array([self.rng.uniform(-7.,7.),self.rng.uniform(-5.5,5.5),float(scale[2])],np.float32)
+     candidate=np.array([self.rng.uniform(-7.,7.),self.rng.uniform(-5.5,5.5),float(scale[2])/2.],np.float32)
      if all(np.linalg.norm(candidate[:2]-p[:2])>1.5 for p in self.positions): break
     obstacle.set_world_pose(position=candidate)
     self.obstacle_positions[self.obstacles.index(obstacle)]=candidate

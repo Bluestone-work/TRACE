@@ -28,6 +28,8 @@ def main():
     ap.add_argument("--seed", type=int, default=4348)
     ap.add_argument("--out", default="results/psto_episodes")
     ap.add_argument("--headless", action="store_true")
+    ap.add_argument("--controller", choices=("fixed", "mappo"), default="fixed")
+    ap.add_argument("--checkpoint", help="MAPPO checkpoint; required with --controller mappo")
     args = ap.parse_args()
     out = unique_dir(args.out)
     from isaacsim import SimulationApp
@@ -35,19 +37,33 @@ def main():
     env = None
     episode_rows, trajectory_rows, failures = [], [], []
     try:
+        import torch
         from trace.pursuit.env import PSTOPursuitEnv
         env = PSTOPursuitEnv(max_episode_steps=args.steps, seed=args.seed,
             randomize_resets=True, randomize_obstacles=True)
+        policy = None
+        if args.controller == "mappo":
+            if not args.checkpoint:
+                raise ValueError("--checkpoint is required with --controller mappo")
+            from trace.pursuit.algorithm.mappo import PSTOMAPPO
+            policy = PSTOMAPPO(device="cuda" if torch.cuda.is_available() else "cpu")
+            policy.load_model_weights(args.checkpoint, load_optimizers=False); policy.eval(); env.set_policy_lstm(policy.lstm)
         # Verify the seed contract before collecting episodes: the same seed must
         # reconstruct reset poses, while a different seed must change them.
         env.reset(seed=args.seed)
         same_a = np.stack([v.position for v in env.scene.vehicles]).copy()
         env.reset(seed=args.seed)
         same_b = np.stack([v.position for v in env.scene.vehicles]).copy()
+        layout_a = np.asarray(env.scene.obstacle_positions, np.float32).copy()
+        env.reset(seed=args.seed)
+        layout_b = np.asarray(env.scene.obstacle_positions, np.float32).copy()
         env.reset(seed=args.seed + 1)
         different = np.stack([v.position for v in env.scene.vehicles]).copy()
+        layout_different = np.asarray(env.scene.obstacle_positions, np.float32).copy()
         if not np.allclose(same_a, same_b): failures.append("same_seed_reset_not_reproducible")
+        if not np.allclose(layout_a, layout_b): failures.append("same_seed_obstacle_layout_not_reproducible")
         if np.allclose(same_a, different): failures.append("different_seed_reset_not_randomized")
+        if np.allclose(layout_a, layout_different): failures.append("different_seed_obstacle_layout_not_randomized")
         for episode in range(args.episodes):
             episode_seed = args.seed + episode
             obs = env.reset(seed=episode_seed)
@@ -58,10 +74,18 @@ def main():
             terminal_info = {"capture": False, "escaped": False, "collision": False,
                 "timeout": False, "terminated": False, "truncated": False}
             completed = 0
+            episode_layout = np.asarray(env.scene.obstacle_positions, np.float32).tolist()
             for step in range(args.steps):
                 if not np.isfinite(obs["state"]).all() or not np.isfinite(obs["central_state"]).all():
                     failures.append(f"nonfinite_observation_episode_{episode}_step_{step}")
-                actions = np.full((2, 2), .5, dtype=np.float32)
+                if policy is None:
+                    actions = np.full((2, 2), .5, dtype=np.float32)
+                else:
+                    with torch.no_grad():
+                        action, _, _ = policy.act(torch.as_tensor(obs["fused_image"], device=policy.device),
+                            torch.as_tensor(obs["state"], device=policy.device),
+                            torch.as_tensor(obs["central_state"], device=policy.device), deterministic=True)
+                    actions = action.cpu().numpy()
                 next_obs, reward, done, info = env.step(actions, actions_are_normalized=True)
                 if not np.isfinite(reward):
                     failures.append(f"nonfinite_reward_episode_{episode}_step_{step}")
@@ -90,20 +114,27 @@ def main():
                 "timeout": bool(terminal_info["timeout"]), "terminated": bool(terminal_info["terminated"]),
                 "truncated": bool(terminal_info["truncated"]),
                 "visibility_ratio": float(np.mean(visibility)) if visibility else 0.,
-                "reacquisition_time_steps": float(np.mean(reacquisition_steps)) if reacquisition_steps else None})
-        status = "pass" if not failures and len(episode_rows) == args.episodes else "fail"
+                "reacquisition_time_steps": float(np.mean(reacquisition_steps)) if reacquisition_steps else None,
+                "pursuer_pursuer_collision": bool(terminal_info.get("pursuer_pursuer_collision", False)),
+                "pursuer_evader_collision": bool(terminal_info.get("pursuer_evader_collision", False)),
+                "pursuer_obstacle_collision": bool(terminal_info.get("pursuer_obstacle_collision", False)),
+                "evader_obstacle_collision": bool(terminal_info.get("evader_obstacle_collision", False)),
+                "obstacle_layout": json.dumps(episode_layout)})
+        execution_status = "pass" if not failures and len(episode_rows) == args.episodes else "fail"
     except Exception as exc:
         import traceback
         traceback.print_exc()
         failures.append(f"{type(exc).__name__}: {exc}")
-        status = "blocked"
+        execution_status = "blocked"
     with (out / "episodes.csv").open("w", newline="") as handle:
         fields = episode_rows[0].keys() if episode_rows else ["episode"]
         writer = csv.DictWriter(handle, fieldnames=fields); writer.writeheader(); writer.writerows(episode_rows)
     with (out / "trajectories.csv").open("w", newline="") as handle:
         fields = trajectory_rows[0].keys() if trajectory_rows else ["episode"]
         writer = csv.DictWriter(handle, fieldnames=fields); writer.writeheader(); writer.writerows(trajectory_rows)
-    result = {"status": status, "episodes_requested": args.episodes, "episodes_completed": len(episode_rows),
+    result = {"status": execution_status, "test_scope": "MAPPO policy rollout" if args.controller == "mappo" else "fixed-action environment rollout",
+        "task_performance_status": "evaluated" if args.controller == "mappo" else "not_evaluated",
+        "controller": args.controller, "checkpoint": args.checkpoint, "episodes_requested": args.episodes, "episodes_completed": len(episode_rows),
         "steps_per_episode_limit": args.steps, "policy_hz": 30., "episode_duration_s": args.steps / 30.,
         "failures": failures, "episodes_csv": str(out / "episodes.csv"),
         "trajectories_csv": str(out / "trajectories.csv"),
@@ -117,7 +148,7 @@ def main():
     if env is not None:
         env.close()
     app.close()
-    if status != "pass":
+    if execution_status != "pass":
         raise SystemExit(1)
 
 

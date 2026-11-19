@@ -14,7 +14,11 @@ def official_reward(pursuer_pos,pursuer_vel,evader_pos,obstacle_proximity=None,s
  else:
   prox=obstacle_proximity if obstacle_proximity.ndim==4 else obstacle_proximity.unsqueeze(0); actual=(lidar_range-prox).clamp(min=0.); sensitive=max(obstacle_penalty_sensitive_range,1e-9); scaled=(actual.clamp(max=obstacle_penalty_sensitive_range)/sensitive).clamp(min=1e-6); logs=torch.log(scaled**obstacle_penalty_log_power); logs=torch.where(torch.isposinf(logs),torch.zeros_like(logs),logs); logs=torch.where(torch.isneginf(logs),torch.full_like(logs,-100.),logs); q=torch.quantile(logs.reshape(B,P,-1),obstacle_penalty_quantile,dim=-1); obstacle_penalty=(q+obstacle_penalty_log_offset).mean(-1)
  if pursuer_collision is None: pursuer_collision=(prox.reshape(B,-1).max(-1).values>lidar_range-pursuer_collision_distance)
- else:pursuer_collision=pursuer_collision if pursuer_collision.ndim==1 else pursuer_collision.any(-1)
+ else:
+  pursuer_collision=torch.as_tensor(pursuer_collision,device=pursuer_pos.device).bool()
+  if pursuer_collision.ndim==0 or pursuer_collision.numel()==1: pursuer_collision=pursuer_collision.reshape(1).expand(B)
+  elif pursuer_collision.numel()==B: pursuer_collision=pursuer_collision.reshape(B)
+  else: pursuer_collision=pursuer_collision.reshape(B,-1).any(-1)
  evader_collision=torch.zeros(B,dtype=torch.bool,device=pursuer_pos.device) if evader_collision is None else evader_collision.bool(); evader_collision=evader_collision.reshape(-1).expand(B) if evader_collision.ndim==0 or evader_collision.numel()==1 else evader_collision
  closest=dist.argmin(-1); closest_unit=torch.gather(unit,1,closest[:,None,None].expand(-1,1,3)).squeeze(1); angles=torch.acos(torch.clamp((closest_unit[:,None]*unit).sum(-1),-1.,1.)); formation=angles.mean(-1)/math.pi*2.-.5 if P>1 else torch.zeros(B,device=pursuer_pos.device)
  below=(torch.cat((pursuer_pos[...,2],evader_pos[...,2:3]),-1)<below_bound_altitude).any(-1); time=torch.where(torch.as_tensor(step,device=pursuer_pos.device)>time_penalty_start_step,torch.as_tensor(time_penalty_value,device=pursuer_pos.device),torch.zeros(B,device=pursuer_pos.device)); reward=pursuit_weight*(pursuit+pursuit_offset)+coordination_weight*coordination+captured.float()*capture_bonus+obstacle_weight*obstacle_penalty+formation_weight*formation+time; reward[pursuer_collision]+=pursuer_collision_penalty; reward[evader_collision]+=evader_collision_bonus; reward[escaped]+=escape_penalty; done=captured|pursuer_collision|evader_collision|below|escaped

@@ -6,6 +6,8 @@ optimizers/schedulers, and the supervised LSTM auxiliary loss.
 """
 from dataclasses import dataclass
 from pathlib import Path
+import random
+import numpy as np
 import torch
 from torch import nn
 import torch.nn.functional as F
@@ -73,6 +75,7 @@ class PSTOMAPPO(nn.Module):
   self.lstm=TrajectoryPredictor(4,64,c.sl_future_len*3).to(self.device); self.value_norm=ValueNorm(1).to(self.device)
   self.encoder_opt=torch.optim.AdamW(self.encoder.parameters(),lr=c.encoder_lr,weight_decay=2e-4); self.actor_opt=torch.optim.AdamW(self.actor.parameters(),lr=c.actor_lr,weight_decay=2e-4); self.critic_encoder_opt=torch.optim.AdamW(self.critic_encoder.parameters(),lr=c.critic_lr,weight_decay=1e-4); self.critic_opt=torch.optim.AdamW(self.critic.parameters(),lr=c.critic_lr,weight_decay=1e-4); self.lstm_opt=torch.optim.Adam(self.lstm.parameters(),lr=c.sl_lr)
   self.encoder_scheduler=self._make_scheduler(self.encoder_opt,c); self.actor_scheduler=self._make_scheduler(self.actor_opt,c); self.critic_encoder_scheduler=self._make_scheduler(self.critic_encoder_opt,c); self.critic_scheduler=self._make_scheduler(self.critic_opt,c); self.lstm_scheduler=torch.optim.lr_scheduler.StepLR(self.lstm_opt,1000,.95)
+  self._update_count=0; self._lstm_train_counter=0
  def _make_scheduler(self,opt,c):
   warmup=max(int(c.warmup_steps),0); total=max(int(c.scheduler_steps),warmup+1)
   def rate(step):
@@ -136,7 +139,19 @@ class PSTOMAPPO(nn.Module):
   flat_action=action.reshape(N,self.num_agents,-1); flat_old_lp=old_lp.reshape(N,self.num_agents)
   flat_adv=adv.reshape(N,1).expand(N,self.num_agents); flat_ret=ret_norm.reshape(N,1)
   flat_old_v=old_v.reshape(N,1); flat_c=central.reshape(N,-1)
-  logs=[]; last_sl=torch.tensor(0.,device=self.device); last_lg=torch.tensor(0.,device=self.device); self._last_lstm_update=False
+  logs=[]; last_sl=torch.tensor(0.,device=self.device); last_lg=torch.tensor(0.,device=self.device); self._last_lstm_update=False; lstm_updates=0; minibatch_count=0
+  supervised_aligned=('history' in rollout and rollout['history'].shape[0]==N)
+  def update_lstm(ids):
+   nonlocal last_sl,last_lg,lstm_updates
+   h=rollout['history'].to(self.device); f=rollout['future'].to(self.device); mask=rollout.get('history_mask',torch.ones(h.shape[:2],dtype=torch.bool,device=self.device)).to(self.device); dt=rollout.get('agent_dt',torch.full((h.shape[0],1),1/30,device=self.device)).to(self.device)
+   if supervised_aligned:
+    h,f,mask,dt=h[ids],f[ids],mask[ids],dt[ids]
+    valid=rollout.get('supervised_valid')
+    if valid is not None:
+     valid=valid.to(self.device)[ids].bool(); h,f,mask,dt=h[valid],f[valid],mask[valid],dt[valid]
+   if h.numel()==0:return
+   if dt.ndim==2: dt=dt.unsqueeze(1)
+   dt=dt.expand(-1,h.shape[1],-1); h,mask,dt=self._augment_lstm_history(h,mask,dt); pred=self.lstm(torch.cat((h,dt),-1),mask=mask); sl=F.mse_loss(pred,f.reshape(f.shape[0],-1)); self.lstm_opt.zero_grad(set_to_none=True); sl.backward(); lg=nn.utils.clip_grad_norm_(self.lstm.parameters(),self.cfg.lstm_max_grad_norm); self.lstm_opt.step(); self._last_lstm_update=True; last_sl,last_lg=sl.detach(),lg.detach(); lstm_updates+=1
   num_minibatches=max(int(self.cfg.num_minibatches),1); mb_size=max((N+num_minibatches-1)//num_minibatches,1)
   for _epoch in range(max(int(self.cfg.training_epoch_num),1)):
    order=torch.randperm(N,device=self.device)
@@ -155,24 +170,48 @@ class PSTOMAPPO(nn.Module):
     loss.backward()
     eg=nn.utils.clip_grad_norm_(self.encoder.parameters(),self.cfg.max_grad_norm); ag=nn.utils.clip_grad_norm_(self.actor.parameters(),self.cfg.max_grad_norm); ceg=nn.utils.clip_grad_norm_(self.critic_encoder.parameters(),self.cfg.max_grad_norm); cg=nn.utils.clip_grad_norm_(self.critic.parameters(),self.cfg.max_grad_norm)
     self.encoder_opt.step(); self.actor_opt.step(); self.critic_encoder_opt.step(); self.critic_opt.step()
-    sl=torch.tensor(0.,device=self.device); lg=torch.tensor(0.,device=self.device)
-    if 'history' in rollout and 'future' in rollout and not self._last_lstm_update and getattr(self, '_update_count', 0) % max(int(self.cfg.lstm_update_frequency), 1) == 0:
-     h=rollout['history'].to(self.device); f=rollout['future'].to(self.device); mask=rollout.get('history_mask',torch.ones(h.shape[:2],dtype=torch.bool,device=self.device)).to(self.device); dt=rollout.get('agent_dt',torch.full((h.shape[0],1),1/30,device=self.device)).to(self.device); dt=dt.unsqueeze(1) if dt.ndim==2 else dt; dt=dt.expand(-1,h.shape[1],-1); h,mask,dt=self._augment_lstm_history(h,mask,dt); pred=self.lstm(torch.cat((h,dt),-1),mask=mask); sl=F.mse_loss(pred,f.reshape(f.shape[0],-1)); self.lstm_opt.zero_grad(set_to_none=True); sl.backward(); lg=nn.utils.clip_grad_norm_(self.lstm.parameters(),self.cfg.lstm_max_grad_norm); self.lstm_opt.step(); self._last_lstm_update=True; last_sl,last_lg=sl.detach(),lg.detach()
+    if 'history' in rollout and 'future' in rollout and self._lstm_train_counter % max(int(self.cfg.lstm_update_frequency),1) == 0:
+     update_lstm(ids)
+    self._lstm_train_counter+=1; minibatch_count+=1
     logs.append((policy_loss.detach(),value_loss.detach(),entropy.detach(),eg,ag,ceg,cg))
-  self._update_count=getattr(self, '_update_count', 0)+1
+  self._update_count+=1
   vals=torch.stack([x[0] for x in logs]); vls=torch.stack([x[1] for x in logs]); ents=torch.stack([x[2] for x in logs]); grads=[x[3:] for x in logs]
-  return {'policy_loss':float(vals.mean()),'value_loss':float(vls.mean()),'entropy':float(ents.mean()),'sl_loss':float(last_sl),'encoder_grad_norm':float(torch.stack([x[0] for x in grads]).mean()),'actor_grad_norm':float(torch.stack([x[1] for x in grads]).mean()),'critic_grad_norm':float(torch.stack([x[3] for x in grads]).mean()),'lstm_grad_norm':float(last_lg)}
+  return {'policy_loss':float(vals.mean()),'value_loss':float(vls.mean()),'entropy':float(ents.mean()),'sl_loss':float(last_sl),'encoder_grad_norm':float(torch.stack([x[0] for x in grads]).mean()),'actor_grad_norm':float(torch.stack([x[1] for x in grads]).mean()),'critic_grad_norm':float(torch.stack([x[3] for x in grads]).mean()),'lstm_grad_norm':float(last_lg),'lstm_updates':int(lstm_updates),'minibatches':int(minibatch_count)}
  def step_schedulers(self):
   self.encoder_scheduler.step(); self.actor_scheduler.step(); self.critic_encoder_scheduler.step(); self.critic_scheduler.step()
   if getattr(self,'_last_lstm_update',False): self.lstm_scheduler.step()
- def save_state(self,path):
-  Path(path).parent.mkdir(parents=True,exist_ok=True); torch.save({'encoder':self.encoder.state_dict(),'actor':self.actor.state_dict(),'critic_encoder':self.critic_encoder.state_dict(),'critic':self.critic.state_dict(),'lstm':self.lstm.state_dict(),'encoder_opt':self.encoder_opt.state_dict(),'actor_opt':self.actor_opt.state_dict(),'critic_encoder_opt':self.critic_encoder_opt.state_dict(),'critic_opt':self.critic_opt.state_dict(),'lstm_opt':self.lstm_opt.state_dict(),'encoder_scheduler':self.encoder_scheduler.state_dict(),'actor_scheduler':self.actor_scheduler.state_dict(),'critic_encoder_scheduler':self.critic_encoder_scheduler.state_dict(),'critic_scheduler':self.critic_scheduler.state_dict(),'lstm_scheduler':self.lstm_scheduler.state_dict(),'value_norm':self.value_norm.state_dict()},path)
- def load_model_weights(self,path,load_optimizers=False):
-  s=torch.load(path,map_location=self.device); self.encoder.load_state_dict(s['encoder']);self.actor.load_state_dict(s['actor']);self.critic_encoder.load_state_dict(s['critic_encoder']);self.critic.load_state_dict(s['critic']);self.lstm.load_state_dict(s['lstm']);self.value_norm.load_state_dict(s['value_norm']);
+ @staticmethod
+ def _numpy_rng_state_for_checkpoint():
+  """Return NumPy RNG state without pickling NumPy private module paths."""
+  state=np.random.get_state()
+  return {'kind':str(state[0]),'state':np.asarray(state[1],dtype=np.uint32).tolist(),
+          'pos':int(state[2]),'has_gauss':int(state[3]),'cached_gaussian':float(state[4])}
+ @staticmethod
+ def _restore_numpy_rng_state(state):
+  if isinstance(state,dict) and 'state' in state:
+   np.random.set_state((state.get('kind','MT19937'),np.asarray(state['state'],dtype=np.uint32),
+                        int(state.get('pos',0)),int(state.get('has_gauss',0)),
+                        float(state.get('cached_gaussian',0.))))
+  elif state is not None:
+   # Legacy checkpoints saved the raw NumPy tuple.  Keep loading those when
+   # the installed NumPy version can deserialize it.
+   np.random.set_state(state)
+ def save_state(self,path,progress=None):
+  Path(path).parent.mkdir(parents=True,exist_ok=True); cuda_rng=torch.cuda.get_rng_state_all() if torch.cuda.is_available() else None; torch.save({'encoder':self.encoder.state_dict(),'actor':self.actor.state_dict(),'critic_encoder':self.critic_encoder.state_dict(),'critic':self.critic.state_dict(),'lstm':self.lstm.state_dict(),'encoder_opt':self.encoder_opt.state_dict(),'actor_opt':self.actor_opt.state_dict(),'critic_encoder_opt':self.critic_encoder_opt.state_dict(),'critic_opt':self.critic_opt.state_dict(),'lstm_opt':self.lstm_opt.state_dict(),'encoder_scheduler':self.encoder_scheduler.state_dict(),'actor_scheduler':self.actor_scheduler.state_dict(),'critic_encoder_scheduler':self.critic_encoder_scheduler.state_dict(),'critic_scheduler':self.critic_scheduler.state_dict(),'lstm_scheduler':self.lstm_scheduler.state_dict(),'value_norm':self.value_norm.state_dict(),'update_count':self._update_count,'lstm_train_counter':self._lstm_train_counter,'progress':progress or {},'python_rng_state':random.getstate(),'numpy_rng_state':self._numpy_rng_state_for_checkpoint(),'torch_rng_state':torch.get_rng_state(),'cuda_rng_state':cuda_rng},path)
+ def load_model_weights(self,path,load_optimizers=False,restore_rng=False):
+  try: s=torch.load(path,map_location=self.device,weights_only=False)
+  except TypeError: s=torch.load(path,map_location=self.device)
+  self.encoder.load_state_dict(s['encoder']);self.actor.load_state_dict(s['actor']);self.critic_encoder.load_state_dict(s['critic_encoder']);self.critic.load_state_dict(s['critic']);self.lstm.load_state_dict(s['lstm']);self.value_norm.load_state_dict(s['value_norm']); self._update_count=int(s.get('update_count',0)); self._lstm_train_counter=int(s.get('lstm_train_counter',0))
   if load_optimizers:
    for k,o in [('encoder_opt',self.encoder_opt),('actor_opt',self.actor_opt),('critic_encoder_opt',self.critic_encoder_opt),('critic_opt',self.critic_opt),('lstm_opt',self.lstm_opt)]: o.load_state_dict(s[k])
    for k,o in [('encoder_scheduler',self.encoder_scheduler),('actor_scheduler',self.actor_scheduler),('critic_encoder_scheduler',self.critic_encoder_scheduler),('critic_scheduler',self.critic_scheduler),('lstm_scheduler',self.lstm_scheduler)]:
     if k in s: o.load_state_dict(s[k])
+  if restore_rng:
+   if s.get('python_rng_state') is not None: random.setstate(s['python_rng_state'])
+   if s.get('numpy_rng_state') is not None: self._restore_numpy_rng_state(s['numpy_rng_state'])
+   if s.get('torch_rng_state') is not None: torch.set_rng_state(torch.as_tensor(s['torch_rng_state'],dtype=torch.uint8,device='cpu'))
+   if torch.cuda.is_available() and s.get('cuda_rng_state') is not None: torch.cuda.set_rng_state_all([torch.as_tensor(x,dtype=torch.uint8,device='cpu') for x in s['cuda_rng_state']])
+  return s.get('progress',{})
 
 # Explicit alias used by code written against the upstream name.
 MAPPO=PSTOMAPPO
