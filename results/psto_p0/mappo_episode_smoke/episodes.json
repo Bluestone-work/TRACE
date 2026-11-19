@@ -1,0 +1,20 @@
+{
+  "status": "pass",
+  "test_scope": "MAPPO policy rollout",
+  "task_performance_status": "evaluated",
+  "controller": "mappo",
+  "checkpoint": "results/psto_p0/fix_lstm/native2/checkpoint.pt",
+  "episodes_requested": 1,
+  "episodes_completed": 1,
+  "steps_per_episode_limit": 20,
+  "policy_hz": 30.0,
+  "episode_duration_s": 0.6666666666666666,
+  "failures": [],
+  "episodes_csv": "results/psto_p0/mappo_episode_smoke/episodes.csv",
+  "trajectories_csv": "results/psto_p0/mappo_episode_smoke/trajectories.csv",
+  "capture_count": 0,
+  "escape_count": 0,
+  "collision_count": 0,
+  "timeout_count": 1,
+  "mean_steps": 20.0
+}

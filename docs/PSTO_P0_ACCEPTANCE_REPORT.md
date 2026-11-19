@@ -86,6 +86,8 @@ GAE 使用两个 mask：`terminated` 只控制 TD bootstrap；`episode_end` 控�
 
 在修复后的代码上重新执行 native 20-frame smoke，得到 `sl_loss=0.01941`、`lstm_updates=1`、`minibatches=1`；随后使用同一 checkpoint 将累计 frames 从 20 恢复到 21，`--resume` 实际完成第二次更新并恢复了 RNG 与环境状态。
 
+在 commit `4a1fda9` 上再次执行了相同的真实 Isaac Sim 6.0.1 验证：`results/psto_p0/final_validation/post_commit20/checkpoint.json` 记录 20 帧、1 次 PPO/LSTM 更新（`sl_loss=0.0194136`），随后 `--resume --total_frames 21` 记录累计 frames `20 -> 21`、updates `1 -> 2`。`.pt` 权重留在本地，仓库只提交 JSON 和配置快照。
+
 使用 `--max_episode_steps 1 --total_frames 2` 的真实 PhysX timeout smoke 记录了 `terminated_steps=0`、`truncated_steps=2`，并完成了有限的 PPO 更新；结果在 `results/psto_p0/smoke/timeout/`。
 
 此前的基准 commit `90abbb6` 已由后续验证 commit 推送到远程；其 1 帧 native PhysX PPO smoke 结果见 `results/psto_p0/post_commit_smoke/`，JSON 中记录了 Isaac Sim 6.0.1 build。

@@ -1,0 +1,20 @@
+{
+  "status": "pass",
+  "test_scope": "fixed-action environment rollout",
+  "task_performance_status": "not_evaluated",
+  "controller": "fixed",
+  "checkpoint": null,
+  "episodes_requested": 10,
+  "episodes_completed": 10,
+  "steps_per_episode_limit": 280,
+  "policy_hz": 30.0,
+  "episode_duration_s": 9.333333333333334,
+  "failures": [],
+  "episodes_csv": "results/psto_p0/episodes_10_collision_audit/episodes.csv",
+  "trajectories_csv": "results/psto_p0/episodes_10_collision_audit/trajectories.csv",
+  "capture_count": 1,
+  "escape_count": 0,
+  "collision_count": 8,
+  "timeout_count": 1,
+  "mean_steps": 147.5
+}
