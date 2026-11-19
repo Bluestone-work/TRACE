@@ -6,6 +6,7 @@ import platform
 import random
 import subprocess
 import sys
+import time
 from pathlib import Path
 
 import numpy as np
@@ -22,6 +23,23 @@ def git_sha():
         return subprocess.check_output(["git", "rev-parse", "HEAD"], text=True).strip()
     except Exception:
         return "unknown"
+
+
+def gpu_snapshot():
+    """Best-effort hardware telemetry for long-run readiness reports."""
+    try:
+        raw = subprocess.check_output(
+            ["nvidia-smi", "--query-gpu=utilization.gpu,memory.used",
+             "--format=csv,noheader,nounits"], text=True, stderr=subprocess.DEVNULL)
+        rows = []
+        for line in raw.strip().splitlines():
+            fields = [x.strip() for x in line.split(",")]
+            if len(fields) >= 2:
+                rows.append({"utilization_gpu_pct": float(fields[0]),
+                             "memory_used_mib": float(fields[1])})
+        return rows
+    except Exception:
+        return []
 
 
 def choose_checkpoint(args, experiment, seed):
@@ -50,6 +68,11 @@ def main():
     parser.add_argument("--headless", action="store_true")
     parser.add_argument("--training_epoch_num", type=int)
     parser.add_argument("--num_minibatches", type=int)
+    parser.add_argument("--checkpoint_interval", type=int)
+    parser.add_argument("--evaluation_interval", type=int)
+    parser.add_argument("--num_eval_episodes", type=int)
+    parser.add_argument("--max_updates", type=int, default=0,
+                        help="debug/resume audit limit; 0 means run until total_frames")
     args = parser.parse_args()
     config_path = Path(args.config).resolve()
     config = load_config(config_path)
@@ -62,6 +85,9 @@ def main():
     max_episode_steps = env_cfg.get("max_episode_steps", 280) if args.max_episode_steps is None else args.max_episode_steps
     ppo_epochs = algo_cfg.get("ppo_epochs", 4) if args.training_epoch_num is None else args.training_epoch_num
     num_minibatches = algo_cfg.get("num_minibatches", 1) if args.num_minibatches is None else args.num_minibatches
+    checkpoint_interval = int(experiment_cfg.get("checkpoint_interval", 10) if args.checkpoint_interval is None else args.checkpoint_interval)
+    evaluation_interval = int(experiment_cfg.get("evaluation_interval", 0) if args.evaluation_interval is None else args.evaluation_interval)
+    num_eval_episodes = int(experiment_cfg.get("num_eval_episodes", 0) if args.num_eval_episodes is None else args.num_eval_episodes)
     checkpoint = choose_checkpoint(args, experiment_cfg, seed)
     if num_envs != 1:
         raise SystemExit("The physical TRACE adapter currently supports --num_envs 1 only.")
@@ -108,6 +134,8 @@ def main():
             "num_envs": num_envs, "total_frames": total_frames, "rollout_steps": rollout_steps,
             "ppo_epochs": ppo_epochs, "num_minibatches": num_minibatches, "python": sys.version,
             "platform": platform.platform(), "torch": torch.__version__, "cuda": torch.version.cuda,
+            "checkpoint_interval": checkpoint_interval, "evaluation_interval": evaluation_interval,
+            "num_eval_episodes": num_eval_episodes,
             "cuda_seeded": cuda_seeded}
         try:
             import omni.kit.app
@@ -123,12 +151,70 @@ def main():
             if resume_progress.get("env_state") is not None:
                 env.load_state_dict(resume_progress["env_state"])
 
-        obs = env.observe() if args.resume and resume_progress.get("env_state") is not None else env.reset()
+        # A checkpoint is taken after the rollout has already produced the
+        # next observation.  Re-running ``observe()`` here would append the
+        # same physical sample to the LSTM history a second time and make a
+        # resumed update differ from an uninterrupted update.  New
+        # checkpoints carry the pending observation; legacy checkpoints fall
+        # back to reconstructing it from the environment state.
+        if args.resume and resume_progress.get("observation") is not None:
+            obs = resume_progress["observation"]
+        elif args.resume and resume_progress.get("env_state") is not None:
+            obs = env.observe()
+        else:
+            obs = env.reset()
         frames = int(resume_progress.get("frames", 0)) if args.resume else 0
         updates = int(resume_progress.get("updates", policy._update_count)) if args.resume else 0
         terminated_count = truncated_count = 0
         logs = []
-        while frames < total_frames:
+        evaluations = list(resume_progress.get("evaluations", [])) if args.resume else []
+        train_start = time.perf_counter()
+
+        def evaluate_checkpoint(eval_seed):
+            """Evaluate on independent seeded episodes, then restore training exactly."""
+            if num_eval_episodes <= 0:
+                return None
+            py_rng = random.getstate(); np_rng = np.random.get_state(); torch_rng = torch.get_rng_state()
+            cuda_rng = torch.cuda.get_rng_state_all() if torch.cuda.is_available() else None
+            train_env_state = env.state_dict()
+            was_training = policy.training
+            policy.eval()
+            rows = []
+            try:
+                for eval_episode in range(num_eval_episodes):
+                    eval_obs = env.reset(seed=int(eval_seed + eval_episode))
+                    total_reward = 0.0; visibility = []; terminal = {}; done = False
+                    for eval_step in range(max_episode_steps):
+                        with torch.no_grad():
+                            eval_action, _, _ = policy.act(
+                                torch.as_tensor(eval_obs["fused_image"], device=policy.device),
+                                torch.as_tensor(eval_obs["state"], device=policy.device),
+                                torch.as_tensor(eval_obs["central_state"], device=policy.device),
+                                deterministic=True,
+                            )
+                        eval_obs, reward_eval, done, terminal = env.step(eval_action.cpu().numpy(), actions_are_normalized=True)
+                        total_reward += float(reward_eval); visibility.append(float(terminal.get("visibility_ratio", 0.0)))
+                        if done:
+                            break
+                    rows.append({"episode": eval_episode, "seed": int(eval_seed + eval_episode),
+                        "steps": eval_step + 1, "reward": total_reward,
+                        "capture": bool(terminal.get("capture", False)), "escaped": bool(terminal.get("escaped", False)),
+                        "collision": bool(terminal.get("collision", False)), "timeout": bool(terminal.get("timeout", False)),
+                        "visibility_ratio": float(np.mean(visibility)) if visibility else 0.0})
+            finally:
+                env.load_state_dict(train_env_state)
+                random.setstate(py_rng); np.random.set_state(np_rng); torch.set_rng_state(torch_rng)
+                if torch.cuda.is_available() and cuda_rng is not None:
+                    torch.cuda.set_rng_state_all(cuda_rng)
+                policy.train(was_training)
+            return {"frames": frames, "update": updates, "seed": int(eval_seed), "episodes": rows,
+                "capture_success_rate": float(np.mean([r["capture"] for r in rows])) if rows else 0.0,
+                "collision_rate": float(np.mean([r["collision"] for r in rows])) if rows else 0.0,
+                "escape_rate": float(np.mean([r["escaped"] for r in rows])) if rows else 0.0,
+                "average_episode_reward": float(np.mean([r["reward"] for r in rows])) if rows else 0.0,
+                "average_episode_length": float(np.mean([r["steps"] for r in rows])) if rows else 0.0,
+                "target_visibility_ratio": float(np.mean([r["visibility_ratio"] for r in rows])) if rows else 0.0}
+        while frames < total_frames and (args.max_updates <= 0 or updates < args.max_updates):
             images, states, centrals, actions = [], [], [], []
             log_probs, values, next_values, rewards = [], [], [], []
             terminateds, episode_ends = [], []
@@ -169,11 +255,32 @@ def main():
                 "history_mask": torch.stack(masks), "agent_dt": torch.stack(dts),
                 "supervised_valid": torch.as_tensor(supervised_valid, dtype=torch.bool)})
             log = policy.update(rollout); policy.step_schedulers(); updates += 1
-            logs.append({"frames": frames, "update": updates, **log}); policy.save_state(checkpoint, progress={"frames":frames,"updates":updates,"env_state":env.state_dict()})
+            log_row = {"frames": frames, "update": updates, "elapsed_s": time.perf_counter() - train_start,
+                "training_fps": frames / max(time.perf_counter() - train_start, 1e-9),
+                "gpu": gpu_snapshot(), **log}
+            logs.append(log_row)
+            if evaluation_interval > 0 and num_eval_episodes > 0 and updates % evaluation_interval == 0:
+                evaluation = evaluate_checkpoint(seed + 100000 + updates * 1000)
+                evaluations.append(evaluation)
+                log_row["evaluation"] = evaluation
+                print(json.dumps({"evaluation": evaluation}, default=float), flush=True)
+            progress = {"frames":frames,"updates":updates,"env_state":env.state_dict(),
+                        "observation": obs, "evaluations":evaluations}
+            if (checkpoint_interval > 0 and updates % checkpoint_interval == 0) or frames >= total_frames:
+                checkpoint_start = time.perf_counter()
+                policy.save_state(checkpoint, progress=progress)
+                log_row["checkpoint_seconds"] = time.perf_counter() - checkpoint_start
             print(json.dumps(logs[-1]), flush=True)
+        if not checkpoint.exists():
+            policy.save_state(checkpoint, progress={"frames":frames,"updates":updates,
+                                                     "env_state":env.state_dict(),
+                                                     "observation": obs,
+                                                     "evaluations":evaluations})
         result = {**metadata, "status": "pass", "frames": frames, "updates": updates,
             "terminated_steps": terminated_count, "truncated_steps": truncated_count,
-            "checkpoint": str(checkpoint), "logs": logs}
+            "checkpoint": str(checkpoint), "logs": logs, "evaluations": evaluations,
+            "training_elapsed_s": time.perf_counter() - train_start,
+            "training_fps": frames / max(time.perf_counter() - train_start, 1e-9)}
     except Exception as exc:
         import traceback
         traceback.print_exc()

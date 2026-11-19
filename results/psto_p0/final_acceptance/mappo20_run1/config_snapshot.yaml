@@ -1,0 +1,48 @@
+experiment_name: trace_native_pilot
+source: TRACE Isaac Sim 6 adapter; bounded pre-long-training pilot
+seed: 4348
+environment:
+  physics_dt: 0.004166666666666667
+  policy_hz: 30.0
+  policy_dt: 0.03333333333333333
+  frame_skip: 8
+  episode_duration: 9.333333333333334
+  max_episode_steps: 280
+  num_envs: 1
+  observation_dim: 13
+  centralized_state_dim: 84
+  num_obstacles: 18
+  randomize_resets: true
+  randomize_obstacles: true
+mappo:
+  actor_lr: 0.00006
+  critic_lr: 0.00006
+  encoder_lr: 0.00006
+  gamma: 0.995
+  gae_lambda: 0.95
+  clip_param: 0.1
+  entropy_coef: 0.01
+  value_loss_coef: 1.0
+  max_grad_norm: 1.0
+  ppo_epochs: 1
+  num_minibatches: 1
+  rollout_steps: 64
+  total_frames: 10000
+  scheduler: cosine
+  warmup_steps: 0
+  sl_lr: 0.00008
+  lstm_lr: 0.00008
+  lstm_update_frequency: 1
+lstm:
+  history_length: 10
+  prediction_horizon: 10
+  hidden_dim: 64
+  observation_dropout: 0.25
+  continuous_occlusion_probability: 0.35
+  max_occlusion_length: 4
+  irregular_sampling: true
+experiment:
+  checkpoint_interval: 10
+  evaluation_interval: 10
+  num_eval_episodes: 2
+  output_directory: results/psto/trace_native_pilot

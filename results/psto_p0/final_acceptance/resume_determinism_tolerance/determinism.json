@@ -1,0 +1,12 @@
+{
+  "status": "pass",
+  "seed": 9201,
+  "continuous_checkpoint": "/home/wj/\u684c\u9762/\u65e0\u4eba\u673a/TRACE_baseline_foundation/results/psto_p0/final_acceptance/resume_determinism_tolerance/continuous.pt",
+  "resumed_checkpoint": "/home/wj/\u684c\u9762/\u65e0\u4eba\u673a/TRACE_baseline_foundation/results/psto_p0/final_acceptance/resume_determinism_tolerance/split.pt",
+  "continuous_frames": 2,
+  "resumed_frames": 2,
+  "continuous_updates": 2,
+  "resumed_updates": 2,
+  "max_model_tensor_abs_diff": 5.797483026981354e-08,
+  "mismatches": []
+}

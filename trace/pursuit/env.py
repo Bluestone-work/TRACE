@@ -8,6 +8,14 @@ from .evader import evader_policy
 from .visibility import target_visible
 from .rewards import official_reward
 
+def _portable_rng_state(rng):
+ def convert(value):
+  if isinstance(value, dict): return {k: convert(v) for k, v in value.items()}
+  if isinstance(value, np.ndarray): return value.tolist()
+  if isinstance(value, np.generic): return value.item()
+  return value
+ return convert(rng.bit_generator.state)
+
 def build_global_state_84(positions,quaternions,velocities,angular_velocities,prev_actions,downsampled_lidar):
  positions=np.asarray(positions,np.float32); quaternions=np.asarray(quaternions,np.float32); velocities=np.asarray(velocities,np.float32); angular_velocities=np.asarray(angular_velocities,np.float32); prev_actions=np.asarray(prev_actions,np.float32); down=np.asarray(downsampled_lidar,np.float32)
  pooled=[]
@@ -110,8 +118,9 @@ class PSTOPursuitEnv:
    'rotor_speeds':[np.asarray(x.actuator.rotor_speeds).copy() for x in self.scene.vehicles],
    'observed_evader_history':[x.copy() for x in self.observed_evader_history],
    'observed_evader_times':list(self.observed_evader_times),
-   'ground_truth_evader_history':[x.copy() for x in self.ground_truth_evader_history], 'rng_state':self.rng.bit_generator.state,
-   'obstacle_positions':np.asarray(getattr(self.scene,'obstacle_positions',[]),np.float32).copy()}
+   'ground_truth_evader_history':[x.copy() for x in self.ground_truth_evader_history], 'rng_state':_portable_rng_state(self.rng),
+   'obstacle_positions':np.asarray(getattr(self.scene,'obstacle_positions',[]),np.float32).copy(),
+   'scene_state':self.scene.state_dict() if hasattr(self.scene,'state_dict') else None}
  def load_state_dict(self,state):
   positions=np.asarray(state['positions'],np.float32); self.scene.reset(positions=positions,randomize=False,randomize_obstacles=False)
   if state.get('obstacle_positions') is not None:
@@ -123,3 +132,5 @@ class PSTOPursuitEnv:
    vehicle.actuator.throttle=np.clip(throttle,-1.,1.); vehicle._read_physics_state()
   self.step_count=int(state['step_count']); self.episode_index=int(state.get('episode_index',0)); self.seed=int(state.get('seed',self.seed)); self.prev_actions=np.asarray(state['prev_actions'],np.float32).copy(); self.observed_evader_history=[np.asarray(x,np.float32).copy() for x in state.get('observed_evader_history',[])]; self.observed_evader_times=list(state.get('observed_evader_times',[])); self.ground_truth_evader_history=[np.asarray(x,np.float32).copy() for x in state.get('ground_truth_evader_history',[])];
   if state.get('rng_state') is not None: self.rng.bit_generator.state=state['rng_state']
+  if state.get('scene_state') is not None and hasattr(self.scene,'load_state_dict'):
+   self.scene.load_state_dict(state['scene_state'])

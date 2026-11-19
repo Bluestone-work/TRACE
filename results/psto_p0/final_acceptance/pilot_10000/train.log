@@ -1,0 +1,3249 @@
+Warning: running in conda env, please deactivate before executing this script
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+E0000 00:00:1795102950.466758 2661041 descriptor_database.cc:633] File already exists in database: grpc/health/v1/health.proto
+W0000 00:00:1795102950.466797 2661041 message.cc:301] Protobuf GeneratedMessageFactory: File is already registered: grpc/health/v1/health.proto
+2026-11-19T15:42:30Z [Info] [carb] Logging to file: /home/wj/isaacsim/kit/logs/Kit/Isaac-Sim Python/6.0/kit_20261119_234230.log
+[0.059s] [ext: omni.assets.plugins-0.0.0] startup
+[0.060s] [ext: omni.blobkey-1.1.2] startup
+[0.060s] [ext: omni.kit.async_engine-0.0.3] startup
+[0.279s] [ext: omni.client.lib-1.1.1] startup
+[0.288s] [ext: omni.client-1.3.0] startup
+[0.291s] [ext: omni.protobuf.lib-1.0.0] startup
+[0.292s] [ext: omni.grpc.lib-1.0.0] startup
+[0.295s] [ext: omni.metrics.core-0.0.3] startup
+[0.295s] [ext: omni.datastore-0.0.0] startup
+[0.296s] [ext: omni.gpu_foundation.shadercache.vulkan-1.0.0] startup
+[0.298s] [ext: omni.hsscclient-1.1.4] startup
+[0.298s] [ext: omni.stats-1.0.1] startup
+[0.299s] [ext: omni.ujitso.default-1.0.0] startup
+[0.301s] [ext: omni.gpu_foundation-0.0.0] startup
+[0.609s] [ext: carb.windowing.plugins-1.0.1] startup
+[0.609s] [ext: omni.kit.renderer.init-1.0.1] startup
+2026-11-19T15:42:30Z [624ms] [Warning] [omni.platforminfo.plugin] failed to open the default display.  Can't verify X Server version.
+2026-11-19T15:42:31Z [1,084ms] [Warning] [omni.rtx] Skipping unsupported non-NVIDIA GPU: Intel(R) Graphics (ARL)
+2026-11-19T15:42:31Z [1,084ms] [Warning] [omni.rtx] Skipping unsupported non-NVIDIA GPU: Intel(R) Graphics (ARL)
+
+|---------------------------------------------------------------------------------------------|
+| Driver Version: 595.84        | Graphics API: Vulkan
+|=============================================================================================|
+| GPU | Name                             | Active | LDA | GPU Memory | Vendor-ID | LUID       |
+|     |                                  |        |     |            | Device-ID | UUID       |
+|     |                                  |        |     |            | Bus-ID    |            |
+|---------------------------------------------------------------------------------------------|
+| 0   | NVIDIA GeForce RTX 4090          | Yes: 0 |     | 81898   MB | 10de      | 0          |
+|     |                                  |        |     |            | 2684      | 87704b96.. |
+|     |                                  |        |     |            | 2         |            |
+|---------------------------------------------------------------------------------------------|
+| 1   | NVIDIA GeForce RTX 4090          |        |     | 81898   MB | 10de      | 0          |
+|     |                                  |        |     |            | 2684      | 7528159c.. |
+|     |                                  |        |     |            | 85        |            |
+|---------------------------------------------------------------------------------------------|
+| 2   | Intel(R) Graphics (ARL)          |        |     | 96127   MB | 8086      | 0          |
+|     |                                  |        |     |            | 7d67      | 8680677d.. |
+|     |                                  |        |     |            | 0         |            |
+|=============================================================================================|
+| OS: 24.04.4 LTS (Noble Numbat) ubuntu, Version: 24.04.4, Kernel: 7.0.0-31-generic
+| Processor: Intel(R) Core(TM) Ultra 9 285K
+| Cores: 24 | Logical Cores: 24
+|---------------------------------------------------------------------------------------------|
+| Total Memory (MB): 128169 | Free Memory: 97463
+| Total Page/Swap (MB): 8191 | Free Page/Swap: 682
+|---------------------------------------------------------------------------------------------|
+2026-11-19T15:42:31Z [1,349ms] [Warning] [omni.rtx] CPU performance profile is set to powersave. This profile sets the CPU to the lowest frequency reducing performance.
+2026-11-19T15:42:31Z [1,358ms] [Warning] [omni.rtx] PCIe link width current (2) and maximum (16) for device 0 don't match.
+2026-11-19T15:42:31Z [1,358ms] [Warning] [omni.rtx] IOMMU is enabled.
+[1.549s] [ext: omni.kit.pipapi-0.0.0] startup
+[1.551s] [ext: omni.kit.pip_archive-0.0.0] startup
+[1.551s] [ext: isaacsim.pip.newton-0.6.1] startup
+[1.551s] [ext: omni.pip.compute-1.9.2] startup
+[1.551s] [ext: omni.isaac.core_archive-5.3.1] startup
+[1.551s] [ext: omni.kit.telemetry-0.5.2] startup
+[1.589s] [ext: omni.kit.loop-isaac-1.6.0] startup
+[1.590s] [ext: omni.kit.test-2.0.7] startup
+[1.635s] [ext: omni.materialx.libs-1.0.9] startup
+[1.640s] [ext: omni.gpucompute.plugins-0.0.0] startup
+[1.640s] [ext: omni.usd.config-1.0.7] startup
+[1.643s] [ext: omni.usd.libs-1.0.3] startup
+[1.701s] [ext: omni.iray.libs-0.0.1] startup
+[1.706s] [ext: omni.mdl-57.0.3] startup
+[1.722s] [ext: omni.mdl.neuraylib-0.2.20] startup
+[1.724s] [ext: omni.kit.usd.mdl-1.1.9] startup
+[1.800s] [ext: omni.appwindow-1.2.2] startup
+[1.801s] [ext: omni.kit.renderer.core-1.2.2] startup
+2026-11-19T15:42:31Z [1,790ms] [Warning] [carb.windowing-glfw.plugin] GLFW initialization failed.
+2026-11-19T15:42:31Z [1,790ms] [Warning] [carb] Failed to startup plugin carb.windowing-glfw.plugin (interfaces: [carb::windowing::IGLContext v1.0],[carb::windowing::IWindowing v1.5]) (impl: carb.windowing-glfw.plugin)
+[1.834s] [ext: omni.kit.renderer.capture-2.0.1] startup
+[1.835s] [ext: omni.kit.renderer.imgui-2.0.6] startup
+2026-11-19T15:42:32Z [1,810ms] [Warning] [carb.windowing-glfw.plugin] GLFW initialization failed.
+2026-11-19T15:42:32Z [1,810ms] [Warning] [carb] Failed to startup plugin carb.windowing-glfw.plugin (interfaces: [carb::windowing::IGLContext v1.0],[carb::windowing::IWindowing v1.5]) (impl: carb.windowing-glfw.plugin)
+2026-11-19T15:42:32Z [1,811ms] [Warning] [carb.windowing-glfw.plugin] GLFW initialization failed.
+2026-11-19T15:42:32Z [1,811ms] [Warning] [carb] Failed to startup plugin carb.windowing-glfw.plugin (interfaces: [carb::windowing::IGLContext v1.0],[carb::windowing::IWindowing v1.5]) (impl: carb.windowing-glfw.plugin)
+[1.887s] [ext: omni.ui-3.2.0] startup
+[1.893s] [ext: omni.kit.mainwindow-1.0.3] startup
+[1.894s] [ext: carb.audio-0.1.0] startup
+[1.896s] [ext: omni.uiaudio-1.0.0] startup
+[1.897s] [ext: omni.kit.uiapp-0.0.0] startup
+[1.897s] [ext: omni.usd.schema.metrics.assembler-110.1.0] startup
+[1.899s] [ext: omni.usd.schema.audio-0.0.1] startup
+[1.901s] [ext: omni.usd_resolver-1.0.0] startup
+[1.903s] [ext: omni.usd.core-1.8.3] startup
+[1.905s] [ext: omni.metropolis.schema-0.0.3] startup
+[1.906s] [ext: isaacsim.anim.robot.schema-0.1.1] startup
+[1.906s] [ext: omni.usd.schema.anim-0.0.1] startup
+[1.919s] [ext: omni.usd.schema.geospatial-0.0.1] startup
+[1.921s] [ext: omni.usd.schema.omnigraph-1.0.1] startup
+[1.925s] [ext: omni.usd.schema.semantics-0.0.0] startup
+[1.927s] [ext: omni.activity.core-1.0.3] startup
+[1.927s] [ext: omni.cubric-0.1.0] startup
+[1.928s] [ext: omni.graph.exec-0.9.6] startup
+[1.928s] [ext: omni.hydra.scene_delegate-0.3.5] startup
+[1.931s] [ext: usdrt.scenegraph-7.6.3] startup
+[1.949s] [ext: omni.hydra.usdrt_delegate-7.5.2] startup
+[1.954s] [ext: omni.inspect-1.0.2] startup
+[1.955s] [ext: omni.kit.actions.core-1.0.0] startup
+[1.956s] [ext: omni.kit.audiodeviceenum-1.0.2] startup
+[1.957s] [ext: omni.kit.commands-1.5.0] startup
+[1.959s] [ext: omni.kit.exec.core-0.13.5] startup
+[1.960s] [ext: omni.kit.usd_undo-0.1.8] startup
+[1.961s] [ext: omni.kit.window.popup_dialog-2.0.25] startup
+[1.963s] [ext: omni.kit.widget.nucleus_connector-2.3.1] startup
+[1.966s] [ext: omni.timeline-1.1.0] startup
+[1.967s] [ext: omni.usd-1.16.0] startup
+[2.000s] [ext: omni.graph.core-3.1.2] startup
+[2.002s] [ext: omni.kit.notification_manager-1.0.11] startup
+[2.003s] [ext: isaacsim.core.deprecation_manager-0.4.2] startup
+[2.004s] [ext: isaacsim.replicator.agent.schema-0.1.1] startup
+[2.004s] [ext: isaacsim.robot.schema-6.3.7] startup
+[2.007s] [ext: isaacsim.robot_motion.schema-0.2.1] startup
+[2.008s] [ext: omni.anim.behavior.schema-110.1.0] startup
+[2.010s] [ext: omni.anim.graph.schema-110.1.1] startup
+[2.014s] [ext: omni.anim.navigation.schema-110.1.0] startup
+[2.016s] [ext: omni.behavior.tree.schema-110.1.0] startup
+[2.017s] [ext: omni.isaac.ml_archive-3.3.0] startup
+[2.017s] [ext: omni.kit.asset_converter-6.0.1] startup
+[2.026s] [ext: omni.pip.cloud-1.5.4] startup
+[2.028s] [ext: omni.usd.schema.flow-110.0.0] startup
+[2.028s] [ext: omni.usd.schema.mujoco-1.1.1] startup
+[2.029s] [ext: omni.usd.schema.newton-1.2.1] startup
+[2.029s] [ext: omni.usd.schema.omni_lens_distortion-1.0.0] startup
+[2.029s] [ext: omni.usd.schema.omni_projectors-1.0.0] startup
+[2.030s] [ext: omni.usd.schema.omni_sensors-0.0.0] startup
+[2.036s] [ext: omni.usd.schema.omniscripting-1.0.1] startup
+[2.039s] [ext: omni.usd.schema.physical_lighting-0.1.0] startup
+[2.042s] [ext: omni.usd.schema.physx-110.1.13] startup
+[2.063s] [ext: omni.usd.schema.render_settings.rtx-1.0.2] startup
+[2.066s] [ext: omni.usd.schema.usd_particle_field-1.0.0] startup
+[2.067s] [ext: isaacsim.core.version-2.1.1] startup
+[2.067s] [ext: omni.kit.menu.core-1.2.0] startup
+[2.067s] [ext: omni.kit.menu.utils-2.2.4] startup
+[2.073s] [ext: isaacsim.app.about-2.3.1] startup
+[2.076s] [ext: isaacsim.asset.transformer-1.2.5] startup
+[2.079s] [ext: omni.scene.optimizer.core-110.1.0] startup
+[2.115s] [ext: isaacsim.asset.importer.utils-1.8.1] startup
+[2.117s] [ext: omni.convexdecomposition-110.1.13] startup
+[2.119s] [ext: omni.physics-110.1.13] startup
+[2.121s] [ext: omni.physx.gpu-110.1.13] startup
+[2.121s] [ext: omni.physx.foundation-110.1.13] startup
+[2.122s] [ext: omni.usdphysics-110.1.13] startup
+[2.124s] [ext: omni.physx.cooking-110.1.13] startup
+[2.125s] [ext: omni.physx-110.1.13] startup
+[2.134s] [ext: omni.physics.physx-110.1.13] startup
+[2.136s] [ext: isaacsim.asset.exporter.urdf-2.0.5] startup
+[2.142s] [ext: omni.kit.clipboard-1.1.1] startup
+[2.142s] [ext: omni.kit.usd.layers-2.6.1] startup
+[2.148s] [ext: omni.kit.widget.context_menu-1.4.0] startup
+[2.149s] [ext: omni.kit.context_menu-1.9.0] startup
+[2.150s] [ext: omni.kit.helper.file_utils-0.1.10] startup
+[2.151s] [ext: omni.kit.widget.nucleus_info-2.0.2] startup
+[2.152s] [ext: omni.kit.search_core-1.0.8] startup
+[2.152s] [ext: omni.kit.widget.path_field-2.0.13] startup
+[2.153s] [ext: omni.kit.widget.browser_bar-2.0.10] startup
+[2.153s] [ext: omni.kit.widget.filebrowser-2.13.4] startup
+[2.157s] [ext: omni.kit.widget.options_menu-1.1.6] startup
+[2.158s] [ext: omni.kit.widget.options_button-1.0.3] startup
+[2.159s] [ext: omni.kit.widget.search_delegate-1.0.9] startup
+[2.159s] [ext: omni.ui.scene-2.0.3] startup
+[2.163s] [ext: omni.kit.window.filepicker-2.15.5] startup
+[2.173s] [ext: omni.kit.window.file_importer-1.1.21] startup
+[2.175s] [ext: omni.kit.material.library-3.1.2] startup
+[2.179s] [ext: isaacsim.asset.transformer.rules-1.7.10] startup
+[2.186s] [ext: omni.usdex.libs-2.2.2] startup
+[2.193s] [ext: isaacsim.asset.importer.mjcf-3.10.1] startup
+[2.194s] [ext: isaacsim.asset.importer.urdf-3.11.2] startup
+[2.197s] [ext: omni.kit.primitive.mesh-1.1.0] startup
+[2.199s] [ext: omni.kit.stage_template.core-1.1.22] startup
+[2.199s] [ext: omni.kit.stage_templates-2.0.2] startup
+[2.201s] [ext: omni.usd.metrics.assembler-110.1.2] startup
+[2.203s] [ext: omni.warp.core-1.13.0] startup
+[2.340s] [ext: isaacsim.core.experimental.utils-0.17.2] startup
+[2.341s] [ext: omni.physics.stageupdate-110.1.13] startup
+[2.342s] [ext: omni.physics.tensors-110.1.13] startup
+[2.346s] [ext: omni.physx.tensors-110.1.13] startup
+[2.350s] [ext: isaacsim.core.simulation_manager-1.15.6] startup
+[2.361s] [ext: isaacsim.storage.native-1.9.3] startup
+[2.362s] [ext: omni.usd.metrics.assembler.physics-110.1.13] startup
+[2.363s] [ext: isaacsim.core.utils-4.1.7] startup
+[2.366s] [ext: isaacsim.core.prims-0.11.7] startup
+[3.230s] [ext: isaacsim.core.api-5.2.13] startup
+[3.236s] [ext: isaacsim.core.cloner-1.7.3] startup
+[3.237s] [ext: isaacsim.test.docstring-1.3.2] startup
+[3.241s] [ext: isaacsim.core.experimental.prims-1.8.9] startup
+[3.259s] [ext: isaacsim.core.experimental.primdata-0.3.2] startup
+[3.261s] [ext: omni.graph.tools-1.81.0] startup
+[3.278s] [ext: omni.graph-1.142.5] startup
+[3.321s] [ext: isaacsim.core.experimental.actuators-0.1.2] startup
+[3.339s] [ext: isaacsim.core.experimental.materials-0.7.1] startup
+[3.342s] [ext: isaacsim.core.experimental.objects-0.8.1] startup
+[3.390s] [ext: omni.hydra.engine.stats-1.0.5] startup
+[3.392s] [ext: omni.hydra.rtx.shadercache.vulkan-1.0.0] startup
+[3.393s] [ext: omni.index.libs-387500.4413.0] startup
+[3.393s] [ext: omni.index-1.0.1] startup
+[3.394s] [ext: omni.ujitso.client-0.0.0] startup
+[3.394s] [ext: omni.usd.schema.playback-1.0.0] startup
+[3.396s] [ext: omni.volume-0.5.2] startup
+[3.400s] [ext: omni.hydra.rtx-1.0.4] startup
+2026-11-19T15:42:33Z [3,385ms] [Warning] [omni.log] Source: omni.hydra was already registered.
+[3.424s] [ext: omni.kit.hydra_texture-1.6.0] startup
+[3.427s] [ext: omni.kit.raycast.query-1.2.0] startup
+[3.431s] [ext: omni.kit.viewport.legacy_gizmos-1.0.24] startup
+[3.433s] [ext: omni.kit.viewport.registry-104.0.6] startup
+[3.434s] [ext: omni.kit.viewport.scene_camera_model-1.0.7] startup
+[3.437s] [ext: omni.kit.widget.viewport-109.2.0] startup
+[3.441s] [ext: omni.kit.window.drop_support-1.0.8] startup
+[3.441s] [ext: omni.kit.viewport.window-109.0.2] startup
+[3.456s] [ext: omni.kit.viewport.utility-2.0.1] startup
+[3.457s] [ext: isaacsim.core.rendering_manager-0.4.3] startup
+[3.471s] [ext: omni.graph.action_core-1.1.9] startup
+[3.473s] [ext: omni.graph.action_nodes_core-2.11.0] startup
+[3.475s] [ext: omni.graph.action_nodes-2.11.0] startup
+[3.498s] [ext: omni.graph.action-2.10.2] startup
+[3.500s] [ext: omni.graph.image.core-0.6.1] startup
+[3.501s] [ext: omni.graph.image.nodes-1.3.1] startup
+[3.501s] [ext: omni.graph.nodes_core-2.11.0] startup
+[3.506s] [ext: omni.graph.nodes-2.12.0] startup
+[3.511s] [ext: omni.kit.hotkeys.core-1.3.12] startup
+[3.513s] [ext: omni.kit.property.adapter.core-1.1.1] startup
+[3.516s] [ext: omni.kit.property.adapter.usd-1.0.5] startup
+[3.518s] [ext: omni.kit.widget.filter-1.1.5] startup
+[3.519s] [ext: omni.kit.widget.highlight_label-1.0.3] startup
+[3.519s] [ext: omni.kit.widget.searchfield-1.1.8] startup
+[3.520s] [ext: omni.kit.window.file_exporter-1.0.36] startup
+[3.521s] [ext: omni.kit.widget.stage-4.4.0] startup
+[3.530s] [ext: omni.kit.window.content_browser_registry-0.0.6] startup
+[3.531s] [ext: omni.kit.window.file-2.0.10] startup
+[3.534s] [ext: omni.kit.window.content_browser-3.1.8] startup
+[3.542s] [ext: omni.kit.window.property-1.15.1] startup
+[3.554s] [ext: omni.kit.property.usd-4.9.4] startup
+[3.564s] [ext: omni.graph.scriptnode-2.10.2] startup
+[3.572s] [ext: omni.kit.widget.searchable_combobox-1.0.7] startup
+[3.573s] [ext: omni.kit.widget.settings-2.0.0] startup
+[3.575s] [ext: omni.kit.window.preferences-1.8.3] startup
+[3.581s] [ext: omni.kit.viewport.menubar.core-107.2.2] startup
+[3.590s] [ext: omni.syntheticdata-0.6.15] startup
+[3.616s] [ext: omni.replicator.nv-1.1.1] startup
+[3.622s] [ext: omni.videoencoding-0.2.1] startup
+[3.624s] [ext: omni.replicator.core-1.13.27] startup
+2026-11-19T15:42:33Z [3,606ms] [Warning] [pxr.Semantics] pxr.Semantics is deprecated - please use Semantics instead
+2026-11-19T15:42:33Z [3,672ms] [Warning] [omni.replicator.core.scripts.extension] No material configuration file, adding configuration to material settings directly.
+[3.816s] [ext: isaacsim.core.nodes-5.10.5] startup
+[3.848s] [ext: isaacsim.core.throttling-2.3.5] startup
+[3.850s] [ext: omni.kit.manipulator.viewport-107.0.1] startup
+[3.851s] [ext: omni.graph.visualization.nodes-2.1.4] startup
+[3.867s] [ext: omni.kit.window.extensions-1.5.10] startup
+[3.872s] [ext: isaacsim.gui.components-1.8.5] startup
+[3.876s] [ext: isaacsim.robot.surface_gripper-3.6.2] startup
+[3.887s] [ext: isaacsim.robot.manipulators-3.4.4] startup
+[3.896s] [ext: isaacsim.robot_motion.lula-4.1.3] startup
+[3.903s] [ext: isaacsim.robot_motion.motion_generation-8.2.9] startup
+[3.908s] [ext: isaacsim.cortex.framework-1.0.18] startup
+[3.909s] [ext: isaacsim.cortex.behaviors-2.0.17] startup
+[3.911s] [ext: isaacsim.examples.base-1.3.2] startup
+[3.912s] [ext: omni.kit.widget.zoombar-1.0.7] startup
+[3.913s] [ext: omni.kit.browser.core-2.3.18] startup
+[3.916s] [ext: omni.kit.browser.folder.core-2.0.2] startup
+[3.920s] [ext: omni.kit.widget.stage_icons-1.0.8] startup
+[3.921s] [ext: omni.kit.window.stage-2.6.1] startup
+[3.924s] [ext: omni.kit.menu.stage-1.2.7] startup
+[3.925s] [ext: omni.kit.usd.collect-3.0.6] startup
+[3.928s] [ext: omni.kit.widget.prompt-1.0.7] startup
+[3.928s] [ext: omni.kit.tool.collect-2.2.19] startup
+[3.931s] [ext: isaacsim.examples.browser-0.3.2] startup
+[3.933s] [ext: omni.kit.search.files-1.0.4] startup
+[3.934s] [ext: omni.kit.widget.calendar-1.0.9] startup
+[3.935s] [ext: omni.kit.widget.extended_searchfield-1.0.31] startup
+[3.942s] [ext: omni.simready.content.browser-0.3.7] startup
+[4.022s] [ext: isaacsim.gui.content_browser-0.4.3] startup
+[4.024s] [ext: omni.kit.selection-0.1.6] startup
+[4.025s] [ext: isaacsim.gui.menu-2.10.5] startup
+[4.032s] [ext: isaacsim.gui.property-1.6.4] startup
+[4.038s] [ext: omni.kit.viewport.actions-110.0.0] startup
+[4.042s] [ext: omni.kit.viewport.menubar.display-107.1.3] startup
+[4.043s] [ext: isaacsim.gui.sensors.icon-2.2.1] startup
+[4.046s] [ext: omni.behavior.scripting.core-110.1.0] startup
+[4.049s] [ext: isaacsim.replicator.behavior-1.5.4] startup
+[4.050s] [ext: isaacsim.replicator.experimental.domain_randomization-1.2.5] startup
+[4.063s] [ext: isaacsim.replicator.domain_randomization-1.2.2] startup
+[4.122s] [ext: isaacsim.replicator.writers-1.5.4] startup
+[4.142s] [ext: isaacsim.robot.experimental.wheeled_robots-0.2.11] startup
+[4.160s] [ext: isaacsim.robot.policy.examples-5.2.12] startup
+[4.169s] [ext: isaacsim.robot.wheeled_robots-5.2.4] startup
+[4.173s] [ext: isaacsim.robot.wheeled_robots.nodes-0.1.5] startup
+[4.189s] [ext: isaacsim.robot_motion.experimental.motion_generation-6.1.3] startup
+[4.199s] [ext: isaacsim.robot_motion.cumotion-1.3.1] startup
+[4.210s] [ext: omni.kit.numpy.common-0.1.3] startup
+[4.212s] [ext: isaacsim.sensors.camera-1.7.9] startup
+[4.234s] [ext: isaacsim.sensors.experimental.physics-3.0.2] startup
+[4.242s] [ext: omni.sensors.net-1.0.1] startup
+[4.244s] [ext: omni.sensors.nv.common-3.0.0] startup
+[4.256s] [ext: omni.sensors.nv.materials-2.0.0] startup
+[4.258s] [ext: omni.sensors.nv.acoustic-3.0.0] startup
+[4.261s] [ext: omni.sensors.nv.ids-2.0.1] startup
+[4.262s] [ext: omni.sensors.nv.lidar-3.0.0] startup
+[4.266s] [ext: omni.sensors.nv.radar-3.0.0] startup
+[4.269s] [ext: isaacsim.sensors.experimental.rtx-1.4.6] startup
+[4.441s] [ext: isaacsim.sensors.physics.nodes-1.5.3] startup
+[4.447s] [ext: isaacsim.util.debug_draw-3.2.3] startup
+[4.453s] [ext: isaacsim.sensors.physx-2.5.5] startup
+[4.460s] [ext: isaacsim.sensors.rtx-15.17.1] startup
+[4.471s] [ext: isaacsim.simulation_app-2.18.4] startup
+[4.472s] [ext: omni.anim.curve.core-1.6.0] startup
+[4.481s] [ext: omni.graph.ui_nodes-2.11.1] startup
+[4.507s] [ext: omni.hydra.scene_api-0.1.3] startup
+[4.511s] [ext: omni.kit.manipulator.camera-110.0.0] startup
+[4.515s] [ext: omni.kit.manipulator.selector-1.1.4] startup
+[4.516s] [ext: omni.kit.manipulator.transform-107.0.0] startup
+[4.519s] [ext: omni.kit.widget.toolbar-2.1.0] startup
+[4.524s] [ext: omni.kit.manipulator.tool.snap-1.5.14] startup
+[4.528s] [ext: omni.kit.viewport.manipulator.transform-107.0.4] startup
+[4.530s] [ext: omni.kit.manipulator.prim.core-108.0.2] startup
+[4.536s] [ext: omni.kit.manipulator.prim.usd-107.0.3] startup
+[4.537s] [ext: omni.kit.manipulator.prim-108.0.0] startup
+[4.537s] [ext: omni.kit.manipulator.selection-109.0.1] startup
+[4.538s] [ext: omni.kit.menu.create-2.0.2] startup
+[4.540s] [ext: omni.kit.property.audio-1.0.16] startup
+[4.543s] [ext: omni.kit.property.camera-1.0.14] startup
+[4.544s] [ext: omni.kit.property.geometry-2.1.2] startup
+[4.547s] [ext: omni.kit.property.light-1.0.14] startup
+2026-11-19T15:42:34Z [4,543ms] [Warning] [omni.usd] Encountered USD Warnings but USD Diagnostics are currently muted. To view USD Warnings, please set the '/persistent/app/usd/muteUsdDiagnostics' setting to false in Preferences page.
+[4.574s] [ext: omni.kit.property.material-1.14.6] startup
+[4.579s] [ext: omni.kit.property.render-1.2.2] startup
+[4.580s] [ext: omni.kit.property.transform-1.6.9] startup
+[4.583s] [ext: omni.kit.property.bundle-1.5.1] startup
+[4.584s] [ext: omni.kit.usdz_export-1.1.0] startup
+[4.586s] [ext: omni.kit.tool.asset_importer-6.0.1] startup
+[4.591s] [ext: omni.kit.ui.actions-1.0.5] startup
+[4.592s] [ext: omni.kit.viewport.menubar.camera-107.0.10] startup
+[4.596s] [ext: omni.kit.viewport.menubar.lighting-107.3.2] startup
+[4.599s] [ext: omni.kit.viewport.menubar.render-110.0.0] startup
+[4.601s] [ext: omni.kit.viewport.menubar.settings-110.0.1] startup
+[4.604s] [ext: omni.kit.window.console-1.1.9] startup
+[4.607s] [ext: omni.kit.window.status_bar-0.1.11] startup
+[4.609s] [ext: omni.kit.window.toolbar-3.0.3] startup
+[4.611s] [ext: omni.ocio-0.1.1] startup
+[4.612s] [ext: omni.physx.commands-110.1.13] startup
+[4.615s] [ext: omni.replicator.replicator_yaml-2.0.12] startup
+[4.624s] [ext: omni.rtx.window.settings-0.8.0] startup
+[4.629s] [ext: omni.rtx.settings.core-0.7.1] startup
+[4.632s] [ext: omni.usd.metrics.assembler.ui-110.1.1] startup
+[4.640s] [ext: semantics.schema.editor-2.0.2] startup
+[4.643s] [ext: semantics.schema.property-2.0.2] startup
+[4.644s] [ext: omni.kit.menu.common-2.0.2] startup
+[4.645s] [ext: isaacsim.exp.base-6.0.1] startup
+[4.645s] [ext: isaacsim.exp.base.python-6.0.1] startup
+[4.647s] Simulation App Starting
+[5.778s] Simulation App Startup Complete
+[5.785s] app ready
+Starting kit application with the following args:  ['/home/wj/isaacsim/exts/isaacsim.simulation_app/isaacsim/simulation_app/simulation_app.py', '/home/wj/isaacsim/apps/isaacsim.exp.base.python.kit', '--/app/tokens/exe-path=/home/wj/isaacsim/kit', '--/persistent/app/viewport/displayOptions=3094', '--/rtx/materialDb/syncLoads=True', '--/rtx/hydra/materialSyncLoads=True', '--/omni/kit/plugin/syncUsdLoads=True', '--/app/renderer/resolution/width=1280', '--/app/renderer/resolution/height=720', '--/app/window/width=1440', '--/app/window/height=900', '--/renderer/multiGpu/enabled=False', '--/app/fastShutdown=True', '--/app/installSignalHandlers=0', '--ext-folder', '/home/wj/isaacsim/exts', '--ext-folder', '/home/wj/isaacsim/apps', '--/physics/cudaDevice=0', '--/plugins/carb.tasking.plugin/threadCount=24', '--/plugins/omni.tbb.globalcontrol/maxThreadCount=24', '--portable', '--no-window', '--/app/window/hideUi=1']
+Passing the following args to the base kit application:  ['--config', 'configs/psto/trace_native_pilot.yaml', '--headless', '--seed', '4348', '--total_frames', '10000', '--rollout_steps', '64', '--training_epoch_num', '1', '--num_minibatches', '1', '--checkpoint_interval', '25', '--evaluation_interval', '50', '--num_eval_episodes', '1', '--checkpoint', 'results/psto_p0/final_acceptance/pilot_10000/checkpoint.pt']
+Warp 1.13.0 initialized:
+   CUDA Toolkit 12.9, Driver 13.2
+   Devices:
+     "cpu"      : "x86_64"
+     "cuda:0"   : "NVIDIA GeForce RTX 4090" (47 GiB, sm_89, mempool enabled)
+     "cuda:1"   : "NVIDIA GeForce RTX 4090" (47 GiB, sm_89, mempool enabled)
+   CUDA peer access:
+     Not supported
+   Kernel cache:
+     /home/wj/.cache/warp/1.13.0
+{
+  "experiment_name": "trace_native_pilot",
+  "config": "/home/wj/\u684c\u9762/\u65e0\u4eba\u673a/TRACE_baseline_foundation/configs/psto/trace_native_pilot.yaml",
+  "seed": 4348,
+  "git_sha": "aed43a95064b6726e086778c819859ff973163d2",
+  "physics_dt": 0.004166666666666667,
+  "policy_hz": 30.0,
+  "policy_dt": 0.03333333333333333,
+  "episode_duration": 9.333333333333334,
+  "max_episode_steps": 280,
+  "frame_skip": 8,
+  "num_envs": 1,
+  "total_frames": 10000,
+  "rollout_steps": 64,
+  "ppo_epochs": 1,
+  "num_minibatches": 1,
+  "python": "3.12.13 (tags/v3.12.13-dirty:3bb231a, Apr 22 2026, 14:10:08) [GCC 11.4.0]",
+  "platform": "Linux-7.0.0-31-generic-x86_64-with-glibc2.39",
+  "torch": "2.11.0+cu128",
+  "cuda": "12.8",
+  "checkpoint_interval": 25,
+  "evaluation_interval": 50,
+  "num_eval_episodes": 1,
+  "cuda_seeded": true,
+  "isaac_sim_version": "110.1.2+production.326809.f9bf0dda.gl"
+}
+{"frames": 64, "update": 1, "elapsed_s": 12.236336193978786, "training_fps": 5.230323318113659, "policy_loss": 0.020124029368162155, "value_loss": 0.6323843002319336, "entropy": -0.1186639815568924, "sl_loss": 0.02639034390449524, "encoder_grad_norm": 0.9794585108757019, "actor_grad_norm": 0.21001200377941132, "critic_grad_norm": 4.949798107147217, "lstm_grad_norm": 0.045113954693078995, "lstm_updates": 1, "minibatches": 1}
+{"frames": 128, "update": 2, "elapsed_s": 24.1564304321073, "training_fps": 5.298795944069448, "policy_loss": 0.030410245060920715, "value_loss": 0.36950451135635376, "entropy": -0.10183289647102356, "sl_loss": 0.02307279221713543, "encoder_grad_norm": 1.8509106636047363, "actor_grad_norm": 0.5257325768470764, "critic_grad_norm": 1.5079506635665894, "lstm_grad_norm": 0.05205859616398811, "lstm_updates": 1, "minibatches": 1}
+{"frames": 192, "update": 3, "elapsed_s": 36.09428716707043, "training_fps": 5.319401256249469, "policy_loss": 0.03273819386959076, "value_loss": 0.23593053221702576, "entropy": -0.10749136656522751, "sl_loss": 0.023275276646018028, "encoder_grad_norm": 0.9953760504722595, "actor_grad_norm": 0.29337289929389954, "critic_grad_norm": 2.374559164047241, "lstm_grad_norm": 0.039226021617650986, "lstm_updates": 1, "minibatches": 1}
+{"frames": 256, "update": 4, "elapsed_s": 48.301247528987005, "training_fps": 5.3000700733455846, "policy_loss": 0.05267713963985443, "value_loss": 0.12341729551553726, "entropy": -0.1164824366569519, "sl_loss": 0.024064693599939346, "encoder_grad_norm": 1.6638157367706299, "actor_grad_norm": 0.5157615542411804, "critic_grad_norm": 2.831038236618042, "lstm_grad_norm": 0.03692319244146347, "lstm_updates": 1, "minibatches": 1}
+{"frames": 320, "update": 5, "elapsed_s": 60.650810312945396, "training_fps": 5.276104228769608, "policy_loss": 0.044648535549640656, "value_loss": 0.19046379625797272, "entropy": -0.12003206461668015, "sl_loss": 0.03557247668504715, "encoder_grad_norm": 1.165103554725647, "actor_grad_norm": 0.326244980096817, "critic_grad_norm": 4.808628082275391, "lstm_grad_norm": 0.05986976996064186, "lstm_updates": 1, "minibatches": 1}
+{"frames": 384, "update": 6, "elapsed_s": 72.68742625205778, "training_fps": 5.282894404311605, "policy_loss": 0.04985643923282623, "value_loss": 0.03852541372179985, "entropy": -0.1422991156578064, "sl_loss": 0.02733847312629223, "encoder_grad_norm": 1.26901376247406, "actor_grad_norm": 0.36800453066825867, "critic_grad_norm": 1.8446861505508423, "lstm_grad_norm": 0.036476634442806244, "lstm_updates": 1, "minibatches": 1}
+{"frames": 448, "update": 7, "elapsed_s": 84.80648003402166, "training_fps": 5.28261515091703, "policy_loss": 0.01647034101188183, "value_loss": 0.10110827535390854, "entropy": -0.12397906929254532, "sl_loss": 0.025147490203380585, "encoder_grad_norm": 0.9025683999061584, "actor_grad_norm": 0.2536499798297882, "critic_grad_norm": 3.123401165008545, "lstm_grad_norm": 0.03713230416178703, "lstm_updates": 1, "minibatches": 1}
+{"frames": 512, "update": 8, "elapsed_s": 96.94802894396707, "training_fps": 5.281180046777063, "policy_loss": 0.05392569303512573, "value_loss": 0.07584698498249054, "entropy": -0.12854722142219543, "sl_loss": 0.0238764900714159, "encoder_grad_norm": 1.077358365058899, "actor_grad_norm": 0.2567813992500305, "critic_grad_norm": 0.9099692702293396, "lstm_grad_norm": 0.03428831696510315, "lstm_updates": 1, "minibatches": 1}
+{"frames": 576, "update": 9, "elapsed_s": 109.54991120705381, "training_fps": 5.257877348462262, "policy_loss": 0.036868248134851456, "value_loss": 0.13296690583229065, "entropy": -0.13316383957862854, "sl_loss": 0.029212631285190582, "encoder_grad_norm": 1.1432737112045288, "actor_grad_norm": 0.3950214982032776, "critic_grad_norm": 1.3390439748764038, "lstm_grad_norm": 0.0337955504655838, "lstm_updates": 1, "minibatches": 1}
+{"frames": 640, "update": 10, "elapsed_s": 121.42670202907175, "training_fps": 5.2706693451165325, "policy_loss": 0.047763582319021225, "value_loss": 0.7141315340995789, "entropy": -0.1373763382434845, "sl_loss": 0.02634444646537304, "encoder_grad_norm": 1.5567378997802734, "actor_grad_norm": 0.5080645680427551, "critic_grad_norm": 10.64200210571289, "lstm_grad_norm": 0.06548772752285004, "lstm_updates": 1, "minibatches": 1}
+{"frames": 704, "update": 11, "elapsed_s": 133.3241264850367, "training_fps": 5.280364586824545, "policy_loss": 0.04649211838841438, "value_loss": 0.05167580023407936, "entropy": -0.1310393214225769, "sl_loss": 0.013896551914513111, "encoder_grad_norm": 1.6718144416809082, "actor_grad_norm": 0.5110684633255005, "critic_grad_norm": 2.134493589401245, "lstm_grad_norm": 0.04041070118546486, "lstm_updates": 1, "minibatches": 1}
+{"frames": 768, "update": 12, "elapsed_s": 146.00762358610518, "training_fps": 5.259999287328998, "policy_loss": 0.07657420635223389, "value_loss": 5.003192901611328, "entropy": -0.13468730449676514, "sl_loss": 0.018403727561235428, "encoder_grad_norm": 1.2593696117401123, "actor_grad_norm": 0.3063240349292755, "critic_grad_norm": 18.21608543395996, "lstm_grad_norm": 0.04974222928285599, "lstm_updates": 1, "minibatches": 1}
+{"frames": 832, "update": 13, "elapsed_s": 158.2197047099471, "training_fps": 5.258510598443729, "policy_loss": 0.018976230174303055, "value_loss": 0.032449617981910706, "entropy": -0.1339569240808487, "sl_loss": 0.03397955372929573, "encoder_grad_norm": 1.5115435123443604, "actor_grad_norm": 0.4056246876716614, "critic_grad_norm": 0.27966567873954773, "lstm_grad_norm": 0.03362870216369629, "lstm_updates": 1, "minibatches": 1}
+{"frames": 896, "update": 14, "elapsed_s": 170.4352180280257, "training_fps": 5.257129392524771, "policy_loss": 0.031250618398189545, "value_loss": 0.012789730913937092, "entropy": -0.12053203582763672, "sl_loss": 0.021104805171489716, "encoder_grad_norm": 1.1933677196502686, "actor_grad_norm": 0.3587484061717987, "critic_grad_norm": 1.1670639514923096, "lstm_grad_norm": 0.03342263028025627, "lstm_updates": 1, "minibatches": 1}
+{"frames": 960, "update": 15, "elapsed_s": 182.71317406604066, "training_fps": 5.254136717966553, "policy_loss": 0.034315239638090134, "value_loss": 0.04717302322387695, "entropy": -0.13379445672035217, "sl_loss": 0.023242903873324394, "encoder_grad_norm": 1.5122264623641968, "actor_grad_norm": 0.34611472487449646, "critic_grad_norm": 2.5591893196105957, "lstm_grad_norm": 0.033742789179086685, "lstm_updates": 1, "minibatches": 1}
+{"frames": 1024, "update": 16, "elapsed_s": 195.47897280403413, "training_fps": 5.23841506131345, "policy_loss": 0.022556431591510773, "value_loss": 4.502176761627197, "entropy": -0.13628104329109192, "sl_loss": 0.02338966727256775, "encoder_grad_norm": 2.4958088397979736, "actor_grad_norm": 0.6668893694877625, "critic_grad_norm": 19.398639678955078, "lstm_grad_norm": 0.04337392374873161, "lstm_updates": 1, "minibatches": 1}
+{"frames": 1088, "update": 17, "elapsed_s": 207.4329332129564, "training_fps": 5.245068749964054, "policy_loss": 0.04848211258649826, "value_loss": 0.05825553089380264, "entropy": -0.1448977291584015, "sl_loss": 0.03373643010854721, "encoder_grad_norm": 1.1398224830627441, "actor_grad_norm": 0.27035996317863464, "critic_grad_norm": 2.6635942459106445, "lstm_grad_norm": 0.06102987378835678, "lstm_updates": 1, "minibatches": 1}
+{"frames": 1152, "update": 18, "elapsed_s": 219.48659832403064, "training_fps": 5.248612013314033, "policy_loss": 0.04021427780389786, "value_loss": 0.011672328226268291, "entropy": -0.13669610023498535, "sl_loss": 0.025005945935845375, "encoder_grad_norm": 1.940579891204834, "actor_grad_norm": 0.6367588639259338, "critic_grad_norm": 0.25380751490592957, "lstm_grad_norm": 0.03840351477265358, "lstm_updates": 1, "minibatches": 1}
+{"frames": 1216, "update": 19, "elapsed_s": 231.59766856208444, "training_fps": 5.2504846148321045, "policy_loss": 0.05413763225078583, "value_loss": 0.01356411911547184, "entropy": -0.12741872668266296, "sl_loss": 0.025276273488998413, "encoder_grad_norm": 2.1114158630371094, "actor_grad_norm": 0.5545445084571838, "critic_grad_norm": 0.7248892188072205, "lstm_grad_norm": 0.03522668778896332, "lstm_updates": 1, "minibatches": 1}
+{"frames": 1280, "update": 20, "elapsed_s": 244.20559418806806, "training_fps": 5.2414851534269244, "policy_loss": 0.03279116004705429, "value_loss": 2.910661220550537, "entropy": -0.13463589549064636, "sl_loss": 0.022591549903154373, "encoder_grad_norm": 0.9496051669120789, "actor_grad_norm": 0.2519698441028595, "critic_grad_norm": 13.457953453063965, "lstm_grad_norm": 0.03456592559814453, "lstm_updates": 1, "minibatches": 1}
+{"frames": 1344, "update": 21, "elapsed_s": 256.3013656930998, "training_fps": 5.243826902996344, "policy_loss": 0.019337818026542664, "value_loss": 0.1143263578414917, "entropy": -0.1428363025188446, "sl_loss": 0.023181233555078506, "encoder_grad_norm": 0.9106824994087219, "actor_grad_norm": 0.23489084839820862, "critic_grad_norm": 2.344360113143921, "lstm_grad_norm": 0.03234543651342392, "lstm_updates": 1, "minibatches": 1}
+{"frames": 1408, "update": 22, "elapsed_s": 268.3371920429636, "training_fps": 5.24712949669762, "policy_loss": 0.031595297157764435, "value_loss": 0.04279045760631561, "entropy": -0.1586945652961731, "sl_loss": 0.028297236189246178, "encoder_grad_norm": 1.999692678451538, "actor_grad_norm": 0.5458041429519653, "critic_grad_norm": 0.5188807845115662, "lstm_grad_norm": 0.03195543214678764, "lstm_updates": 1, "minibatches": 1}
+{"frames": 1472, "update": 23, "elapsed_s": 280.3090520859696, "training_fps": 5.2513466285163375, "policy_loss": 0.056138522922992706, "value_loss": 0.0326613113284111, "entropy": -0.14311490952968597, "sl_loss": 0.027425726875662804, "encoder_grad_norm": 1.4007796049118042, "actor_grad_norm": 0.45793163776397705, "critic_grad_norm": 1.1039890050888062, "lstm_grad_norm": 0.03238286077976227, "lstm_updates": 1, "minibatches": 1}
+{"frames": 1536, "update": 24, "elapsed_s": 292.81244587898254, "training_fps": 5.24567865269223, "policy_loss": 0.024819478392601013, "value_loss": 0.04736492037773132, "entropy": -0.14953657984733582, "sl_loss": 0.027981936931610107, "encoder_grad_norm": 0.628626823425293, "actor_grad_norm": 0.1977599412202835, "critic_grad_norm": 0.6697859168052673, "lstm_grad_norm": 0.03599386662244797, "lstm_updates": 1, "minibatches": 1}
+{"frames": 1600, "update": 25, "elapsed_s": 304.9077039679978, "training_fps": 5.247489571907506, "policy_loss": 0.007862329483032227, "value_loss": 0.014967015944421291, "entropy": -0.12723729014396667, "sl_loss": 0.030545426532626152, "encoder_grad_norm": 0.9807150959968567, "actor_grad_norm": 0.2597736418247223, "critic_grad_norm": 1.22958242893219, "lstm_grad_norm": 0.051423732191324234, "lstm_updates": 1, "minibatches": 1}
+{"frames": 1664, "update": 26, "elapsed_s": 317.1205777260475, "training_fps": 5.247215455230862, "policy_loss": 0.029279448091983795, "value_loss": 0.010278183966875076, "entropy": -0.11326806247234344, "sl_loss": 0.025912847369909286, "encoder_grad_norm": 1.2114111185073853, "actor_grad_norm": 0.33858397603034973, "critic_grad_norm": 0.5274092555046082, "lstm_grad_norm": 0.033686310052871704, "lstm_updates": 1, "minibatches": 1}
+{"frames": 1728, "update": 27, "elapsed_s": 329.7823268561624, "training_fps": 5.239819891904613, "policy_loss": 0.028299197554588318, "value_loss": 1.8890161514282227, "entropy": -0.11758522689342499, "sl_loss": 0.0230377446860075, "encoder_grad_norm": 0.751248836517334, "actor_grad_norm": 0.23391982913017273, "critic_grad_norm": 13.050392150878906, "lstm_grad_norm": 0.03200402855873108, "lstm_updates": 1, "minibatches": 1}
+{"frames": 1792, "update": 28, "elapsed_s": 341.81861948804, "training_fps": 5.24254646948705, "policy_loss": 0.0402429923415184, "value_loss": 0.007622851524502039, "entropy": -0.12224258482456207, "sl_loss": 0.02852499857544899, "encoder_grad_norm": 1.0627186298370361, "actor_grad_norm": 0.21811360120773315, "critic_grad_norm": 0.9965657591819763, "lstm_grad_norm": 0.07040160894393921, "lstm_updates": 1, "minibatches": 1}
+{"frames": 1856, "update": 29, "elapsed_s": 353.9088934510946, "training_fps": 5.244287528618717, "policy_loss": 0.03420409932732582, "value_loss": 0.05415017902851105, "entropy": -0.12074747681617737, "sl_loss": 0.01576760783791542, "encoder_grad_norm": 1.4628536701202393, "actor_grad_norm": 0.3943926990032196, "critic_grad_norm": 1.9703069925308228, "lstm_grad_norm": 0.03302405774593353, "lstm_updates": 1, "minibatches": 1}
+{"frames": 1920, "update": 30, "elapsed_s": 365.9715088461526, "training_fps": 5.2463100275822185, "policy_loss": 0.039007168263196945, "value_loss": 0.0106147900223732, "entropy": -0.11862561106681824, "sl_loss": 0.017224878072738647, "encoder_grad_norm": 1.5779390335083008, "actor_grad_norm": 0.4335882365703583, "critic_grad_norm": 0.1207064837217331, "lstm_grad_norm": 0.03454173728823662, "lstm_updates": 1, "minibatches": 1}
+{"frames": 1984, "update": 31, "elapsed_s": 378.0840815261472, "training_fps": 5.24750999508016, "policy_loss": 0.035436928272247314, "value_loss": 0.01317848265171051, "entropy": -0.11285141110420227, "sl_loss": 0.015844004228711128, "encoder_grad_norm": 0.9578503370285034, "actor_grad_norm": 0.22895537316799164, "critic_grad_norm": 0.23523607850074768, "lstm_grad_norm": 0.03461534157395363, "lstm_updates": 1, "minibatches": 1}
+{"frames": 2048, "update": 32, "elapsed_s": 390.7572241530288, "training_fps": 5.2411059068952, "policy_loss": 0.044880304485559464, "value_loss": 0.014416242018342018, "entropy": -0.10532163828611374, "sl_loss": 0.0128119345754385, "encoder_grad_norm": 1.7026246786117554, "actor_grad_norm": 0.5173841714859009, "critic_grad_norm": 0.46283483505249023, "lstm_grad_norm": 0.030496444553136826, "lstm_updates": 1, "minibatches": 1}
+{"frames": 2112, "update": 33, "elapsed_s": 407.4461580850184, "training_fps": 5.183506962081642, "policy_loss": 0.030718207359313965, "value_loss": 0.025912607088685036, "entropy": -0.10272806137800217, "sl_loss": 0.02507283352315426, "encoder_grad_norm": 1.0476733446121216, "actor_grad_norm": 0.32326170802116394, "critic_grad_norm": 1.414557933807373, "lstm_grad_norm": 0.03568330034613609, "lstm_updates": 1, "minibatches": 1}
+{"frames": 2176, "update": 34, "elapsed_s": 421.76220690994523, "training_fps": 5.159305318064176, "policy_loss": 0.037126872688531876, "value_loss": 0.023129671812057495, "entropy": -0.09888523817062378, "sl_loss": 0.02751053310930729, "encoder_grad_norm": 1.15746009349823, "actor_grad_norm": 0.3339480459690094, "critic_grad_norm": 0.8856077790260315, "lstm_grad_norm": 0.03666977211833, "lstm_updates": 1, "minibatches": 1}
+{"frames": 2240, "update": 35, "elapsed_s": 433.81324248807505, "training_fps": 5.163512260869555, "policy_loss": 0.024189330637454987, "value_loss": 0.03548954799771309, "entropy": -0.10253758728504181, "sl_loss": 0.02702471986413002, "encoder_grad_norm": 2.275212049484253, "actor_grad_norm": 0.6977171897888184, "critic_grad_norm": 1.388669490814209, "lstm_grad_norm": 0.03512309119105339, "lstm_updates": 1, "minibatches": 1}
+{"frames": 2304, "update": 36, "elapsed_s": 446.31704939808697, "training_fps": 5.162249569978408, "policy_loss": 0.023091014474630356, "value_loss": 0.04578167945146561, "entropy": -0.10512509942054749, "sl_loss": 0.021085986867547035, "encoder_grad_norm": 1.0066536664962769, "actor_grad_norm": 0.2833832800388336, "critic_grad_norm": 1.4197344779968262, "lstm_grad_norm": 0.028712617233395576, "lstm_updates": 1, "minibatches": 1}
+{"frames": 2368, "update": 37, "elapsed_s": 458.31393070099875, "training_fps": 5.166764169481393, "policy_loss": 0.028479889035224915, "value_loss": 0.04075732082128525, "entropy": -0.10832866281270981, "sl_loss": 0.026952238753437996, "encoder_grad_norm": 0.8985666036605835, "actor_grad_norm": 0.24748069047927856, "critic_grad_norm": 1.7376857995986938, "lstm_grad_norm": 0.04240725189447403, "lstm_updates": 1, "minibatches": 1}
+{"frames": 2432, "update": 38, "elapsed_s": 470.36588985007256, "training_fps": 5.170442945800368, "policy_loss": 0.0406663715839386, "value_loss": 0.01998509094119072, "entropy": -0.12266863882541656, "sl_loss": 0.02825961634516716, "encoder_grad_norm": 1.8043160438537598, "actor_grad_norm": 0.5821298360824585, "critic_grad_norm": 1.3297679424285889, "lstm_grad_norm": 0.03623127192258835, "lstm_updates": 1, "minibatches": 1}
+{"frames": 2496, "update": 39, "elapsed_s": 482.3340037490707, "training_fps": 5.174837302085372, "policy_loss": 0.006762709468603134, "value_loss": 0.02800600789487362, "entropy": -0.11207824945449829, "sl_loss": 0.025106141343712807, "encoder_grad_norm": 1.0210398435592651, "actor_grad_norm": 0.25739115476608276, "critic_grad_norm": 1.5585047006607056, "lstm_grad_norm": 0.03192462772130966, "lstm_updates": 1, "minibatches": 1}
+{"frames": 2560, "update": 40, "elapsed_s": 495.2664812549483, "training_fps": 5.168934486538089, "policy_loss": 0.004091497510671616, "value_loss": 2.052252769470215, "entropy": -0.105891153216362, "sl_loss": 0.020947881042957306, "encoder_grad_norm": 1.0354539155960083, "actor_grad_norm": 0.302667498588562, "critic_grad_norm": 11.350460052490234, "lstm_grad_norm": 0.029427455738186836, "lstm_updates": 1, "minibatches": 1}
+{"frames": 2624, "update": 41, "elapsed_s": 507.6962055990007, "training_fps": 5.168445159144912, "policy_loss": 0.019490648061037064, "value_loss": 0.02303898334503174, "entropy": -0.10399384051561356, "sl_loss": 0.02816738188266754, "encoder_grad_norm": 0.6943228244781494, "actor_grad_norm": 0.22963012754917145, "critic_grad_norm": 0.49685779213905334, "lstm_grad_norm": 0.036216024309396744, "lstm_updates": 1, "minibatches": 1}
+{"frames": 2688, "update": 42, "elapsed_s": 519.8246004639659, "training_fps": 5.170974967447876, "policy_loss": 0.0460081472992897, "value_loss": 0.020374193787574768, "entropy": -0.10441911220550537, "sl_loss": 0.029282990843057632, "encoder_grad_norm": 1.7611865997314453, "actor_grad_norm": 0.5121522545814514, "critic_grad_norm": 0.7694434523582458, "lstm_grad_norm": 0.040295906364917755, "lstm_updates": 1, "minibatches": 1}
+{"frames": 2752, "update": 43, "elapsed_s": 532.0324142850004, "training_fps": 5.172617161133444, "policy_loss": 0.011934684589505196, "value_loss": 0.014982113614678383, "entropy": -0.09922793507575989, "sl_loss": 0.02728359028697014, "encoder_grad_norm": 1.4145820140838623, "actor_grad_norm": 0.3787575364112854, "critic_grad_norm": 1.5676840543746948, "lstm_grad_norm": 0.046274762600660324, "lstm_updates": 1, "minibatches": 1}
+{"frames": 2816, "update": 44, "elapsed_s": 544.6474360451102, "training_fps": 5.170317180889961, "policy_loss": 0.011798784136772156, "value_loss": 1.7078616619110107, "entropy": -0.09618139266967773, "sl_loss": 0.026637859642505646, "encoder_grad_norm": 0.7515893578529358, "actor_grad_norm": 0.17612005770206451, "critic_grad_norm": 12.13021183013916, "lstm_grad_norm": 0.030197547748684883, "lstm_updates": 1, "minibatches": 1}
+{"frames": 2880, "update": 45, "elapsed_s": 556.7691463909578, "training_fps": 5.172700418824985, "policy_loss": 0.009377449750900269, "value_loss": 0.021855954080820084, "entropy": -0.09737499803304672, "sl_loss": 0.025540784001350403, "encoder_grad_norm": 0.9419733285903931, "actor_grad_norm": 0.25369077920913696, "critic_grad_norm": 1.160830020904541, "lstm_grad_norm": 0.03222668170928955, "lstm_updates": 1, "minibatches": 1}
+{"frames": 2944, "update": 46, "elapsed_s": 568.9013487191405, "training_fps": 5.174886654141021, "policy_loss": 0.01997465267777443, "value_loss": 0.009436117485165596, "entropy": -0.08818721771240234, "sl_loss": 0.02629009447991848, "encoder_grad_norm": 0.6323693990707397, "actor_grad_norm": 0.1619918942451477, "critic_grad_norm": 0.24969862401485443, "lstm_grad_norm": 0.028382038697600365, "lstm_updates": 1, "minibatches": 1}
+{"frames": 3008, "update": 47, "elapsed_s": 581.0899766630027, "training_fps": 5.176478889704103, "policy_loss": 0.028796706348657608, "value_loss": 0.007012303452938795, "entropy": -0.08529667556285858, "sl_loss": 0.02034393697977066, "encoder_grad_norm": 1.2077635526657104, "actor_grad_norm": 0.4186350405216217, "critic_grad_norm": 0.17384004592895508, "lstm_grad_norm": 0.02943231537938118, "lstm_updates": 1, "minibatches": 1}
+{"frames": 3072, "update": 48, "elapsed_s": 593.2099102470092, "training_fps": 5.178605319821521, "policy_loss": 0.016717297956347466, "value_loss": 0.017453743144869804, "entropy": -0.08405168354511261, "sl_loss": 0.02774234488606453, "encoder_grad_norm": 1.4246501922607422, "actor_grad_norm": 0.4677601158618927, "critic_grad_norm": 0.45681032538414, "lstm_grad_norm": 0.029091808944940567, "lstm_updates": 1, "minibatches": 1}
+{"frames": 3136, "update": 49, "elapsed_s": 605.653376450995, "training_fps": 5.1778791608326795, "policy_loss": 0.027933193370699883, "value_loss": 0.009260803461074829, "entropy": -0.10248688608407974, "sl_loss": 0.02489401027560234, "encoder_grad_norm": 0.7761219143867493, "actor_grad_norm": 0.2126428782939911, "critic_grad_norm": 0.25845062732696533, "lstm_grad_norm": 0.05572689324617386, "lstm_updates": 1, "minibatches": 1}
+{"evaluation": {"frames": 3200, "update": 50, "seed": 154348, "episodes": [{"episode": 0, "seed": 154348, "steps": 280, "reward": -293.94775139167905, "capture": false, "escaped": false, "collision": false, "timeout": true, "visibility_ratio": 0.5642857142857143}], "capture_success_rate": 0.0, "collision_rate": 0.0, "escape_rate": 0.0, "average_episode_reward": -293.94775139167905, "average_episode_length": 280.0, "target_visibility_ratio": 0.5642857142857143}}
+{"frames": 3200, "update": 50, "elapsed_s": 617.6638518129475, "training_fps": 5.180811514973363, "policy_loss": 0.025558341294527054, "value_loss": 0.03252233564853668, "entropy": -0.10099825263023376, "sl_loss": 0.016580931842327118, "encoder_grad_norm": 0.9192548394203186, "actor_grad_norm": 0.25105708837509155, "critic_grad_norm": 2.3828699588775635, "lstm_grad_norm": 0.05251212418079376, "lstm_updates": 1, "minibatches": 1, "evaluation": {"frames": 3200, "update": 50, "seed": 154348, "episodes": [{"episode": 0, "seed": 154348, "steps": 280, "reward": -293.94775139167905, "capture": false, "escaped": false, "collision": false, "timeout": true, "visibility_ratio": 0.5642857142857143}], "capture_success_rate": 0.0, "collision_rate": 0.0, "escape_rate": 0.0, "average_episode_reward": -293.94775139167905, "average_episode_length": 280.0, "target_visibility_ratio": 0.5642857142857143}}
+{"frames": 3264, "update": 51, "elapsed_s": 682.1845928099938, "training_fps": 4.784628722259012, "policy_loss": 0.03487759828567505, "value_loss": 0.789351224899292, "entropy": -0.09516528248786926, "sl_loss": 0.014420728199183941, "encoder_grad_norm": 0.9934332966804504, "actor_grad_norm": 0.2869115173816681, "critic_grad_norm": 8.78613567352295, "lstm_grad_norm": 0.038064997643232346, "lstm_updates": 1, "minibatches": 1}
+{"frames": 3328, "update": 52, "elapsed_s": 694.2327807161491, "training_fps": 4.793781118969785, "policy_loss": 0.006067600101232529, "value_loss": 0.03942478075623512, "entropy": -0.0841529369354248, "sl_loss": 0.020074918866157532, "encoder_grad_norm": 0.9018049240112305, "actor_grad_norm": 0.28686830401420593, "critic_grad_norm": 0.5574842691421509, "lstm_grad_norm": 0.028513941913843155, "lstm_updates": 1, "minibatches": 1}
+{"frames": 3392, "update": 53, "elapsed_s": 706.1811274781357, "training_fps": 4.803300264836437, "policy_loss": 0.021093172952532768, "value_loss": 0.017476044595241547, "entropy": -0.08618573844432831, "sl_loss": 0.024242542684078217, "encoder_grad_norm": 1.506397008895874, "actor_grad_norm": 0.5531083345413208, "critic_grad_norm": 1.1782186031341553, "lstm_grad_norm": 0.030456164851784706, "lstm_updates": 1, "minibatches": 1}
+{"frames": 3456, "update": 54, "elapsed_s": 718.179680175148, "training_fps": 4.812166220174675, "policy_loss": 0.005022317171096802, "value_loss": 0.008908585645258427, "entropy": -0.0881657525897026, "sl_loss": 0.023972023278474808, "encoder_grad_norm": 1.1200584173202515, "actor_grad_norm": 0.34140294790267944, "critic_grad_norm": 0.2707434594631195, "lstm_grad_norm": 0.030939580872654915, "lstm_updates": 1, "minibatches": 1}
+{"frames": 3520, "update": 55, "elapsed_s": 730.6984471171163, "training_fps": 4.817308714672588, "policy_loss": 0.03293696045875549, "value_loss": 0.005566547624766827, "entropy": -0.07971344888210297, "sl_loss": 0.02543015591800213, "encoder_grad_norm": 1.224584937095642, "actor_grad_norm": 0.3509853482246399, "critic_grad_norm": 0.18007652461528778, "lstm_grad_norm": 0.029114972800016403, "lstm_updates": 1, "minibatches": 1}
+{"frames": 3584, "update": 56, "elapsed_s": 742.5900300289504, "training_fps": 4.826350815069737, "policy_loss": 0.019425734877586365, "value_loss": 0.022499212995171547, "entropy": -0.09023098647594452, "sl_loss": 0.024762233719229698, "encoder_grad_norm": 1.590009331703186, "actor_grad_norm": 0.4798445999622345, "critic_grad_norm": 0.3988936245441437, "lstm_grad_norm": 0.032389719039201736, "lstm_updates": 1, "minibatches": 1}
+{"frames": 3648, "update": 57, "elapsed_s": 754.434753544163, "training_fps": 4.8354082046516345, "policy_loss": 0.017087776213884354, "value_loss": 0.008452218025922775, "entropy": -0.08622778952121735, "sl_loss": 0.02535144053399563, "encoder_grad_norm": 0.8853234052658081, "actor_grad_norm": 0.20122231543064117, "critic_grad_norm": 0.16100311279296875, "lstm_grad_norm": 0.03302019089460373, "lstm_updates": 1, "minibatches": 1}
+{"frames": 3712, "update": 58, "elapsed_s": 766.2632047149818, "training_fps": 4.844288456306753, "policy_loss": 0.029869824647903442, "value_loss": 0.030551180243492126, "entropy": -0.08142721652984619, "sl_loss": 0.028461752459406853, "encoder_grad_norm": 0.800408124923706, "actor_grad_norm": 0.24077771604061127, "critic_grad_norm": 1.8795356750488281, "lstm_grad_norm": 0.04430250823497772, "lstm_updates": 1, "minibatches": 1}
+{"frames": 3776, "update": 59, "elapsed_s": 778.1465953199659, "training_fps": 4.8525560854860394, "policy_loss": 0.02035347744822502, "value_loss": 0.05117682367563248, "entropy": -0.07856424897909164, "sl_loss": 0.027727188542485237, "encoder_grad_norm": 1.3201429843902588, "actor_grad_norm": 0.42334991693496704, "critic_grad_norm": 0.5874277353286743, "lstm_grad_norm": 0.027162035927176476, "lstm_updates": 1, "minibatches": 1}
+{"frames": 3840, "update": 60, "elapsed_s": 790.6364759460557, "training_fps": 4.8568464851472175, "policy_loss": 0.00921323150396347, "value_loss": 1.704878807067871, "entropy": -0.08631404489278793, "sl_loss": 0.03541512042284012, "encoder_grad_norm": 1.3103572130203247, "actor_grad_norm": 0.4091452658176422, "critic_grad_norm": 5.051794052124023, "lstm_grad_norm": 0.05538297817111015, "lstm_updates": 1, "minibatches": 1}
+{"frames": 3904, "update": 61, "elapsed_s": 802.6983056471217, "training_fps": 4.863595661572877, "policy_loss": 0.03990671783685684, "value_loss": 0.07741638273000717, "entropy": -0.0897909626364708, "sl_loss": 0.03005383349955082, "encoder_grad_norm": 1.4880996942520142, "actor_grad_norm": 0.4461146295070648, "critic_grad_norm": 3.5564982891082764, "lstm_grad_norm": 0.03329940512776375, "lstm_updates": 1, "minibatches": 1}
+{"frames": 3968, "update": 62, "elapsed_s": 814.7356380971614, "training_fps": 4.870291429914029, "policy_loss": 0.055205173790454865, "value_loss": 0.03331359848380089, "entropy": -0.08832986652851105, "sl_loss": 0.026306403800845146, "encoder_grad_norm": 0.8805310130119324, "actor_grad_norm": 0.32279521226882935, "critic_grad_norm": 2.0296051502227783, "lstm_grad_norm": 0.034228648990392685, "lstm_updates": 1, "minibatches": 1}
+{"frames": 4032, "update": 63, "elapsed_s": 826.8205574860331, "training_fps": 4.876511548199875, "policy_loss": 0.02873469889163971, "value_loss": 0.012967608869075775, "entropy": -0.08703792840242386, "sl_loss": 0.02477359026670456, "encoder_grad_norm": 1.1919914484024048, "actor_grad_norm": 0.40354323387145996, "critic_grad_norm": 0.8971917629241943, "lstm_grad_norm": 0.02915404923260212, "lstm_updates": 1, "minibatches": 1}
+{"frames": 4096, "update": 64, "elapsed_s": 839.3579831330571, "training_fps": 4.87992022262273, "policy_loss": 0.00947338342666626, "value_loss": 0.0030951397493481636, "entropy": -0.0855141431093216, "sl_loss": 0.020917555317282677, "encoder_grad_norm": 0.8573620915412903, "actor_grad_norm": 0.2772623300552368, "critic_grad_norm": 0.42023077607154846, "lstm_grad_norm": 0.02948962152004242, "lstm_updates": 1, "minibatches": 1}
+{"frames": 4160, "update": 65, "elapsed_s": 851.3981009791605, "training_fps": 4.886080896684672, "policy_loss": 0.019682738929986954, "value_loss": 0.017410796135663986, "entropy": -0.0803963840007782, "sl_loss": 0.027141867205500603, "encoder_grad_norm": 0.79555743932724, "actor_grad_norm": 0.2781142294406891, "critic_grad_norm": 0.46215149760246277, "lstm_grad_norm": 0.03910798579454422, "lstm_updates": 1, "minibatches": 1}
+{"frames": 4224, "update": 66, "elapsed_s": 863.5424395150039, "training_fps": 4.891479333953523, "policy_loss": 0.029180612415075302, "value_loss": 0.017884094268083572, "entropy": -0.07587897777557373, "sl_loss": 0.023601965978741646, "encoder_grad_norm": 1.3161230087280273, "actor_grad_norm": 0.354218065738678, "critic_grad_norm": 1.2342694997787476, "lstm_grad_norm": 0.03386244177818298, "lstm_updates": 1, "minibatches": 1}
+{"frames": 4288, "update": 67, "elapsed_s": 875.6151060271077, "training_fps": 4.897128849147272, "policy_loss": 0.034046005457639694, "value_loss": 0.025512641295790672, "entropy": -0.06860768049955368, "sl_loss": 0.02614896185696125, "encoder_grad_norm": 1.0956071615219116, "actor_grad_norm": 0.3568722605705261, "critic_grad_norm": 0.28750866651535034, "lstm_grad_norm": 0.031005946919322014, "lstm_updates": 1, "minibatches": 1}
+{"frames": 4352, "update": 68, "elapsed_s": 888.2464765601326, "training_fps": 4.899540962025409, "policy_loss": 0.01045122742652893, "value_loss": 0.020276127383112907, "entropy": -0.06769432872533798, "sl_loss": 0.017468241974711418, "encoder_grad_norm": 0.7341100573539734, "actor_grad_norm": 0.2543654143810272, "critic_grad_norm": 0.8695809841156006, "lstm_grad_norm": 0.02810252085328102, "lstm_updates": 1, "minibatches": 1}
+{"frames": 4416, "update": 69, "elapsed_s": 900.0734278780874, "training_fps": 4.906266376838673, "policy_loss": 0.013873957097530365, "value_loss": 0.007474394515156746, "entropy": -0.07674705237150192, "sl_loss": 0.02932085283100605, "encoder_grad_norm": 0.8781371116638184, "actor_grad_norm": 0.3263621926307678, "critic_grad_norm": 0.31363171339035034, "lstm_grad_norm": 0.06654590368270874, "lstm_updates": 1, "minibatches": 1}
+{"frames": 4480, "update": 70, "elapsed_s": 912.0276618360076, "training_fps": 4.912131708547476, "policy_loss": 0.007054958492517471, "value_loss": 0.00911886990070343, "entropy": -0.08437630534172058, "sl_loss": 0.02357429452240467, "encoder_grad_norm": 0.6979856491088867, "actor_grad_norm": 0.24033068120479584, "critic_grad_norm": 0.4932398796081543, "lstm_grad_norm": 0.036072518676519394, "lstm_updates": 1, "minibatches": 1}
+{"frames": 4544, "update": 71, "elapsed_s": 923.9781427411363, "training_fps": 4.917865246727181, "policy_loss": 0.0014226362109184265, "value_loss": 0.04104785621166229, "entropy": -0.08265472203493118, "sl_loss": 0.02018139697611332, "encoder_grad_norm": 0.7055449485778809, "actor_grad_norm": 0.20062267780303955, "critic_grad_norm": 2.536066770553589, "lstm_grad_norm": 0.033579371869564056, "lstm_updates": 1, "minibatches": 1}
+{"frames": 4608, "update": 72, "elapsed_s": 935.8835595611017, "training_fps": 4.9236894380383225, "policy_loss": 0.02130761742591858, "value_loss": 0.021408995613455772, "entropy": -0.08045586943626404, "sl_loss": 0.019629577174782753, "encoder_grad_norm": 0.9354524612426758, "actor_grad_norm": 0.35363203287124634, "critic_grad_norm": 1.1806918382644653, "lstm_grad_norm": 0.030858760699629784, "lstm_updates": 1, "minibatches": 1}
+{"frames": 4672, "update": 73, "elapsed_s": 948.2370876430068, "training_fps": 4.927037823889091, "policy_loss": 0.013791359961032867, "value_loss": 0.008729878813028336, "entropy": -0.07133036851882935, "sl_loss": 0.02838057093322277, "encoder_grad_norm": 0.6393436789512634, "actor_grad_norm": 0.1583593636751175, "critic_grad_norm": 0.6185015439987183, "lstm_grad_norm": 0.030558248981833458, "lstm_updates": 1, "minibatches": 1}
+{"frames": 4736, "update": 74, "elapsed_s": 960.2232050530147, "training_fps": 4.932186570773383, "policy_loss": 0.005511827766895294, "value_loss": 0.01829833909869194, "entropy": -0.06975448131561279, "sl_loss": 0.023543581366539, "encoder_grad_norm": 1.0686851739883423, "actor_grad_norm": 0.32336315512657166, "critic_grad_norm": 0.3685639500617981, "lstm_grad_norm": 0.03121304325759411, "lstm_updates": 1, "minibatches": 1}
+{"frames": 4800, "update": 75, "elapsed_s": 972.2587683219463, "training_fps": 4.93695727175685, "policy_loss": 0.001492336392402649, "value_loss": 0.004914414137601852, "entropy": -0.06568080186843872, "sl_loss": 0.023662833496928215, "encoder_grad_norm": 0.8495094776153564, "actor_grad_norm": 0.2728809714317322, "critic_grad_norm": 0.27571746706962585, "lstm_grad_norm": 0.033080924302339554, "lstm_updates": 1, "minibatches": 1}
+{"frames": 4864, "update": 76, "elapsed_s": 984.3764360700734, "training_fps": 4.9411991378281845, "policy_loss": 0.015319837257266045, "value_loss": 0.004255637060850859, "entropy": -0.06023440137505531, "sl_loss": 0.020116867497563362, "encoder_grad_norm": 0.7689759731292725, "actor_grad_norm": 0.2994440495967865, "critic_grad_norm": 0.23177731037139893, "lstm_grad_norm": 0.02761656418442726, "lstm_updates": 1, "minibatches": 1}
+{"frames": 4928, "update": 77, "elapsed_s": 996.7938779729884, "training_fps": 4.943850584722968, "policy_loss": 0.02429957315325737, "value_loss": 0.009339354932308197, "entropy": -0.06103742495179176, "sl_loss": 0.026795117184519768, "encoder_grad_norm": 1.2196052074432373, "actor_grad_norm": 0.4256831705570221, "critic_grad_norm": 0.9404120445251465, "lstm_grad_norm": 0.03916254639625549, "lstm_updates": 1, "minibatches": 1}
+{"frames": 4992, "update": 78, "elapsed_s": 1008.7307215421461, "training_fps": 4.948793459544421, "policy_loss": 0.0024918317794799805, "value_loss": 0.029634449630975723, "entropy": -0.06424443423748016, "sl_loss": 0.024263890460133553, "encoder_grad_norm": 1.0647534132003784, "actor_grad_norm": 0.37231186032295227, "critic_grad_norm": 2.2559311389923096, "lstm_grad_norm": 0.028208600357174873, "lstm_updates": 1, "minibatches": 1}
+{"frames": 5056, "update": 79, "elapsed_s": 1020.6970925440546, "training_fps": 4.9534774165085365, "policy_loss": 0.028680741786956787, "value_loss": 0.021581852808594704, "entropy": -0.06313854455947876, "sl_loss": 0.026478402316570282, "encoder_grad_norm": 0.8028517961502075, "actor_grad_norm": 0.238223597407341, "critic_grad_norm": 1.7526482343673706, "lstm_grad_norm": 0.02711166813969612, "lstm_updates": 1, "minibatches": 1}
+{"frames": 5120, "update": 80, "elapsed_s": 1032.7120713391341, "training_fps": 4.957819453548562, "policy_loss": 0.027776647359132767, "value_loss": 0.016082987189292908, "entropy": -0.06339655816555023, "sl_loss": 0.025474371388554573, "encoder_grad_norm": 0.9853875637054443, "actor_grad_norm": 0.34533870220184326, "critic_grad_norm": 1.31787109375, "lstm_grad_norm": 0.027151335030794144, "lstm_updates": 1, "minibatches": 1}
+{"frames": 5184, "update": 81, "elapsed_s": 1044.8155864949804, "training_fps": 4.961641139554154, "policy_loss": 0.007432136684656143, "value_loss": 0.002204946707934141, "entropy": -0.061603207141160965, "sl_loss": 0.02667347341775894, "encoder_grad_norm": 0.659213662147522, "actor_grad_norm": 0.20079009234905243, "critic_grad_norm": 0.198832169175148, "lstm_grad_norm": 0.026654314249753952, "lstm_updates": 1, "minibatches": 1}
+{"frames": 5248, "update": 82, "elapsed_s": 1057.28175225202, "training_fps": 4.963672158590358, "policy_loss": 0.03693853318691254, "value_loss": 0.02179894968867302, "entropy": -0.06457793712615967, "sl_loss": 0.031041350215673447, "encoder_grad_norm": 1.2049833536148071, "actor_grad_norm": 0.41228750348091125, "critic_grad_norm": 0.776499330997467, "lstm_grad_norm": 0.06953312456607819, "lstm_updates": 1, "minibatches": 1}
+{"frames": 5312, "update": 83, "elapsed_s": 1069.189597157063, "training_fps": 4.9682488597155015, "policy_loss": 0.00832005962729454, "value_loss": 0.012065436691045761, "entropy": -0.06634839624166489, "sl_loss": 0.0132820475846529, "encoder_grad_norm": 1.2023290395736694, "actor_grad_norm": 0.4186401069164276, "critic_grad_norm": 0.7762652039527893, "lstm_grad_norm": 0.04781527444720268, "lstm_updates": 1, "minibatches": 1}
+{"frames": 5376, "update": 84, "elapsed_s": 1081.09498803108, "training_fps": 4.972736028143589, "policy_loss": 0.015143286436796188, "value_loss": 0.01432323083281517, "entropy": -0.06595758348703384, "sl_loss": 0.011018656194210052, "encoder_grad_norm": 1.0344598293304443, "actor_grad_norm": 0.30181920528411865, "critic_grad_norm": 1.2061947584152222, "lstm_grad_norm": 0.028805376961827278, "lstm_updates": 1, "minibatches": 1}
+{"frames": 5440, "update": 85, "elapsed_s": 1093.39243700495, "training_fps": 4.975340794699976, "policy_loss": 0.024051599204540253, "value_loss": 1.0664865970611572, "entropy": -0.06328780949115753, "sl_loss": 0.0188965555280447, "encoder_grad_norm": 1.1862438917160034, "actor_grad_norm": 0.4638672471046448, "critic_grad_norm": 6.4058380126953125, "lstm_grad_norm": 0.042934782803058624, "lstm_updates": 1, "minibatches": 1}
+{"frames": 5504, "update": 86, "elapsed_s": 1105.2759442459792, "training_fps": 4.979751912389527, "policy_loss": 0.017332620918750763, "value_loss": 0.03414403647184372, "entropy": -0.06374307721853256, "sl_loss": 0.028255237266421318, "encoder_grad_norm": 0.5485818982124329, "actor_grad_norm": 0.18944083154201508, "critic_grad_norm": 0.9272850751876831, "lstm_grad_norm": 0.03990442305803299, "lstm_updates": 1, "minibatches": 1}
+{"frames": 5568, "update": 87, "elapsed_s": 1117.166190264048, "training_fps": 4.984039121459783, "policy_loss": 0.02789321541786194, "value_loss": 0.0223550982773304, "entropy": -0.06530635058879852, "sl_loss": 0.020832741633057594, "encoder_grad_norm": 1.7973824739456177, "actor_grad_norm": 0.6901076436042786, "critic_grad_norm": 1.0690152645111084, "lstm_grad_norm": 0.028566790744662285, "lstm_updates": 1, "minibatches": 1}
+{"frames": 5632, "update": 88, "elapsed_s": 1129.0756465969607, "training_fps": 4.988151161098055, "policy_loss": 0.0002564936876296997, "value_loss": 0.04086531698703766, "entropy": -0.06319622695446014, "sl_loss": 0.023117447271943092, "encoder_grad_norm": 0.8101080656051636, "actor_grad_norm": 0.2852537930011749, "critic_grad_norm": 2.007488250732422, "lstm_grad_norm": 0.028450941666960716, "lstm_updates": 1, "minibatches": 1}
+{"frames": 5696, "update": 89, "elapsed_s": 1141.3927223349456, "training_fps": 4.990394529157305, "policy_loss": 0.02534693107008934, "value_loss": 0.025563308969140053, "entropy": -0.0666709691286087, "sl_loss": 0.021226931363344193, "encoder_grad_norm": 1.5808122158050537, "actor_grad_norm": 0.47244077920913696, "critic_grad_norm": 0.7111148238182068, "lstm_grad_norm": 0.023510577157139778, "lstm_updates": 1, "minibatches": 1}
+{"frames": 5760, "update": 90, "elapsed_s": 1153.2190983630717, "training_fps": 4.994714365309965, "policy_loss": 0.013470929116010666, "value_loss": 0.004614876117557287, "entropy": -0.07016360759735107, "sl_loss": 0.02374880015850067, "encoder_grad_norm": 0.9331744909286499, "actor_grad_norm": 0.3348427712917328, "critic_grad_norm": 0.47340840101242065, "lstm_grad_norm": 0.034038398414850235, "lstm_updates": 1, "minibatches": 1}
+{"frames": 5824, "update": 91, "elapsed_s": 1164.971475525992, "training_fps": 4.999264032044724, "policy_loss": 0.020641442388296127, "value_loss": 0.004582171328365803, "entropy": -0.07658015191555023, "sl_loss": 0.018586765974760056, "encoder_grad_norm": 1.0570229291915894, "actor_grad_norm": 0.4020083248615265, "critic_grad_norm": 0.5776636600494385, "lstm_grad_norm": 0.03452450782060623, "lstm_updates": 1, "minibatches": 1}
+{"frames": 5888, "update": 92, "elapsed_s": 1176.6515463311225, "training_fps": 5.004030305154325, "policy_loss": 0.006137192249298096, "value_loss": 0.009085675701498985, "entropy": -0.07670465111732483, "sl_loss": 0.00935368426144123, "encoder_grad_norm": 0.7988488078117371, "actor_grad_norm": 0.2563129961490631, "critic_grad_norm": 0.7029890418052673, "lstm_grad_norm": 0.040405843406915665, "lstm_updates": 1, "minibatches": 1}
+{"frames": 5952, "update": 93, "elapsed_s": 1188.9709608380217, "training_fps": 5.006009559981212, "policy_loss": 0.05199152231216431, "value_loss": 0.9870792627334595, "entropy": -0.0659656673669815, "sl_loss": 0.018812183290719986, "encoder_grad_norm": 0.9851464629173279, "actor_grad_norm": 0.29805395007133484, "critic_grad_norm": 7.292876243591309, "lstm_grad_norm": 0.043618716299533844, "lstm_updates": 1, "minibatches": 1}
+{"frames": 6016, "update": 94, "elapsed_s": 1201.0672860499471, "training_fps": 5.008878408968427, "policy_loss": 0.007287297397851944, "value_loss": 0.027670174837112427, "entropy": -0.06247274577617645, "sl_loss": 0.027872608974575996, "encoder_grad_norm": 0.999335765838623, "actor_grad_norm": 0.41314926743507385, "critic_grad_norm": 1.388304591178894, "lstm_grad_norm": 0.04859071224927902, "lstm_updates": 1, "minibatches": 1}
+{"frames": 6080, "update": 95, "elapsed_s": 1213.1096763480455, "training_fps": 5.0119128672930815, "policy_loss": 0.02974884584546089, "value_loss": 0.03743593394756317, "entropy": -0.06343775242567062, "sl_loss": 0.027154086157679558, "encoder_grad_norm": 0.8764637112617493, "actor_grad_norm": 0.32441937923431396, "critic_grad_norm": 1.0300763845443726, "lstm_grad_norm": 0.04119838401675224, "lstm_updates": 1, "minibatches": 1}
+{"frames": 6144, "update": 96, "elapsed_s": 1225.1354415100068, "training_fps": 5.014955724899862, "policy_loss": 0.027610141783952713, "value_loss": 0.02463458850979805, "entropy": -0.06828499585390091, "sl_loss": 0.01845567673444748, "encoder_grad_norm": 0.665166437625885, "actor_grad_norm": 0.23969314992427826, "critic_grad_norm": 0.7738370299339294, "lstm_grad_norm": 0.027158042415976524, "lstm_updates": 1, "minibatches": 1}
+{"frames": 6208, "update": 97, "elapsed_s": 1237.6683962200768, "training_fps": 5.015883104053125, "policy_loss": 0.012529296800494194, "value_loss": 0.03577672317624092, "entropy": -0.0655551329255104, "sl_loss": 0.014350319281220436, "encoder_grad_norm": 0.8274388909339905, "actor_grad_norm": 0.29745420813560486, "critic_grad_norm": 2.011385917663574, "lstm_grad_norm": 0.034910041838884354, "lstm_updates": 1, "minibatches": 1}
+{"frames": 6272, "update": 98, "elapsed_s": 1249.6421163461637, "training_fps": 5.0190369827392605, "policy_loss": 0.016548939049243927, "value_loss": 0.011447270400822163, "entropy": -0.07079830020666122, "sl_loss": 0.02388286404311657, "encoder_grad_norm": 0.8952194452285767, "actor_grad_norm": 0.2964390814304352, "critic_grad_norm": 0.18183718621730804, "lstm_grad_norm": 0.04629857838153839, "lstm_updates": 1, "minibatches": 1}
+{"frames": 6336, "update": 99, "elapsed_s": 1261.5590200701263, "training_fps": 5.022357175121507, "policy_loss": 0.007377514615654945, "value_loss": 0.01172559428960085, "entropy": -0.0690496414899826, "sl_loss": 0.023207545280456543, "encoder_grad_norm": 0.6517294049263, "actor_grad_norm": 0.21068015694618225, "critic_grad_norm": 1.207414150238037, "lstm_grad_norm": 0.030493253841996193, "lstm_updates": 1, "minibatches": 1}
+{"evaluation": {"frames": 6400, "update": 100, "seed": 204348, "episodes": [{"episode": 0, "seed": 204348, "steps": 253, "reward": -1219.9057787805796, "capture": false, "escaped": true, "collision": false, "timeout": false, "visibility_ratio": 0.383399209486166}], "capture_success_rate": 0.0, "collision_rate": 0.0, "escape_rate": 1.0, "average_episode_reward": -1219.9057787805796, "average_episode_length": 253.0, "target_visibility_ratio": 0.383399209486166}}
+{"frames": 6400, "update": 100, "elapsed_s": 1273.4708807279821, "training_fps": 5.025635131319692, "policy_loss": 0.01940343528985977, "value_loss": 0.014621935784816742, "entropy": -0.0686754509806633, "sl_loss": 0.02534353919327259, "encoder_grad_norm": 0.8294883370399475, "actor_grad_norm": 0.21166203916072845, "critic_grad_norm": 1.2238702774047852, "lstm_grad_norm": 0.027536310255527496, "lstm_updates": 1, "minibatches": 1, "evaluation": {"frames": 6400, "update": 100, "seed": 204348, "episodes": [{"episode": 0, "seed": 204348, "steps": 253, "reward": -1219.9057787805796, "capture": false, "escaped": true, "collision": false, "timeout": false, "visibility_ratio": 0.383399209486166}], "capture_success_rate": 0.0, "collision_rate": 0.0, "escape_rate": 1.0, "average_episode_reward": -1219.9057787805796, "average_episode_length": 253.0, "target_visibility_ratio": 0.383399209486166}}
+{"frames": 6464, "update": 101, "elapsed_s": 1332.3356794631109, "training_fps": 4.85163018283262, "policy_loss": -0.0006560534238815308, "value_loss": 0.016818024218082428, "entropy": -0.06802325695753098, "sl_loss": 0.028188353404402733, "encoder_grad_norm": 0.9752922058105469, "actor_grad_norm": 0.26467353105545044, "critic_grad_norm": 1.2144871950149536, "lstm_grad_norm": 0.032351888716220856, "lstm_updates": 1, "minibatches": 1}
+{"frames": 6528, "update": 102, "elapsed_s": 1344.8149796440266, "training_fps": 4.854199347498429, "policy_loss": 0.004309173673391342, "value_loss": 0.009201683104038239, "entropy": -0.07267017662525177, "sl_loss": 0.028448617085814476, "encoder_grad_norm": 0.5882708430290222, "actor_grad_norm": 0.23401829600334167, "critic_grad_norm": 0.9300982356071472, "lstm_grad_norm": 0.031807735562324524, "lstm_updates": 1, "minibatches": 1}
+{"frames": 6592, "update": 103, "elapsed_s": 1356.8340595189948, "training_fps": 4.858368605126627, "policy_loss": 0.008778326213359833, "value_loss": 0.010537656955420971, "entropy": -0.0755426436662674, "sl_loss": 0.022699380293488503, "encoder_grad_norm": 0.7877136468887329, "actor_grad_norm": 0.26539620757102966, "critic_grad_norm": 1.0722548961639404, "lstm_grad_norm": 0.03604033589363098, "lstm_updates": 1, "minibatches": 1}
+{"frames": 6656, "update": 104, "elapsed_s": 1368.8982655860018, "training_fps": 4.862304353566076, "policy_loss": 0.01705000177025795, "value_loss": 0.02558407559990883, "entropy": -0.06470173597335815, "sl_loss": 0.022023644298315048, "encoder_grad_norm": 0.7584207653999329, "actor_grad_norm": 0.2675168812274933, "critic_grad_norm": 1.7814475297927856, "lstm_grad_norm": 0.02480396442115307, "lstm_updates": 1, "minibatches": 1}
+{"frames": 6720, "update": 105, "elapsed_s": 1380.965580002172, "training_fps": 4.8661603839306, "policy_loss": -0.0036421623080968857, "value_loss": 0.021418847143650055, "entropy": -0.06220646947622299, "sl_loss": 0.022660929709672928, "encoder_grad_norm": 0.9952316880226135, "actor_grad_norm": 0.3607116937637329, "critic_grad_norm": 0.9543105959892273, "lstm_grad_norm": 0.026759536936879158, "lstm_updates": 1, "minibatches": 1}
+{"frames": 6784, "update": 106, "elapsed_s": 1393.4254594270606, "training_fps": 4.86857761199084, "policy_loss": 0.026514612138271332, "value_loss": 0.004270693752914667, "entropy": -0.06688189506530762, "sl_loss": 0.023242348805069923, "encoder_grad_norm": 0.7478058338165283, "actor_grad_norm": 0.27715253829956055, "critic_grad_norm": 0.362281858921051, "lstm_grad_norm": 0.04220572113990784, "lstm_updates": 1, "minibatches": 1}
+{"frames": 6848, "update": 107, "elapsed_s": 1405.2619237729814, "training_fps": 4.873112891689727, "policy_loss": 0.019710689783096313, "value_loss": 0.020794998854398727, "entropy": -0.07725413888692856, "sl_loss": 0.02220177836716175, "encoder_grad_norm": 0.6696969270706177, "actor_grad_norm": 0.21678823232650757, "critic_grad_norm": 1.1599708795547485, "lstm_grad_norm": 0.03526581823825836, "lstm_updates": 1, "minibatches": 1}
+{"frames": 6912, "update": 108, "elapsed_s": 1417.081354932161, "training_fps": 4.877631035801958, "policy_loss": 0.017432112246751785, "value_loss": 0.01570132002234459, "entropy": -0.07404878735542297, "sl_loss": 0.021085266023874283, "encoder_grad_norm": 0.7891945838928223, "actor_grad_norm": 0.21436314284801483, "critic_grad_norm": 1.4016019105911255, "lstm_grad_norm": 0.038674306124448776, "lstm_updates": 1, "minibatches": 1}
+{"frames": 6976, "update": 109, "elapsed_s": 1428.8415840331, "training_fps": 4.882276715600557, "policy_loss": 0.035703860223293304, "value_loss": 0.05367046594619751, "entropy": -0.08155711740255356, "sl_loss": 0.01993229053914547, "encoder_grad_norm": 0.8703799843788147, "actor_grad_norm": 0.2854481339454651, "critic_grad_norm": 2.9238600730895996, "lstm_grad_norm": 0.028709009289741516, "lstm_updates": 1, "minibatches": 1}
+{"frames": 7040, "update": 110, "elapsed_s": 1441.127696548123, "training_fps": 4.885063283386902, "policy_loss": 0.02448008954524994, "value_loss": 0.09912915527820587, "entropy": -0.07967491447925568, "sl_loss": 0.024268437176942825, "encoder_grad_norm": 0.7373310923576355, "actor_grad_norm": 0.22822612524032593, "critic_grad_norm": 3.870018243789673, "lstm_grad_norm": 0.02781984768807888, "lstm_updates": 1, "minibatches": 1}
+{"frames": 7104, "update": 111, "elapsed_s": 1453.0165129050147, "training_fps": 4.88913920373911, "policy_loss": 0.01183021068572998, "value_loss": 0.05636324733495712, "entropy": -0.06387721002101898, "sl_loss": 0.03147033229470253, "encoder_grad_norm": 0.653306782245636, "actor_grad_norm": 0.21067532896995544, "critic_grad_norm": 1.62152898311615, "lstm_grad_norm": 0.043104980140924454, "lstm_updates": 1, "minibatches": 1}
+{"frames": 7168, "update": 112, "elapsed_s": 1464.9516766150482, "training_fps": 4.892994158684874, "policy_loss": 0.02815403789281845, "value_loss": 0.04260469228029251, "entropy": -0.06557785719633102, "sl_loss": 0.02547750622034073, "encoder_grad_norm": 0.811057984828949, "actor_grad_norm": 0.2932910919189453, "critic_grad_norm": 1.490317702293396, "lstm_grad_norm": 0.022381886839866638, "lstm_updates": 1, "minibatches": 1}
+{"frames": 7232, "update": 113, "elapsed_s": 1476.931271146983, "training_fps": 4.896639497131208, "policy_loss": 0.020109690725803375, "value_loss": 0.049452800303697586, "entropy": -0.0664181262254715, "sl_loss": 0.02197529375553131, "encoder_grad_norm": 0.5751014947891235, "actor_grad_norm": 0.16711661219596863, "critic_grad_norm": 1.7516545057296753, "lstm_grad_norm": 0.02252773381769657, "lstm_updates": 1, "minibatches": 1}
+{"frames": 7296, "update": 114, "elapsed_s": 1488.972117827041, "training_fps": 4.900024593773342, "policy_loss": 0.015702929347753525, "value_loss": 0.06418152153491974, "entropy": -0.06728871911764145, "sl_loss": 0.024048713967204094, "encoder_grad_norm": 0.8168296813964844, "actor_grad_norm": 0.21143104135990143, "critic_grad_norm": 2.6018593311309814, "lstm_grad_norm": 0.02440219558775425, "lstm_updates": 1, "minibatches": 1}
+{"frames": 7360, "update": 115, "elapsed_s": 1501.2972040341701, "training_fps": 4.902427031979839, "policy_loss": 0.017717942595481873, "value_loss": 0.048130810260772705, "entropy": -0.07182137668132782, "sl_loss": 0.02964089810848236, "encoder_grad_norm": 0.8441535234451294, "actor_grad_norm": 0.32428210973739624, "critic_grad_norm": 1.9890371561050415, "lstm_grad_norm": 0.03679991513490677, "lstm_updates": 1, "minibatches": 1}
+{"frames": 7424, "update": 116, "elapsed_s": 1513.0229418680537, "training_fps": 4.906733263194262, "policy_loss": 0.019266227260231972, "value_loss": 0.0828094333410263, "entropy": -0.07385006546974182, "sl_loss": 0.024996643885970116, "encoder_grad_norm": 0.7028535604476929, "actor_grad_norm": 0.21413005888462067, "critic_grad_norm": 2.5507760047912598, "lstm_grad_norm": 0.026148799806833267, "lstm_updates": 1, "minibatches": 1}
+{"frames": 7488, "update": 117, "elapsed_s": 1524.7657240270637, "training_fps": 4.91091836581014, "policy_loss": 0.006819099187850952, "value_loss": 0.030263356864452362, "entropy": -0.07072710990905762, "sl_loss": 0.023447155952453613, "encoder_grad_norm": 0.5604848861694336, "actor_grad_norm": 0.17176119983196259, "critic_grad_norm": 1.2841750383377075, "lstm_grad_norm": 0.023384179919958115, "lstm_updates": 1, "minibatches": 1}
+{"frames": 7552, "update": 118, "elapsed_s": 1536.5550214841496, "training_fps": 4.914890707732485, "policy_loss": -0.0030005984008312225, "value_loss": 0.03074493072926998, "entropy": -0.06838387250900269, "sl_loss": 0.02557559497654438, "encoder_grad_norm": 0.7531872391700745, "actor_grad_norm": 0.2607080638408661, "critic_grad_norm": 1.2786420583724976, "lstm_grad_norm": 0.027120107784867287, "lstm_updates": 1, "minibatches": 1}
+{"frames": 7616, "update": 119, "elapsed_s": 1548.7887658299878, "training_fps": 4.917391037898357, "policy_loss": 0.015474777668714523, "value_loss": 0.019340472295880318, "entropy": -0.07023804634809494, "sl_loss": 0.0235646553337574, "encoder_grad_norm": 0.8786128759384155, "actor_grad_norm": 0.2907375693321228, "critic_grad_norm": 0.3464561998844147, "lstm_grad_norm": 0.03688840568065643, "lstm_updates": 1, "minibatches": 1}
+{"frames": 7680, "update": 120, "elapsed_s": 1560.5139358821325, "training_fps": 4.921455567055237, "policy_loss": 0.0093936026096344, "value_loss": 0.029137784615159035, "entropy": -0.06341370940208435, "sl_loss": 0.028630226850509644, "encoder_grad_norm": 0.9607534408569336, "actor_grad_norm": 0.367442786693573, "critic_grad_norm": 0.8954654932022095, "lstm_grad_norm": 0.06654496490955353, "lstm_updates": 1, "minibatches": 1}
+{"frames": 7744, "update": 121, "elapsed_s": 1572.2667106180452, "training_fps": 4.925372994494992, "policy_loss": 0.004402082413434982, "value_loss": 0.0060172053053975105, "entropy": -0.07271072268486023, "sl_loss": 0.0143532520160079, "encoder_grad_norm": 0.8743534684181213, "actor_grad_norm": 0.37606343626976013, "critic_grad_norm": 0.18788394331932068, "lstm_grad_norm": 0.04222748801112175, "lstm_updates": 1, "minibatches": 1}
+{"frames": 7808, "update": 122, "elapsed_s": 1584.4002858439926, "training_fps": 4.928047580964918, "policy_loss": 0.028359979391098022, "value_loss": 1.5761337280273438, "entropy": -0.07202191650867462, "sl_loss": 0.00649540638551116, "encoder_grad_norm": 1.04892897605896, "actor_grad_norm": 0.34380456805229187, "critic_grad_norm": 11.061256408691406, "lstm_grad_norm": 0.0339125320315361, "lstm_updates": 1, "minibatches": 1}
+{"frames": 7872, "update": 123, "elapsed_s": 1596.1586496471427, "training_fps": 4.93184057681235, "policy_loss": 0.0188656747341156, "value_loss": 0.039061903953552246, "entropy": -0.0679478645324707, "sl_loss": 0.028338944539427757, "encoder_grad_norm": 0.8105533123016357, "actor_grad_norm": 0.24712222814559937, "critic_grad_norm": 1.1657823324203491, "lstm_grad_norm": 0.048376746475696564, "lstm_updates": 1, "minibatches": 1}
+{"frames": 7936, "update": 124, "elapsed_s": 1608.0289293681271, "training_fps": 4.9352345918731695, "policy_loss": 0.02690240740776062, "value_loss": 0.040231358259916306, "entropy": -0.07449747622013092, "sl_loss": 0.023134076967835426, "encoder_grad_norm": 0.8400816321372986, "actor_grad_norm": 0.2115960717201233, "critic_grad_norm": 1.670577883720398, "lstm_grad_norm": 0.028494201600551605, "lstm_updates": 1, "minibatches": 1}
+{"frames": 8000, "update": 125, "elapsed_s": 1619.9845923620742, "training_fps": 4.93831857091138, "policy_loss": 0.0447111576795578, "value_loss": 0.016493499279022217, "entropy": -0.06830696761608124, "sl_loss": 0.022515838965773582, "encoder_grad_norm": 1.890037178993225, "actor_grad_norm": 0.7021955251693726, "critic_grad_norm": 0.6921831965446472, "lstm_grad_norm": 0.03430383652448654, "lstm_updates": 1, "minibatches": 1}
+{"frames": 8064, "update": 126, "elapsed_s": 1632.0214439411648, "training_fps": 4.9411115440493125, "policy_loss": 0.011970847845077515, "value_loss": 0.02767961658537388, "entropy": -0.06734474003314972, "sl_loss": 0.019210103899240494, "encoder_grad_norm": 0.5331703424453735, "actor_grad_norm": 0.1723158359527588, "critic_grad_norm": 0.6901732087135315, "lstm_grad_norm": 0.03875285014510155, "lstm_updates": 1, "minibatches": 1}
+{"frames": 8128, "update": 127, "elapsed_s": 1644.440297326073, "training_fps": 4.94271516563516, "policy_loss": 0.0038977712392807007, "value_loss": 0.024544380605220795, "entropy": -0.06644731760025024, "sl_loss": 0.02025076374411583, "encoder_grad_norm": 0.8541391491889954, "actor_grad_norm": 0.3142380714416504, "critic_grad_norm": 1.3849235773086548, "lstm_grad_norm": 0.03899228572845459, "lstm_updates": 1, "minibatches": 1}
+{"frames": 8192, "update": 128, "elapsed_s": 1656.299345046049, "training_fps": 4.945965848729298, "policy_loss": 0.012302450835704803, "value_loss": 0.028247902169823647, "entropy": -0.06581605970859528, "sl_loss": 0.02511800080537796, "encoder_grad_norm": 0.8253986239433289, "actor_grad_norm": 0.2520920932292938, "critic_grad_norm": 1.9493439197540283, "lstm_grad_norm": 0.025900254026055336, "lstm_updates": 1, "minibatches": 1}
+{"frames": 8256, "update": 129, "elapsed_s": 1668.2284042639658, "training_fps": 4.948962609324555, "policy_loss": 0.013135932385921478, "value_loss": 0.02496999129652977, "entropy": -0.06562894582748413, "sl_loss": 0.02539370022714138, "encoder_grad_norm": 0.9453040361404419, "actor_grad_norm": 0.3523751199245453, "critic_grad_norm": 1.830440878868103, "lstm_grad_norm": 0.031070543453097343, "lstm_updates": 1, "minibatches": 1}
+{"frames": 8320, "update": 130, "elapsed_s": 1680.2282851971686, "training_fps": 4.951708092267814, "policy_loss": 0.014673549681901932, "value_loss": 0.06398232281208038, "entropy": -0.06797309219837189, "sl_loss": 0.023104798048734665, "encoder_grad_norm": 0.7112149000167847, "actor_grad_norm": 0.2898583710193634, "critic_grad_norm": 2.646300792694092, "lstm_grad_norm": 0.0240340456366539, "lstm_updates": 1, "minibatches": 1}
+{"frames": 8384, "update": 131, "elapsed_s": 1692.6489146470558, "training_fps": 4.9531830991681325, "policy_loss": 0.008992921561002731, "value_loss": 0.011502983048558235, "entropy": -0.0659986212849617, "sl_loss": 0.018389645963907242, "encoder_grad_norm": 0.7192666530609131, "actor_grad_norm": 0.212052121758461, "critic_grad_norm": 0.8668280839920044, "lstm_grad_norm": 0.05134619399905205, "lstm_updates": 1, "minibatches": 1}
+{"frames": 8448, "update": 132, "elapsed_s": 1704.7079684790224, "training_fps": 4.95568751537646, "policy_loss": 0.011167734861373901, "value_loss": 0.028310514986515045, "entropy": -0.06855721771717072, "sl_loss": 0.027224410325288773, "encoder_grad_norm": 0.7712124586105347, "actor_grad_norm": 0.26002389192581177, "critic_grad_norm": 0.21047692000865936, "lstm_grad_norm": 0.027069050818681717, "lstm_updates": 1, "minibatches": 1}
+{"frames": 8512, "update": 133, "elapsed_s": 1716.8906431801151, "training_fps": 4.95779974762168, "policy_loss": 0.011686481535434723, "value_loss": 0.03299170732498169, "entropy": -0.06417103111743927, "sl_loss": 0.019544249400496483, "encoder_grad_norm": 0.7062134146690369, "actor_grad_norm": 0.2269187718629837, "critic_grad_norm": 1.1715797185897827, "lstm_grad_norm": 0.022018490359187126, "lstm_updates": 1, "minibatches": 1}
+{"frames": 8576, "update": 134, "elapsed_s": 1729.2766876460519, "training_fps": 4.95929891239611, "policy_loss": 0.011360790580511093, "value_loss": 3.780132293701172, "entropy": -0.06693217903375626, "sl_loss": 0.018582412973046303, "encoder_grad_norm": 0.6378461122512817, "actor_grad_norm": 0.21329066157341003, "critic_grad_norm": 16.545597076416016, "lstm_grad_norm": 0.04130590707063675, "lstm_updates": 1, "minibatches": 1}
+{"frames": 8640, "update": 135, "elapsed_s": 1741.0679329670966, "training_fps": 4.962471499686541, "policy_loss": 0.013212945312261581, "value_loss": 0.01157316379249096, "entropy": -0.0697052925825119, "sl_loss": 0.018727077171206474, "encoder_grad_norm": 0.9489386081695557, "actor_grad_norm": 0.26996785402297974, "critic_grad_norm": 0.9716747403144836, "lstm_grad_norm": 0.03115612082183361, "lstm_updates": 1, "minibatches": 1}
+{"frames": 8704, "update": 136, "elapsed_s": 1752.8323138621636, "training_fps": 4.965677508368269, "policy_loss": 0.018480688333511353, "value_loss": 0.049258869141340256, "entropy": -0.06832834333181381, "sl_loss": 0.02066521719098091, "encoder_grad_norm": 1.2337313890457153, "actor_grad_norm": 0.4303136169910431, "critic_grad_norm": 0.7819576263427734, "lstm_grad_norm": 0.020068472251296043, "lstm_updates": 1, "minibatches": 1}
+{"frames": 8768, "update": 137, "elapsed_s": 1764.630455172155, "training_fps": 4.968745705641015, "policy_loss": 0.04034984111785889, "value_loss": 0.049194104969501495, "entropy": -0.07252974808216095, "sl_loss": 0.01928000897169113, "encoder_grad_norm": 0.910899817943573, "actor_grad_norm": 0.2135705053806305, "critic_grad_norm": 1.6239523887634277, "lstm_grad_norm": 0.02431873232126236, "lstm_updates": 1, "minibatches": 1}
+{"frames": 8832, "update": 138, "elapsed_s": 1776.868196615018, "training_fps": 4.970543123663866, "policy_loss": 0.012436799705028534, "value_loss": 0.045939378440380096, "entropy": -0.0679439902305603, "sl_loss": 0.020624574273824692, "encoder_grad_norm": 0.5380269885063171, "actor_grad_norm": 0.20574940741062164, "critic_grad_norm": 0.42313113808631897, "lstm_grad_norm": 0.021323606371879578, "lstm_updates": 1, "minibatches": 1}
+{"frames": 8896, "update": 139, "elapsed_s": 1788.6285662499722, "training_fps": 4.97364302706449, "policy_loss": 0.0188785120844841, "value_loss": 0.04578399658203125, "entropy": -0.0650370642542839, "sl_loss": 0.021097632125020027, "encoder_grad_norm": 0.8375392556190491, "actor_grad_norm": 0.31119000911712646, "critic_grad_norm": 2.4127445220947266, "lstm_grad_norm": 0.040735770016908646, "lstm_updates": 1, "minibatches": 1}
+{"frames": 8960, "update": 140, "elapsed_s": 1800.4362118651625, "training_fps": 4.976571753570883, "policy_loss": 0.019133880734443665, "value_loss": 0.04281582683324814, "entropy": -0.06228071078658104, "sl_loss": 0.023117126896977425, "encoder_grad_norm": 0.7055046558380127, "actor_grad_norm": 0.24251559376716614, "critic_grad_norm": 1.7669708728790283, "lstm_grad_norm": 0.030453061684966087, "lstm_updates": 1, "minibatches": 1}
+{"frames": 9024, "update": 141, "elapsed_s": 1812.1996767991222, "training_fps": 4.97958371403711, "policy_loss": 0.01089654490351677, "value_loss": 0.016261551529169083, "entropy": -0.06505689024925232, "sl_loss": 0.02228192612528801, "encoder_grad_norm": 1.2040070295333862, "actor_grad_norm": 0.3803577721118927, "critic_grad_norm": 1.241959810256958, "lstm_grad_norm": 0.027133066207170486, "lstm_updates": 1, "minibatches": 1}
+{"frames": 9088, "update": 142, "elapsed_s": 1823.9685666740406, "training_fps": 4.982542003051776, "policy_loss": 0.011081315577030182, "value_loss": 0.01973884180188179, "entropy": -0.0648093968629837, "sl_loss": 0.021986255422234535, "encoder_grad_norm": 0.7467570900917053, "actor_grad_norm": 0.21153393387794495, "critic_grad_norm": 1.0448501110076904, "lstm_grad_norm": 0.02221396006643772, "lstm_updates": 1, "minibatches": 1}
+{"frames": 9152, "update": 143, "elapsed_s": 1836.1438046060503, "training_fps": 4.984359053250902, "policy_loss": 0.00010781362652778625, "value_loss": 0.03193296864628792, "entropy": -0.06773542612791061, "sl_loss": 0.016024261713027954, "encoder_grad_norm": 0.7061108946800232, "actor_grad_norm": 0.20705220103263855, "critic_grad_norm": 0.5377693772315979, "lstm_grad_norm": 0.020255768671631813, "lstm_updates": 1, "minibatches": 1}
+{"frames": 9216, "update": 144, "elapsed_s": 1847.9388335091062, "training_fps": 4.987178053365884, "policy_loss": 0.016313914209604263, "value_loss": 0.05907990783452988, "entropy": -0.07144252955913544, "sl_loss": 0.020384622737765312, "encoder_grad_norm": 0.5828067660331726, "actor_grad_norm": 0.2262188345193863, "critic_grad_norm": 2.140071153640747, "lstm_grad_norm": 0.01904519647359848, "lstm_updates": 1, "minibatches": 1}
+{"frames": 9280, "update": 145, "elapsed_s": 1859.8093270079698, "training_fps": 4.989758822443042, "policy_loss": 0.00933336466550827, "value_loss": 0.010921754874289036, "entropy": -0.07447922229766846, "sl_loss": 0.021742964163422585, "encoder_grad_norm": 1.1081782579421997, "actor_grad_norm": 0.48762232065200806, "critic_grad_norm": 0.29270273447036743, "lstm_grad_norm": 0.017931737005710602, "lstm_updates": 1, "minibatches": 1}
+{"frames": 9344, "update": 146, "elapsed_s": 1871.8161518431734, "training_fps": 4.991943245471294, "policy_loss": 0.005461439490318298, "value_loss": 0.014246857725083828, "entropy": -0.07208399474620819, "sl_loss": 0.022050222381949425, "encoder_grad_norm": 0.60758376121521, "actor_grad_norm": 0.14410805702209473, "critic_grad_norm": 0.22818820178508759, "lstm_grad_norm": 0.027752405032515526, "lstm_updates": 1, "minibatches": 1}
+{"frames": 9408, "update": 147, "elapsed_s": 1884.2509957521688, "training_fps": 4.992965384268827, "policy_loss": 0.008946456015110016, "value_loss": 0.041711095720529556, "entropy": -0.06481769680976868, "sl_loss": 0.022673003375530243, "encoder_grad_norm": 1.1916228532791138, "actor_grad_norm": 0.4869385063648224, "critic_grad_norm": 1.8359267711639404, "lstm_grad_norm": 0.051911987364292145, "lstm_updates": 1, "minibatches": 1}
+{"frames": 9472, "update": 148, "elapsed_s": 1896.0578870819882, "training_fps": 4.995628066482691, "policy_loss": 0.005505792796611786, "value_loss": 0.03825520724058151, "entropy": -0.06097248196601868, "sl_loss": 0.031402360647916794, "encoder_grad_norm": 0.7759060263633728, "actor_grad_norm": 0.2233981341123581, "critic_grad_norm": 2.138792037963867, "lstm_grad_norm": 0.045846421271562576, "lstm_updates": 1, "minibatches": 1}
+{"frames": 9536, "update": 149, "elapsed_s": 1907.8509467490949, "training_fps": 4.99829402953362, "policy_loss": 0.010232672095298767, "value_loss": 0.013701364398002625, "entropy": -0.05869225412607193, "sl_loss": 0.021492917090654373, "encoder_grad_norm": 0.9206963777542114, "actor_grad_norm": 0.32781755924224854, "critic_grad_norm": 1.0930191278457642, "lstm_grad_norm": 0.02409103326499462, "lstm_updates": 1, "minibatches": 1}
+{"evaluation": {"frames": 9600, "update": 150, "seed": 254348, "episodes": [{"episode": 0, "seed": 254348, "steps": 104, "reward": -969.7709817886353, "capture": false, "escaped": false, "collision": true, "timeout": false, "visibility_ratio": 0.4375}], "capture_success_rate": 0.0, "collision_rate": 1.0, "escape_rate": 0.0, "average_episode_reward": -969.7709817886353, "average_episode_length": 104.0, "target_visibility_ratio": 0.4375}}
+{"frames": 9600, "update": 150, "elapsed_s": 1919.7762352100108, "training_fps": 5.000582786607664, "policy_loss": 0.005886506289243698, "value_loss": 0.020954832434654236, "entropy": -0.0590783916413784, "sl_loss": 0.018957749009132385, "encoder_grad_norm": 0.6402183175086975, "actor_grad_norm": 0.27665475010871887, "critic_grad_norm": 1.2038854360580444, "lstm_grad_norm": 0.023987095803022385, "lstm_updates": 1, "minibatches": 1, "evaluation": {"frames": 9600, "update": 150, "seed": 254348, "episodes": [{"episode": 0, "seed": 254348, "steps": 104, "reward": -969.7709817886353, "capture": false, "escaped": false, "collision": true, "timeout": false, "visibility_ratio": 0.4375}], "capture_success_rate": 0.0, "collision_rate": 1.0, "escape_rate": 0.0, "average_episode_reward": -969.7709817886353, "average_episode_length": 104.0, "target_visibility_ratio": 0.4375}}
+{"frames": 9664, "update": 151, "elapsed_s": 1952.04550152109, "training_fps": 4.950704268637855, "policy_loss": 0.023527061566710472, "value_loss": 0.009882725775241852, "entropy": -0.059004731476306915, "sl_loss": 0.02353435568511486, "encoder_grad_norm": 0.8530712127685547, "actor_grad_norm": 0.291735976934433, "critic_grad_norm": 0.45396870374679565, "lstm_grad_norm": 0.02999134548008442, "lstm_updates": 1, "minibatches": 1}
+{"frames": 9728, "update": 152, "elapsed_s": 1963.8783073399682, "training_fps": 4.953463746130418, "policy_loss": 0.030832242220640182, "value_loss": 0.021639084443449974, "entropy": -0.06485380232334137, "sl_loss": 0.027633266523480415, "encoder_grad_norm": 0.7967885136604309, "actor_grad_norm": 0.2610003650188446, "critic_grad_norm": 1.7163963317871094, "lstm_grad_norm": 0.062127742916345596, "lstm_updates": 1, "minibatches": 1}
+{"frames": 9792, "update": 153, "elapsed_s": 1975.82235584897, "training_fps": 4.955911125854565, "policy_loss": 0.012441975995898247, "value_loss": 0.01972280628979206, "entropy": -0.06237991899251938, "sl_loss": 0.019802050665020943, "encoder_grad_norm": 0.9678145051002502, "actor_grad_norm": 0.3065267503261566, "critic_grad_norm": 1.7005456686019897, "lstm_grad_norm": 0.0506926029920578, "lstm_updates": 1, "minibatches": 1}
+{"frames": 9856, "update": 154, "elapsed_s": 1987.6837549239863, "training_fps": 4.958535266171628, "policy_loss": 0.013605596497654915, "value_loss": 0.03214025869965553, "entropy": -0.0591592863202095, "sl_loss": 0.012172635644674301, "encoder_grad_norm": 1.0125077962875366, "actor_grad_norm": 0.377941370010376, "critic_grad_norm": 0.8277810215950012, "lstm_grad_norm": 0.019012371078133583, "lstm_updates": 1, "minibatches": 1}
+{"frames": 9920, "update": 155, "elapsed_s": 1999.707193443086, "training_fps": 4.9607262647308525, "policy_loss": 0.022218123078346252, "value_loss": 0.034171268343925476, "entropy": -0.06143030524253845, "sl_loss": 0.01181976217776537, "encoder_grad_norm": 0.7482798099517822, "actor_grad_norm": 0.23828069865703583, "critic_grad_norm": 1.1008514165878296, "lstm_grad_norm": 0.01960516721010208, "lstm_updates": 1, "minibatches": 1}
+{"frames": 9984, "update": 156, "elapsed_s": 2011.981741338037, "training_fps": 4.962271670347513, "policy_loss": 0.013224292546510696, "value_loss": 0.01901021972298622, "entropy": -0.06280305236577988, "sl_loss": 0.02300705388188362, "encoder_grad_norm": 0.6356544494628906, "actor_grad_norm": 0.2590990662574768, "critic_grad_norm": 1.286980390548706, "lstm_grad_norm": 0.05614086240530014, "lstm_updates": 1, "minibatches": 1}
+{"frames": 10000, "update": 157, "elapsed_s": 2015.003651818959, "training_fps": 4.962770160741139, "policy_loss": 0.0014290735125541687, "value_loss": 0.003984613344073296, "entropy": -0.058872781693935394, "sl_loss": 0.015367493033409119, "encoder_grad_norm": 1.443885326385498, "actor_grad_norm": 0.5330902934074402, "critic_grad_norm": 0.6122393608093262, "lstm_grad_norm": 0.04435127228498459, "lstm_updates": 1, "minibatches": 1}
+{
+  "experiment_name": "trace_native_pilot",
+  "config": "/home/wj/\u684c\u9762/\u65e0\u4eba\u673a/TRACE_baseline_foundation/configs/psto/trace_native_pilot.yaml",
+  "seed": 4348,
+  "git_sha": "aed43a95064b6726e086778c819859ff973163d2",
+  "physics_dt": 0.004166666666666667,
+  "policy_hz": 30.0,
+  "policy_dt": 0.03333333333333333,
+  "episode_duration": 9.333333333333334,
+  "max_episode_steps": 280,
+  "frame_skip": 8,
+  "num_envs": 1,
+  "total_frames": 10000,
+  "rollout_steps": 64,
+  "ppo_epochs": 1,
+  "num_minibatches": 1,
+  "python": "3.12.13 (tags/v3.12.13-dirty:3bb231a, Apr 22 2026, 14:10:08) [GCC 11.4.0]",
+  "platform": "Linux-7.0.0-31-generic-x86_64-with-glibc2.39",
+  "torch": "2.11.0+cu128",
+  "cuda": "12.8",
+  "checkpoint_interval": 25,
+  "evaluation_interval": 50,
+  "num_eval_episodes": 1,
+  "cuda_seeded": true,
+  "isaac_sim_version": "110.1.2+production.326809.f9bf0dda.gl",
+  "status": "pass",
+  "frames": 10000,
+  "updates": 157,
+  "terminated_steps": 12,
+  "truncated_steps": 26,
+  "checkpoint": "results/psto_p0/final_acceptance/pilot_10000/checkpoint.pt",
+  "logs": [
+    {
+      "frames": 64,
+      "update": 1,
+      "elapsed_s": 12.236336193978786,
+      "training_fps": 5.230323318113659,
+      "policy_loss": 0.020124029368162155,
+      "value_loss": 0.6323843002319336,
+      "entropy": -0.1186639815568924,
+      "sl_loss": 0.02639034390449524,
+      "encoder_grad_norm": 0.9794585108757019,
+      "actor_grad_norm": 0.21001200377941132,
+      "critic_grad_norm": 4.949798107147217,
+      "lstm_grad_norm": 0.045113954693078995,
+      "lstm_updates": 1,
+      "minibatches": 1
+    },
+    {
+      "frames": 128,
+      "update": 2,
+      "elapsed_s": 24.1564304321073,
+      "training_fps": 5.298795944069448,
+      "policy_loss": 0.030410245060920715,
+      "value_loss": 0.36950451135635376,
+      "entropy": -0.10183289647102356,
+      "sl_loss": 0.02307279221713543,
+      "encoder_grad_norm": 1.8509106636047363,
+      "actor_grad_norm": 0.5257325768470764,
+      "critic_grad_norm": 1.5079506635665894,
+      "lstm_grad_norm": 0.05205859616398811,
+      "lstm_updates": 1,
+      "minibatches": 1
+    },
+    {
+      "frames": 192,
+      "update": 3,
+      "elapsed_s": 36.09428716707043,
+      "training_fps": 5.319401256249469,
+      "policy_loss": 0.03273819386959076,
+      "value_loss": 0.23593053221702576,
+      "entropy": -0.10749136656522751,
+      "sl_loss": 0.023275276646018028,
+      "encoder_grad_norm": 0.9953760504722595,
+      "actor_grad_norm": 0.29337289929389954,
+      "critic_grad_norm": 2.374559164047241,
+      "lstm_grad_norm": 0.039226021617650986,
+      "lstm_updates": 1,
+      "minibatches": 1
+    },
+    {
+      "frames": 256,
+      "update": 4,
+      "elapsed_s": 48.301247528987005,
+      "training_fps": 5.3000700733455846,
+      "policy_loss": 0.05267713963985443,
+      "value_loss": 0.12341729551553726,
+      "entropy": -0.1164824366569519,
+      "sl_loss": 0.024064693599939346,
+      "encoder_grad_norm": 1.6638157367706299,
+      "actor_grad_norm": 0.5157615542411804,
+      "critic_grad_norm": 2.831038236618042,
+      "lstm_grad_norm": 0.03692319244146347,
+      "lstm_updates": 1,
+      "minibatches": 1
+    },
+    {
+      "frames": 320,
+      "update": 5,
+      "elapsed_s": 60.650810312945396,
+      "training_fps": 5.276104228769608,
+      "policy_loss": 0.044648535549640656,
+      "value_loss": 0.19046379625797272,
+      "entropy": -0.12003206461668015,
+      "sl_loss": 0.03557247668504715,
+      "encoder_grad_norm": 1.165103554725647,
+      "actor_grad_norm": 0.326244980096817,
+      "critic_grad_norm": 4.808628082275391,
+      "lstm_grad_norm": 0.05986976996064186,
+      "lstm_updates": 1,
+      "minibatches": 1
+    },
+    {
+      "frames": 384,
+      "update": 6,
+      "elapsed_s": 72.68742625205778,
+      "training_fps": 5.282894404311605,
+      "policy_loss": 0.04985643923282623,
+      "value_loss": 0.03852541372179985,
+      "entropy": -0.1422991156578064,
+      "sl_loss": 0.02733847312629223,
+      "encoder_grad_norm": 1.26901376247406,
+      "actor_grad_norm": 0.36800453066825867,
+      "critic_grad_norm": 1.8446861505508423,
+      "lstm_grad_norm": 0.036476634442806244,
+      "lstm_updates": 1,
+      "minibatches": 1
+    },
+    {
+      "frames": 448,
+      "update": 7,
+      "elapsed_s": 84.80648003402166,
+      "training_fps": 5.28261515091703,
+      "policy_loss": 0.01647034101188183,
+      "value_loss": 0.10110827535390854,
+      "entropy": -0.12397906929254532,
+      "sl_loss": 0.025147490203380585,
+      "encoder_grad_norm": 0.9025683999061584,
+      "actor_grad_norm": 0.2536499798297882,
+      "critic_grad_norm": 3.123401165008545,
+      "lstm_grad_norm": 0.03713230416178703,
+      "lstm_updates": 1,
+      "minibatches": 1
+    },
+    {
+      "frames": 512,
+      "update": 8,
+      "elapsed_s": 96.94802894396707,
+      "training_fps": 5.281180046777063,
+      "policy_loss": 0.05392569303512573,
+      "value_loss": 0.07584698498249054,
+      "entropy": -0.12854722142219543,
+      "sl_loss": 0.0238764900714159,
+      "encoder_grad_norm": 1.077358365058899,
+      "actor_grad_norm": 0.2567813992500305,
+      "critic_grad_norm": 0.9099692702293396,
+      "lstm_grad_norm": 0.03428831696510315,
+      "lstm_updates": 1,
+      "minibatches": 1
+    },
+    {
+      "frames": 576,
+      "update": 9,
+      "elapsed_s": 109.54991120705381,
+      "training_fps": 5.257877348462262,
+      "policy_loss": 0.036868248134851456,
+      "value_loss": 0.13296690583229065,
+      "entropy": -0.13316383957862854,
+      "sl_loss": 0.029212631285190582,
+      "encoder_grad_norm": 1.1432737112045288,
+      "actor_grad_norm": 0.3950214982032776,
+      "critic_grad_norm": 1.3390439748764038,
+      "lstm_grad_norm": 0.0337955504655838,
+      "lstm_updates": 1,
+      "minibatches": 1
+    },
+    {
+      "frames": 640,
+      "update": 10,
+      "elapsed_s": 121.42670202907175,
+      "training_fps": 5.2706693451165325,
+      "policy_loss": 0.047763582319021225,
+      "value_loss": 0.7141315340995789,
+      "entropy": -0.1373763382434845,
+      "sl_loss": 0.02634444646537304,
+      "encoder_grad_norm": 1.5567378997802734,
+      "actor_grad_norm": 0.5080645680427551,
+      "critic_grad_norm": 10.64200210571289,
+      "lstm_grad_norm": 0.06548772752285004,
+      "lstm_updates": 1,
+      "minibatches": 1
+    },
+    {
+      "frames": 704,
+      "update": 11,
+      "elapsed_s": 133.3241264850367,
+      "training_fps": 5.280364586824545,
+      "policy_loss": 0.04649211838841438,
+      "value_loss": 0.05167580023407936,
+      "entropy": -0.1310393214225769,
+      "sl_loss": 0.013896551914513111,
+      "encoder_grad_norm": 1.6718144416809082,
+      "actor_grad_norm": 0.5110684633255005,
+      "critic_grad_norm": 2.134493589401245,
+      "lstm_grad_norm": 0.04041070118546486,
+      "lstm_updates": 1,
+      "minibatches": 1
+    },
+    {
+      "frames": 768,
+      "update": 12,
+      "elapsed_s": 146.00762358610518,
+      "training_fps": 5.259999287328998,
+      "policy_loss": 0.07657420635223389,
+      "value_loss": 5.003192901611328,
+      "entropy": -0.13468730449676514,
+      "sl_loss": 0.018403727561235428,
+      "encoder_grad_norm": 1.2593696117401123,
+      "actor_grad_norm": 0.3063240349292755,
+      "critic_grad_norm": 18.21608543395996,
+      "lstm_grad_norm": 0.04974222928285599,
+      "lstm_updates": 1,
+      "minibatches": 1
+    },
+    {
+      "frames": 832,
+      "update": 13,
+      "elapsed_s": 158.2197047099471,
+      "training_fps": 5.258510598443729,
+      "policy_loss": 0.018976230174303055,
+      "value_loss": 0.032449617981910706,
+      "entropy": -0.1339569240808487,
+      "sl_loss": 0.03397955372929573,
+      "encoder_grad_norm": 1.5115435123443604,
+      "actor_grad_norm": 0.4056246876716614,
+      "critic_grad_norm": 0.27966567873954773,
+      "lstm_grad_norm": 0.03362870216369629,
+      "lstm_updates": 1,
+      "minibatches": 1
+    },
+    {
+      "frames": 896,
+      "update": 14,
+      "elapsed_s": 170.4352180280257,
+      "training_fps": 5.257129392524771,
+      "policy_loss": 0.031250618398189545,
+      "value_loss": 0.012789730913937092,
+      "entropy": -0.12053203582763672,
+      "sl_loss": 0.021104805171489716,
+      "encoder_grad_norm": 1.1933677196502686,
+      "actor_grad_norm": 0.3587484061717987,
+      "critic_grad_norm": 1.1670639514923096,
+      "lstm_grad_norm": 0.03342263028025627,
+      "lstm_updates": 1,
+      "minibatches": 1
+    },
+    {
+      "frames": 960,
+      "update": 15,
+      "elapsed_s": 182.71317406604066,
+      "training_fps": 5.254136717966553,
+      "policy_loss": 0.034315239638090134,
+      "value_loss": 0.04717302322387695,
+      "entropy": -0.13379445672035217,
+      "sl_loss": 0.023242903873324394,
+      "encoder_grad_norm": 1.5122264623641968,
+      "actor_grad_norm": 0.34611472487449646,
+      "critic_grad_norm": 2.5591893196105957,
+      "lstm_grad_norm": 0.033742789179086685,
+      "lstm_updates": 1,
+      "minibatches": 1
+    },
+    {
+      "frames": 1024,
+      "update": 16,
+      "elapsed_s": 195.47897280403413,
+      "training_fps": 5.23841506131345,
+      "policy_loss": 0.022556431591510773,
+      "value_loss": 4.502176761627197,
+      "entropy": -0.13628104329109192,
+      "sl_loss": 0.02338966727256775,
+      "encoder_grad_norm": 2.4958088397979736,
+      "actor_grad_norm": 0.6668893694877625,
+      "critic_grad_norm": 19.398639678955078,
+      "lstm_grad_norm": 0.04337392374873161,
+      "lstm_updates": 1,
+      "minibatches": 1
+    },
+    {
+      "frames": 1088,
+      "update": 17,
+      "elapsed_s": 207.4329332129564,
+      "training_fps": 5.245068749964054,
+      "policy_loss": 0.04848211258649826,
+      "value_loss": 0.05825553089380264,
+      "entropy": -0.1448977291584015,
+      "sl_loss": 0.03373643010854721,
+      "encoder_grad_norm": 1.1398224830627441,
+      "actor_grad_norm": 0.27035996317863464,
+      "critic_grad_norm": 2.6635942459106445,
+      "lstm_grad_norm": 0.06102987378835678,
+      "lstm_updates": 1,
+      "minibatches": 1
+    },
+    {
+      "frames": 1152,
+      "update": 18,
+      "elapsed_s": 219.48659832403064,
+      "training_fps": 5.248612013314033,
+      "policy_loss": 0.04021427780389786,
+      "value_loss": 0.011672328226268291,
+      "entropy": -0.13669610023498535,
+      "sl_loss": 0.025005945935845375,
+      "encoder_grad_norm": 1.940579891204834,
+      "actor_grad_norm": 0.6367588639259338,
+      "critic_grad_norm": 0.25380751490592957,
+      "lstm_grad_norm": 0.03840351477265358,
+      "lstm_updates": 1,
+      "minibatches": 1
+    },
+    {
+      "frames": 1216,
+      "update": 19,
+      "elapsed_s": 231.59766856208444,
+      "training_fps": 5.2504846148321045,
+      "policy_loss": 0.05413763225078583,
+      "value_loss": 0.01356411911547184,
+      "entropy": -0.12741872668266296,
+      "sl_loss": 0.025276273488998413,
+      "encoder_grad_norm": 2.1114158630371094,
+      "actor_grad_norm": 0.5545445084571838,
+      "critic_grad_norm": 0.7248892188072205,
+      "lstm_grad_norm": 0.03522668778896332,
+      "lstm_updates": 1,
+      "minibatches": 1
+    },
+    {
+      "frames": 1280,
+      "update": 20,
+      "elapsed_s": 244.20559418806806,
+      "training_fps": 5.2414851534269244,
+      "policy_loss": 0.03279116004705429,
+      "value_loss": 2.910661220550537,
+      "entropy": -0.13463589549064636,
+      "sl_loss": 0.022591549903154373,
+      "encoder_grad_norm": 0.9496051669120789,
+      "actor_grad_norm": 0.2519698441028595,
+      "critic_grad_norm": 13.457953453063965,
+      "lstm_grad_norm": 0.03456592559814453,
+      "lstm_updates": 1,
+      "minibatches": 1
+    },
+    {
+      "frames": 1344,
+      "update": 21,
+      "elapsed_s": 256.3013656930998,
+      "training_fps": 5.243826902996344,
+      "policy_loss": 0.019337818026542664,
+      "value_loss": 0.1143263578414917,
+      "entropy": -0.1428363025188446,
+      "sl_loss": 0.023181233555078506,
+      "encoder_grad_norm": 0.9106824994087219,
+      "actor_grad_norm": 0.23489084839820862,
+      "critic_grad_norm": 2.344360113143921,
+      "lstm_grad_norm": 0.03234543651342392,
+      "lstm_updates": 1,
+      "minibatches": 1
+    },
+    {
+      "frames": 1408,
+      "update": 22,
+      "elapsed_s": 268.3371920429636,
+      "training_fps": 5.24712949669762,
+      "policy_loss": 0.031595297157764435,
+      "value_loss": 0.04279045760631561,
+      "entropy": -0.1586945652961731,
+      "sl_loss": 0.028297236189246178,
+      "encoder_grad_norm": 1.999692678451538,
+      "actor_grad_norm": 0.5458041429519653,
+      "critic_grad_norm": 0.5188807845115662,
+      "lstm_grad_norm": 0.03195543214678764,
+      "lstm_updates": 1,
+      "minibatches": 1
+    },
+    {
+      "frames": 1472,
+      "update": 23,
+      "elapsed_s": 280.3090520859696,
+      "training_fps": 5.2513466285163375,
+      "policy_loss": 0.056138522922992706,
+      "value_loss": 0.0326613113284111,
+      "entropy": -0.14311490952968597,
+      "sl_loss": 0.027425726875662804,
+      "encoder_grad_norm": 1.4007796049118042,
+      "actor_grad_norm": 0.45793163776397705,
+      "critic_grad_norm": 1.1039890050888062,
+      "lstm_grad_norm": 0.03238286077976227,
+      "lstm_updates": 1,
+      "minibatches": 1
+    },
+    {
+      "frames": 1536,
+      "update": 24,
+      "elapsed_s": 292.81244587898254,
+      "training_fps": 5.24567865269223,
+      "policy_loss": 0.024819478392601013,
+      "value_loss": 0.04736492037773132,
+      "entropy": -0.14953657984733582,
+      "sl_loss": 0.027981936931610107,
+      "encoder_grad_norm": 0.628626823425293,
+      "actor_grad_norm": 0.1977599412202835,
+      "critic_grad_norm": 0.6697859168052673,
+      "lstm_grad_norm": 0.03599386662244797,
+      "lstm_updates": 1,
+      "minibatches": 1
+    },
+    {
+      "frames": 1600,
+      "update": 25,
+      "elapsed_s": 304.9077039679978,
+      "training_fps": 5.247489571907506,
+      "policy_loss": 0.007862329483032227,
+      "value_loss": 0.014967015944421291,
+      "entropy": -0.12723729014396667,
+      "sl_loss": 0.030545426532626152,
+      "encoder_grad_norm": 0.9807150959968567,
+      "actor_grad_norm": 0.2597736418247223,
+      "critic_grad_norm": 1.22958242893219,
+      "lstm_grad_norm": 0.051423732191324234,
+      "lstm_updates": 1,
+      "minibatches": 1
+    },
+    {
+      "frames": 1664,
+      "update": 26,
+      "elapsed_s": 317.1205777260475,
+      "training_fps": 5.247215455230862,
+      "policy_loss": 0.029279448091983795,
+      "value_loss": 0.010278183966875076,
+      "entropy": -0.11326806247234344,
+      "sl_loss": 0.025912847369909286,
+      "encoder_grad_norm": 1.2114111185073853,
+      "actor_grad_norm": 0.33858397603034973,
+      "critic_grad_norm": 0.5274092555046082,
+      "lstm_grad_norm": 0.033686310052871704,
+      "lstm_updates": 1,
+      "minibatches": 1
+    },
+    {
+      "frames": 1728,
+      "update": 27,
+      "elapsed_s": 329.7823268561624,
+      "training_fps": 5.239819891904613,
+      "policy_loss": 0.028299197554588318,
+      "value_loss": 1.8890161514282227,
+      "entropy": -0.11758522689342499,
+      "sl_loss": 0.0230377446860075,
+      "encoder_grad_norm": 0.751248836517334,
+      "actor_grad_norm": 0.23391982913017273,
+      "critic_grad_norm": 13.050392150878906,
+      "lstm_grad_norm": 0.03200402855873108,
+      "lstm_updates": 1,
+      "minibatches": 1
+    },
+    {
+      "frames": 1792,
+      "update": 28,
+      "elapsed_s": 341.81861948804,
+      "training_fps": 5.24254646948705,
+      "policy_loss": 0.0402429923415184,
+      "value_loss": 0.007622851524502039,
+      "entropy": -0.12224258482456207,
+      "sl_loss": 0.02852499857544899,
+      "encoder_grad_norm": 1.0627186298370361,
+      "actor_grad_norm": 0.21811360120773315,
+      "critic_grad_norm": 0.9965657591819763,
+      "lstm_grad_norm": 0.07040160894393921,
+      "lstm_updates": 1,
+      "minibatches": 1
+    },
+    {
+      "frames": 1856,
+      "update": 29,
+      "elapsed_s": 353.9088934510946,
+      "training_fps": 5.244287528618717,
+      "policy_loss": 0.03420409932732582,
+      "value_loss": 0.05415017902851105,
+      "entropy": -0.12074747681617737,
+      "sl_loss": 0.01576760783791542,
+      "encoder_grad_norm": 1.4628536701202393,
+      "actor_grad_norm": 0.3943926990032196,
+      "critic_grad_norm": 1.9703069925308228,
+      "lstm_grad_norm": 0.03302405774593353,
+      "lstm_updates": 1,
+      "minibatches": 1
+    },
+    {
+      "frames": 1920,
+      "update": 30,
+      "elapsed_s": 365.9715088461526,
+      "training_fps": 5.2463100275822185,
+      "policy_loss": 0.039007168263196945,
+      "value_loss": 0.0106147900223732,
+      "entropy": -0.11862561106681824,
+      "sl_loss": 0.017224878072738647,
+      "encoder_grad_norm": 1.5779390335083008,
+      "actor_grad_norm": 0.4335882365703583,
+      "critic_grad_norm": 0.1207064837217331,
+      "lstm_grad_norm": 0.03454173728823662,
+      "lstm_updates": 1,
+      "minibatches": 1
+    },
+    {
+      "frames": 1984,
+      "update": 31,
+      "elapsed_s": 378.0840815261472,
+      "training_fps": 5.24750999508016,
+      "policy_loss": 0.035436928272247314,
+      "value_loss": 0.01317848265171051,
+      "entropy": -0.11285141110420227,
+      "sl_loss": 0.015844004228711128,
+      "encoder_grad_norm": 0.9578503370285034,
+      "actor_grad_norm": 0.22895537316799164,
+      "critic_grad_norm": 0.23523607850074768,
+      "lstm_grad_norm": 0.03461534157395363,
+      "lstm_updates": 1,
+      "minibatches": 1
+    },
+    {
+      "frames": 2048,
+      "update": 32,
+      "elapsed_s": 390.7572241530288,
+      "training_fps": 5.2411059068952,
+      "policy_loss": 0.044880304485559464,
+      "value_loss": 0.014416242018342018,
+      "entropy": -0.10532163828611374,
+      "sl_loss": 0.0128119345754385,
+      "encoder_grad_norm": 1.7026246786117554,
+      "actor_grad_norm": 0.5173841714859009,
+      "critic_grad_norm": 0.46283483505249023,
+      "lstm_grad_norm": 0.030496444553136826,
+      "lstm_updates": 1,
+      "minibatches": 1
+    },
+    {
+      "frames": 2112,
+      "update": 33,
+      "elapsed_s": 407.4461580850184,
+      "training_fps": 5.183506962081642,
+      "policy_loss": 0.030718207359313965,
+      "value_loss": 0.025912607088685036,
+      "entropy": -0.10272806137800217,
+      "sl_loss": 0.02507283352315426,
+      "encoder_grad_norm": 1.0476733446121216,
+      "actor_grad_norm": 0.32326170802116394,
+      "critic_grad_norm": 1.414557933807373,
+      "lstm_grad_norm": 0.03568330034613609,
+      "lstm_updates": 1,
+      "minibatches": 1
+    },
+    {
+      "frames": 2176,
+      "update": 34,
+      "elapsed_s": 421.76220690994523,
+      "training_fps": 5.159305318064176,
+      "policy_loss": 0.037126872688531876,
+      "value_loss": 0.023129671812057495,
+      "entropy": -0.09888523817062378,
+      "sl_loss": 0.02751053310930729,
+      "encoder_grad_norm": 1.15746009349823,
+      "actor_grad_norm": 0.3339480459690094,
+      "critic_grad_norm": 0.8856077790260315,
+      "lstm_grad_norm": 0.03666977211833,
+      "lstm_updates": 1,
+      "minibatches": 1
+    },
+    {
+      "frames": 2240,
+      "update": 35,
+      "elapsed_s": 433.81324248807505,
+      "training_fps": 5.163512260869555,
+      "policy_loss": 0.024189330637454987,
+      "value_loss": 0.03548954799771309,
+      "entropy": -0.10253758728504181,
+      "sl_loss": 0.02702471986413002,
+      "encoder_grad_norm": 2.275212049484253,
+      "actor_grad_norm": 0.6977171897888184,
+      "critic_grad_norm": 1.388669490814209,
+      "lstm_grad_norm": 0.03512309119105339,
+      "lstm_updates": 1,
+      "minibatches": 1
+    },
+    {
+      "frames": 2304,
+      "update": 36,
+      "elapsed_s": 446.31704939808697,
+      "training_fps": 5.162249569978408,
+      "policy_loss": 0.023091014474630356,
+      "value_loss": 0.04578167945146561,
+      "entropy": -0.10512509942054749,
+      "sl_loss": 0.021085986867547035,
+      "encoder_grad_norm": 1.0066536664962769,
+      "actor_grad_norm": 0.2833832800388336,
+      "critic_grad_norm": 1.4197344779968262,
+      "lstm_grad_norm": 0.028712617233395576,
+      "lstm_updates": 1,
+      "minibatches": 1
+    },
+    {
+      "frames": 2368,
+      "update": 37,
+      "elapsed_s": 458.31393070099875,
+      "training_fps": 5.166764169481393,
+      "policy_loss": 0.028479889035224915,
+      "value_loss": 0.04075732082128525,
+      "entropy": -0.10832866281270981,
+      "sl_loss": 0.026952238753437996,
+      "encoder_grad_norm": 0.8985666036605835,
+      "actor_grad_norm": 0.24748069047927856,
+      "critic_grad_norm": 1.7376857995986938,
+      "lstm_grad_norm": 0.04240725189447403,
+      "lstm_updates": 1,
+      "minibatches": 1
+    },
+    {
+      "frames": 2432,
+      "update": 38,
+      "elapsed_s": 470.36588985007256,
+      "training_fps": 5.170442945800368,
+      "policy_loss": 0.0406663715839386,
+      "value_loss": 0.01998509094119072,
+      "entropy": -0.12266863882541656,
+      "sl_loss": 0.02825961634516716,
+      "encoder_grad_norm": 1.8043160438537598,
+      "actor_grad_norm": 0.5821298360824585,
+      "critic_grad_norm": 1.3297679424285889,
+      "lstm_grad_norm": 0.03623127192258835,
+      "lstm_updates": 1,
+      "minibatches": 1
+    },
+    {
+      "frames": 2496,
+      "update": 39,
+      "elapsed_s": 482.3340037490707,
+      "training_fps": 5.174837302085372,
+      "policy_loss": 0.006762709468603134,
+      "value_loss": 0.02800600789487362,
+      "entropy": -0.11207824945449829,
+      "sl_loss": 0.025106141343712807,
+      "encoder_grad_norm": 1.0210398435592651,
+      "actor_grad_norm": 0.25739115476608276,
+      "critic_grad_norm": 1.5585047006607056,
+      "lstm_grad_norm": 0.03192462772130966,
+      "lstm_updates": 1,
+      "minibatches": 1
+    },
+    {
+      "frames": 2560,
+      "update": 40,
+      "elapsed_s": 495.2664812549483,
+      "training_fps": 5.168934486538089,
+      "policy_loss": 0.004091497510671616,
+      "value_loss": 2.052252769470215,
+      "entropy": -0.105891153216362,
+      "sl_loss": 0.020947881042957306,
+      "encoder_grad_norm": 1.0354539155960083,
+      "actor_grad_norm": 0.302667498588562,
+      "critic_grad_norm": 11.350460052490234,
+      "lstm_grad_norm": 0.029427455738186836,
+      "lstm_updates": 1,
+      "minibatches": 1
+    },
+    {
+      "frames": 2624,
+      "update": 41,
+      "elapsed_s": 507.6962055990007,
+      "training_fps": 5.168445159144912,
+      "policy_loss": 0.019490648061037064,
+      "value_loss": 0.02303898334503174,
+      "entropy": -0.10399384051561356,
+      "sl_loss": 0.02816738188266754,
+      "encoder_grad_norm": 0.6943228244781494,
+      "actor_grad_norm": 0.22963012754917145,
+      "critic_grad_norm": 0.49685779213905334,
+      "lstm_grad_norm": 0.036216024309396744,
+      "lstm_updates": 1,
+      "minibatches": 1
+    },
+    {
+      "frames": 2688,
+      "update": 42,
+      "elapsed_s": 519.8246004639659,
+      "training_fps": 5.170974967447876,
+      "policy_loss": 0.0460081472992897,
+      "value_loss": 0.020374193787574768,
+      "entropy": -0.10441911220550537,
+      "sl_loss": 0.029282990843057632,
+      "encoder_grad_norm": 1.7611865997314453,
+      "actor_grad_norm": 0.5121522545814514,
+      "critic_grad_norm": 0.7694434523582458,
+      "lstm_grad_norm": 0.040295906364917755,
+      "lstm_updates": 1,
+      "minibatches": 1
+    },
+    {
+      "frames": 2752,
+      "update": 43,
+      "elapsed_s": 532.0324142850004,
+      "training_fps": 5.172617161133444,
+      "policy_loss": 0.011934684589505196,
+      "value_loss": 0.014982113614678383,
+      "entropy": -0.09922793507575989,
+      "sl_loss": 0.02728359028697014,
+      "encoder_grad_norm": 1.4145820140838623,
+      "actor_grad_norm": 0.3787575364112854,
+      "critic_grad_norm": 1.5676840543746948,
+      "lstm_grad_norm": 0.046274762600660324,
+      "lstm_updates": 1,
+      "minibatches": 1
+    },
+    {
+      "frames": 2816,
+      "update": 44,
+      "elapsed_s": 544.6474360451102,
+      "training_fps": 5.170317180889961,
+      "policy_loss": 0.011798784136772156,
+      "value_loss": 1.7078616619110107,
+      "entropy": -0.09618139266967773,
+      "sl_loss": 0.026637859642505646,
+      "encoder_grad_norm": 0.7515893578529358,
+      "actor_grad_norm": 0.17612005770206451,
+      "critic_grad_norm": 12.13021183013916,
+      "lstm_grad_norm": 0.030197547748684883,
+      "lstm_updates": 1,
+      "minibatches": 1
+    },
+    {
+      "frames": 2880,
+      "update": 45,
+      "elapsed_s": 556.7691463909578,
+      "training_fps": 5.172700418824985,
+      "policy_loss": 0.009377449750900269,
+      "value_loss": 0.021855954080820084,
+      "entropy": -0.09737499803304672,
+      "sl_loss": 0.025540784001350403,
+      "encoder_grad_norm": 0.9419733285903931,
+      "actor_grad_norm": 0.25369077920913696,
+      "critic_grad_norm": 1.160830020904541,
+      "lstm_grad_norm": 0.03222668170928955,
+      "lstm_updates": 1,
+      "minibatches": 1
+    },
+    {
+      "frames": 2944,
+      "update": 46,
+      "elapsed_s": 568.9013487191405,
+      "training_fps": 5.174886654141021,
+      "policy_loss": 0.01997465267777443,
+      "value_loss": 0.009436117485165596,
+      "entropy": -0.08818721771240234,
+      "sl_loss": 0.02629009447991848,
+      "encoder_grad_norm": 0.6323693990707397,
+      "actor_grad_norm": 0.1619918942451477,
+      "critic_grad_norm": 0.24969862401485443,
+      "lstm_grad_norm": 0.028382038697600365,
+      "lstm_updates": 1,
+      "minibatches": 1
+    },
+    {
+      "frames": 3008,
+      "update": 47,
+      "elapsed_s": 581.0899766630027,
+      "training_fps": 5.176478889704103,
+      "policy_loss": 0.028796706348657608,
+      "value_loss": 0.007012303452938795,
+      "entropy": -0.08529667556285858,
+      "sl_loss": 0.02034393697977066,
+      "encoder_grad_norm": 1.2077635526657104,
+      "actor_grad_norm": 0.4186350405216217,
+      "critic_grad_norm": 0.17384004592895508,
+      "lstm_grad_norm": 0.02943231537938118,
+      "lstm_updates": 1,
+      "minibatches": 1
+    },
+    {
+      "frames": 3072,
+      "update": 48,
+      "elapsed_s": 593.2099102470092,
+      "training_fps": 5.178605319821521,
+      "policy_loss": 0.016717297956347466,
+      "value_loss": 0.017453743144869804,
+      "entropy": -0.08405168354511261,
+      "sl_loss": 0.02774234488606453,
+      "encoder_grad_norm": 1.4246501922607422,
+      "actor_grad_norm": 0.4677601158618927,
+      "critic_grad_norm": 0.45681032538414,
+      "lstm_grad_norm": 0.029091808944940567,
+      "lstm_updates": 1,
+      "minibatches": 1
+    },
+    {
+      "frames": 3136,
+      "update": 49,
+      "elapsed_s": 605.653376450995,
+      "training_fps": 5.1778791608326795,
+      "policy_loss": 0.027933193370699883,
+      "value_loss": 0.009260803461074829,
+      "entropy": -0.10248688608407974,
+      "sl_loss": 0.02489401027560234,
+      "encoder_grad_norm": 0.7761219143867493,
+      "actor_grad_norm": 0.2126428782939911,
+      "critic_grad_norm": 0.25845062732696533,
+      "lstm_grad_norm": 0.05572689324617386,
+      "lstm_updates": 1,
+      "minibatches": 1
+    },
+    {
+      "frames": 3200,
+      "update": 50,
+      "elapsed_s": 617.6638518129475,
+      "training_fps": 5.180811514973363,
+      "policy_loss": 0.025558341294527054,
+      "value_loss": 0.03252233564853668,
+      "entropy": -0.10099825263023376,
+      "sl_loss": 0.016580931842327118,
+      "encoder_grad_norm": 0.9192548394203186,
+      "actor_grad_norm": 0.25105708837509155,
+      "critic_grad_norm": 2.3828699588775635,
+      "lstm_grad_norm": 0.05251212418079376,
+      "lstm_updates": 1,
+      "minibatches": 1,
+      "evaluation": {
+        "frames": 3200,
+        "update": 50,
+        "seed": 154348,
+        "episodes": [
+          {
+            "episode": 0,
+            "seed": 154348,
+            "steps": 280,
+            "reward": -293.94775139167905,
+            "capture": false,
+            "escaped": false,
+            "collision": false,
+            "timeout": true,
+            "visibility_ratio": 0.5642857142857143
+          }
+        ],
+        "capture_success_rate": 0.0,
+        "collision_rate": 0.0,
+        "escape_rate": 0.0,
+        "average_episode_reward": -293.94775139167905,
+        "average_episode_length": 280.0,
+        "target_visibility_ratio": 0.5642857142857143
+      }
+    },
+    {
+      "frames": 3264,
+      "update": 51,
+      "elapsed_s": 682.1845928099938,
+      "training_fps": 4.784628722259012,
+      "policy_loss": 0.03487759828567505,
+      "value_loss": 0.789351224899292,
+      "entropy": -0.09516528248786926,
+      "sl_loss": 0.014420728199183941,
+      "encoder_grad_norm": 0.9934332966804504,
+      "actor_grad_norm": 0.2869115173816681,
+      "critic_grad_norm": 8.78613567352295,
+      "lstm_grad_norm": 0.038064997643232346,
+      "lstm_updates": 1,
+      "minibatches": 1
+    },
+    {
+      "frames": 3328,
+      "update": 52,
+      "elapsed_s": 694.2327807161491,
+      "training_fps": 4.793781118969785,
+      "policy_loss": 0.006067600101232529,
+      "value_loss": 0.03942478075623512,
+      "entropy": -0.0841529369354248,
+      "sl_loss": 0.020074918866157532,
+      "encoder_grad_norm": 0.9018049240112305,
+      "actor_grad_norm": 0.28686830401420593,
+      "critic_grad_norm": 0.5574842691421509,
+      "lstm_grad_norm": 0.028513941913843155,
+      "lstm_updates": 1,
+      "minibatches": 1
+    },
+    {
+      "frames": 3392,
+      "update": 53,
+      "elapsed_s": 706.1811274781357,
+      "training_fps": 4.803300264836437,
+      "policy_loss": 0.021093172952532768,
+      "value_loss": 0.017476044595241547,
+      "entropy": -0.08618573844432831,
+      "sl_loss": 0.024242542684078217,
+      "encoder_grad_norm": 1.506397008895874,
+      "actor_grad_norm": 0.5531083345413208,
+      "critic_grad_norm": 1.1782186031341553,
+      "lstm_grad_norm": 0.030456164851784706,
+      "lstm_updates": 1,
+      "minibatches": 1
+    },
+    {
+      "frames": 3456,
+      "update": 54,
+      "elapsed_s": 718.179680175148,
+      "training_fps": 4.812166220174675,
+      "policy_loss": 0.005022317171096802,
+      "value_loss": 0.008908585645258427,
+      "entropy": -0.0881657525897026,
+      "sl_loss": 0.023972023278474808,
+      "encoder_grad_norm": 1.1200584173202515,
+      "actor_grad_norm": 0.34140294790267944,
+      "critic_grad_norm": 0.2707434594631195,
+      "lstm_grad_norm": 0.030939580872654915,
+      "lstm_updates": 1,
+      "minibatches": 1
+    },
+    {
+      "frames": 3520,
+      "update": 55,
+      "elapsed_s": 730.6984471171163,
+      "training_fps": 4.817308714672588,
+      "policy_loss": 0.03293696045875549,
+      "value_loss": 0.005566547624766827,
+      "entropy": -0.07971344888210297,
+      "sl_loss": 0.02543015591800213,
+      "encoder_grad_norm": 1.224584937095642,
+      "actor_grad_norm": 0.3509853482246399,
+      "critic_grad_norm": 0.18007652461528778,
+      "lstm_grad_norm": 0.029114972800016403,
+      "lstm_updates": 1,
+      "minibatches": 1
+    },
+    {
+      "frames": 3584,
+      "update": 56,
+      "elapsed_s": 742.5900300289504,
+      "training_fps": 4.826350815069737,
+      "policy_loss": 0.019425734877586365,
+      "value_loss": 0.022499212995171547,
+      "entropy": -0.09023098647594452,
+      "sl_loss": 0.024762233719229698,
+      "encoder_grad_norm": 1.590009331703186,
+      "actor_grad_norm": 0.4798445999622345,
+      "critic_grad_norm": 0.3988936245441437,
+      "lstm_grad_norm": 0.032389719039201736,
+      "lstm_updates": 1,
+      "minibatches": 1
+    },
+    {
+      "frames": 3648,
+      "update": 57,
+      "elapsed_s": 754.434753544163,
+      "training_fps": 4.8354082046516345,
+      "policy_loss": 0.017087776213884354,
+      "value_loss": 0.008452218025922775,
+      "entropy": -0.08622778952121735,
+      "sl_loss": 0.02535144053399563,
+      "encoder_grad_norm": 0.8853234052658081,
+      "actor_grad_norm": 0.20122231543064117,
+      "critic_grad_norm": 0.16100311279296875,
+      "lstm_grad_norm": 0.03302019089460373,
+      "lstm_updates": 1,
+      "minibatches": 1
+    },
+    {
+      "frames": 3712,
+      "update": 58,
+      "elapsed_s": 766.2632047149818,
+      "training_fps": 4.844288456306753,
+      "policy_loss": 0.029869824647903442,
+      "value_loss": 0.030551180243492126,
+      "entropy": -0.08142721652984619,
+      "sl_loss": 0.028461752459406853,
+      "encoder_grad_norm": 0.800408124923706,
+      "actor_grad_norm": 0.24077771604061127,
+      "critic_grad_norm": 1.8795356750488281,
+      "lstm_grad_norm": 0.04430250823497772,
+      "lstm_updates": 1,
+      "minibatches": 1
+    },
+    {
+      "frames": 3776,
+      "update": 59,
+      "elapsed_s": 778.1465953199659,
+      "training_fps": 4.8525560854860394,
+      "policy_loss": 0.02035347744822502,
+      "value_loss": 0.05117682367563248,
+      "entropy": -0.07856424897909164,
+      "sl_loss": 0.027727188542485237,
+      "encoder_grad_norm": 1.3201429843902588,
+      "actor_grad_norm": 0.42334991693496704,
+      "critic_grad_norm": 0.5874277353286743,
+      "lstm_grad_norm": 0.027162035927176476,
+      "lstm_updates": 1,
+      "minibatches": 1
+    },
+    {
+      "frames": 3840,
+      "update": 60,
+      "elapsed_s": 790.6364759460557,
+      "training_fps": 4.8568464851472175,
+      "policy_loss": 0.00921323150396347,
+      "value_loss": 1.704878807067871,
+      "entropy": -0.08631404489278793,
+      "sl_loss": 0.03541512042284012,
+      "encoder_grad_norm": 1.3103572130203247,
+      "actor_grad_norm": 0.4091452658176422,
+      "critic_grad_norm": 5.051794052124023,
+      "lstm_grad_norm": 0.05538297817111015,
+      "lstm_updates": 1,
+      "minibatches": 1
+    },
+    {
+      "frames": 3904,
+      "update": 61,
+      "elapsed_s": 802.6983056471217,
+      "training_fps": 4.863595661572877,
+      "policy_loss": 0.03990671783685684,
+      "value_loss": 0.07741638273000717,
+      "entropy": -0.0897909626364708,
+      "sl_loss": 0.03005383349955082,
+      "encoder_grad_norm": 1.4880996942520142,
+      "actor_grad_norm": 0.4461146295070648,
+      "critic_grad_norm": 3.5564982891082764,
+      "lstm_grad_norm": 0.03329940512776375,
+      "lstm_updates": 1,
+      "minibatches": 1
+    },
+    {
+      "frames": 3968,
+      "update": 62,
+      "elapsed_s": 814.7356380971614,
+      "training_fps": 4.870291429914029,
+      "policy_loss": 0.055205173790454865,
+      "value_loss": 0.03331359848380089,
+      "entropy": -0.08832986652851105,
+      "sl_loss": 0.026306403800845146,
+      "encoder_grad_norm": 0.8805310130119324,
+      "actor_grad_norm": 0.32279521226882935,
+      "critic_grad_norm": 2.0296051502227783,
+      "lstm_grad_norm": 0.034228648990392685,
+      "lstm_updates": 1,
+      "minibatches": 1
+    },
+    {
+      "frames": 4032,
+      "update": 63,
+      "elapsed_s": 826.8205574860331,
+      "training_fps": 4.876511548199875,
+      "policy_loss": 0.02873469889163971,
+      "value_loss": 0.012967608869075775,
+      "entropy": -0.08703792840242386,
+      "sl_loss": 0.02477359026670456,
+      "encoder_grad_norm": 1.1919914484024048,
+      "actor_grad_norm": 0.40354323387145996,
+      "critic_grad_norm": 0.8971917629241943,
+      "lstm_grad_norm": 0.02915404923260212,
+      "lstm_updates": 1,
+      "minibatches": 1
+    },
+    {
+      "frames": 4096,
+      "update": 64,
+      "elapsed_s": 839.3579831330571,
+      "training_fps": 4.87992022262273,
+      "policy_loss": 0.00947338342666626,
+      "value_loss": 0.0030951397493481636,
+      "entropy": -0.0855141431093216,
+      "sl_loss": 0.020917555317282677,
+      "encoder_grad_norm": 0.8573620915412903,
+      "actor_grad_norm": 0.2772623300552368,
+      "critic_grad_norm": 0.42023077607154846,
+      "lstm_grad_norm": 0.02948962152004242,
+      "lstm_updates": 1,
+      "minibatches": 1
+    },
+    {
+      "frames": 4160,
+      "update": 65,
+      "elapsed_s": 851.3981009791605,
+      "training_fps": 4.886080896684672,
+      "policy_loss": 0.019682738929986954,
+      "value_loss": 0.017410796135663986,
+      "entropy": -0.0803963840007782,
+      "sl_loss": 0.027141867205500603,
+      "encoder_grad_norm": 0.79555743932724,
+      "actor_grad_norm": 0.2781142294406891,
+      "critic_grad_norm": 0.46215149760246277,
+      "lstm_grad_norm": 0.03910798579454422,
+      "lstm_updates": 1,
+      "minibatches": 1
+    },
+    {
+      "frames": 4224,
+      "update": 66,
+      "elapsed_s": 863.5424395150039,
+      "training_fps": 4.891479333953523,
+      "policy_loss": 0.029180612415075302,
+      "value_loss": 0.017884094268083572,
+      "entropy": -0.07587897777557373,
+      "sl_loss": 0.023601965978741646,
+      "encoder_grad_norm": 1.3161230087280273,
+      "actor_grad_norm": 0.354218065738678,
+      "critic_grad_norm": 1.2342694997787476,
+      "lstm_grad_norm": 0.03386244177818298,
+      "lstm_updates": 1,
+      "minibatches": 1
+    },
+    {
+      "frames": 4288,
+      "update": 67,
+      "elapsed_s": 875.6151060271077,
+      "training_fps": 4.897128849147272,
+      "policy_loss": 0.034046005457639694,
+      "value_loss": 0.025512641295790672,
+      "entropy": -0.06860768049955368,
+      "sl_loss": 0.02614896185696125,
+      "encoder_grad_norm": 1.0956071615219116,
+      "actor_grad_norm": 0.3568722605705261,
+      "critic_grad_norm": 0.28750866651535034,
+      "lstm_grad_norm": 0.031005946919322014,
+      "lstm_updates": 1,
+      "minibatches": 1
+    },
+    {
+      "frames": 4352,
+      "update": 68,
+      "elapsed_s": 888.2464765601326,
+      "training_fps": 4.899540962025409,
+      "policy_loss": 0.01045122742652893,
+      "value_loss": 0.020276127383112907,
+      "entropy": -0.06769432872533798,
+      "sl_loss": 0.017468241974711418,
+      "encoder_grad_norm": 0.7341100573539734,
+      "actor_grad_norm": 0.2543654143810272,
+      "critic_grad_norm": 0.8695809841156006,
+      "lstm_grad_norm": 0.02810252085328102,
+      "lstm_updates": 1,
+      "minibatches": 1
+    },
+    {
+      "frames": 4416,
+      "update": 69,
+      "elapsed_s": 900.0734278780874,
+      "training_fps": 4.906266376838673,
+      "policy_loss": 0.013873957097530365,
+      "value_loss": 0.007474394515156746,
+      "entropy": -0.07674705237150192,
+      "sl_loss": 0.02932085283100605,
+      "encoder_grad_norm": 0.8781371116638184,
+      "actor_grad_norm": 0.3263621926307678,
+      "critic_grad_norm": 0.31363171339035034,
+      "lstm_grad_norm": 0.06654590368270874,
+      "lstm_updates": 1,
+      "minibatches": 1
+    },
+    {
+      "frames": 4480,
+      "update": 70,
+      "elapsed_s": 912.0276618360076,
+      "training_fps": 4.912131708547476,
+      "policy_loss": 0.007054958492517471,
+      "value_loss": 0.00911886990070343,
+      "entropy": -0.08437630534172058,
+      "sl_loss": 0.02357429452240467,
+      "encoder_grad_norm": 0.6979856491088867,
+      "actor_grad_norm": 0.24033068120479584,
+      "critic_grad_norm": 0.4932398796081543,
+      "lstm_grad_norm": 0.036072518676519394,
+      "lstm_updates": 1,
+      "minibatches": 1
+    },
+    {
+      "frames": 4544,
+      "update": 71,
+      "elapsed_s": 923.9781427411363,
+      "training_fps": 4.917865246727181,
+      "policy_loss": 0.0014226362109184265,
+      "value_loss": 0.04104785621166229,
+      "entropy": -0.08265472203493118,
+      "sl_loss": 0.02018139697611332,
+      "encoder_grad_norm": 0.7055449485778809,
+      "actor_grad_norm": 0.20062267780303955,
+      "critic_grad_norm": 2.536066770553589,
+      "lstm_grad_norm": 0.033579371869564056,
+      "lstm_updates": 1,
+      "minibatches": 1
+    },
+    {
+      "frames": 4608,
+      "update": 72,
+      "elapsed_s": 935.8835595611017,
+      "training_fps": 4.9236894380383225,
+      "policy_loss": 0.02130761742591858,
+      "value_loss": 0.021408995613455772,
+      "entropy": -0.08045586943626404,
+      "sl_loss": 0.019629577174782753,
+      "encoder_grad_norm": 0.9354524612426758,
+      "actor_grad_norm": 0.35363203287124634,
+      "critic_grad_norm": 1.1806918382644653,
+      "lstm_grad_norm": 0.030858760699629784,
+      "lstm_updates": 1,
+      "minibatches": 1
+    },
+    {
+      "frames": 4672,
+      "update": 73,
+      "elapsed_s": 948.2370876430068,
+      "training_fps": 4.927037823889091,
+      "policy_loss": 0.013791359961032867,
+      "value_loss": 0.008729878813028336,
+      "entropy": -0.07133036851882935,
+      "sl_loss": 0.02838057093322277,
+      "encoder_grad_norm": 0.6393436789512634,
+      "actor_grad_norm": 0.1583593636751175,
+      "critic_grad_norm": 0.6185015439987183,
+      "lstm_grad_norm": 0.030558248981833458,
+      "lstm_updates": 1,
+      "minibatches": 1
+    },
+    {
+      "frames": 4736,
+      "update": 74,
+      "elapsed_s": 960.2232050530147,
+      "training_fps": 4.932186570773383,
+      "policy_loss": 0.005511827766895294,
+      "value_loss": 0.01829833909869194,
+      "entropy": -0.06975448131561279,
+      "sl_loss": 0.023543581366539,
+      "encoder_grad_norm": 1.0686851739883423,
+      "actor_grad_norm": 0.32336315512657166,
+      "critic_grad_norm": 0.3685639500617981,
+      "lstm_grad_norm": 0.03121304325759411,
+      "lstm_updates": 1,
+      "minibatches": 1
+    },
+    {
+      "frames": 4800,
+      "update": 75,
+      "elapsed_s": 972.2587683219463,
+      "training_fps": 4.93695727175685,
+      "policy_loss": 0.001492336392402649,
+      "value_loss": 0.004914414137601852,
+      "entropy": -0.06568080186843872,
+      "sl_loss": 0.023662833496928215,
+      "encoder_grad_norm": 0.8495094776153564,
+      "actor_grad_norm": 0.2728809714317322,
+      "critic_grad_norm": 0.27571746706962585,
+      "lstm_grad_norm": 0.033080924302339554,
+      "lstm_updates": 1,
+      "minibatches": 1
+    },
+    {
+      "frames": 4864,
+      "update": 76,
+      "elapsed_s": 984.3764360700734,
+      "training_fps": 4.9411991378281845,
+      "policy_loss": 0.015319837257266045,
+      "value_loss": 0.004255637060850859,
+      "entropy": -0.06023440137505531,
+      "sl_loss": 0.020116867497563362,
+      "encoder_grad_norm": 0.7689759731292725,
+      "actor_grad_norm": 0.2994440495967865,
+      "critic_grad_norm": 0.23177731037139893,
+      "lstm_grad_norm": 0.02761656418442726,
+      "lstm_updates": 1,
+      "minibatches": 1
+    },
+    {
+      "frames": 4928,
+      "update": 77,
+      "elapsed_s": 996.7938779729884,
+      "training_fps": 4.943850584722968,
+      "policy_loss": 0.02429957315325737,
+      "value_loss": 0.009339354932308197,
+      "entropy": -0.06103742495179176,
+      "sl_loss": 0.026795117184519768,
+      "encoder_grad_norm": 1.2196052074432373,
+      "actor_grad_norm": 0.4256831705570221,
+      "critic_grad_norm": 0.9404120445251465,
+      "lstm_grad_norm": 0.03916254639625549,
+      "lstm_updates": 1,
+      "minibatches": 1
+    },
+    {
+      "frames": 4992,
+      "update": 78,
+      "elapsed_s": 1008.7307215421461,
+      "training_fps": 4.948793459544421,
+      "policy_loss": 0.0024918317794799805,
+      "value_loss": 0.029634449630975723,
+      "entropy": -0.06424443423748016,
+      "sl_loss": 0.024263890460133553,
+      "encoder_grad_norm": 1.0647534132003784,
+      "actor_grad_norm": 0.37231186032295227,
+      "critic_grad_norm": 2.2559311389923096,
+      "lstm_grad_norm": 0.028208600357174873,
+      "lstm_updates": 1,
+      "minibatches": 1
+    },
+    {
+      "frames": 5056,
+      "update": 79,
+      "elapsed_s": 1020.6970925440546,
+      "training_fps": 4.9534774165085365,
+      "policy_loss": 0.028680741786956787,
+      "value_loss": 0.021581852808594704,
+      "entropy": -0.06313854455947876,
+      "sl_loss": 0.026478402316570282,
+      "encoder_grad_norm": 0.8028517961502075,
+      "actor_grad_norm": 0.238223597407341,
+      "critic_grad_norm": 1.7526482343673706,
+      "lstm_grad_norm": 0.02711166813969612,
+      "lstm_updates": 1,
+      "minibatches": 1
+    },
+    {
+      "frames": 5120,
+      "update": 80,
+      "elapsed_s": 1032.7120713391341,
+      "training_fps": 4.957819453548562,
+      "policy_loss": 0.027776647359132767,
+      "value_loss": 0.016082987189292908,
+      "entropy": -0.06339655816555023,
+      "sl_loss": 0.025474371388554573,
+      "encoder_grad_norm": 0.9853875637054443,
+      "actor_grad_norm": 0.34533870220184326,
+      "critic_grad_norm": 1.31787109375,
+      "lstm_grad_norm": 0.027151335030794144,
+      "lstm_updates": 1,
+      "minibatches": 1
+    },
+    {
+      "frames": 5184,
+      "update": 81,
+      "elapsed_s": 1044.8155864949804,
+      "training_fps": 4.961641139554154,
+      "policy_loss": 0.007432136684656143,
+      "value_loss": 0.002204946707934141,
+      "entropy": -0.061603207141160965,
+      "sl_loss": 0.02667347341775894,
+      "encoder_grad_norm": 0.659213662147522,
+      "actor_grad_norm": 0.20079009234905243,
+      "critic_grad_norm": 0.198832169175148,
+      "lstm_grad_norm": 0.026654314249753952,
+      "lstm_updates": 1,
+      "minibatches": 1
+    },
+    {
+      "frames": 5248,
+      "update": 82,
+      "elapsed_s": 1057.28175225202,
+      "training_fps": 4.963672158590358,
+      "policy_loss": 0.03693853318691254,
+      "value_loss": 0.02179894968867302,
+      "entropy": -0.06457793712615967,
+      "sl_loss": 0.031041350215673447,
+      "encoder_grad_norm": 1.2049833536148071,
+      "actor_grad_norm": 0.41228750348091125,
+      "critic_grad_norm": 0.776499330997467,
+      "lstm_grad_norm": 0.06953312456607819,
+      "lstm_updates": 1,
+      "minibatches": 1
+    },
+    {
+      "frames": 5312,
+      "update": 83,
+      "elapsed_s": 1069.189597157063,
+      "training_fps": 4.9682488597155015,
+      "policy_loss": 0.00832005962729454,
+      "value_loss": 0.012065436691045761,
+      "entropy": -0.06634839624166489,
+      "sl_loss": 0.0132820475846529,
+      "encoder_grad_norm": 1.2023290395736694,
+      "actor_grad_norm": 0.4186401069164276,
+      "critic_grad_norm": 0.7762652039527893,
+      "lstm_grad_norm": 0.04781527444720268,
+      "lstm_updates": 1,
+      "minibatches": 1
+    },
+    {
+      "frames": 5376,
+      "update": 84,
+      "elapsed_s": 1081.09498803108,
+      "training_fps": 4.972736028143589,
+      "policy_loss": 0.015143286436796188,
+      "value_loss": 0.01432323083281517,
+      "entropy": -0.06595758348703384,
+      "sl_loss": 0.011018656194210052,
+      "encoder_grad_norm": 1.0344598293304443,
+      "actor_grad_norm": 0.30181920528411865,
+      "critic_grad_norm": 1.2061947584152222,
+      "lstm_grad_norm": 0.028805376961827278,
+      "lstm_updates": 1,
+      "minibatches": 1
+    },
+    {
+      "frames": 5440,
+      "update": 85,
+      "elapsed_s": 1093.39243700495,
+      "training_fps": 4.975340794699976,
+      "policy_loss": 0.024051599204540253,
+      "value_loss": 1.0664865970611572,
+      "entropy": -0.06328780949115753,
+      "sl_loss": 0.0188965555280447,
+      "encoder_grad_norm": 1.1862438917160034,
+      "actor_grad_norm": 0.4638672471046448,
+      "critic_grad_norm": 6.4058380126953125,
+      "lstm_grad_norm": 0.042934782803058624,
+      "lstm_updates": 1,
+      "minibatches": 1
+    },
+    {
+      "frames": 5504,
+      "update": 86,
+      "elapsed_s": 1105.2759442459792,
+      "training_fps": 4.979751912389527,
+      "policy_loss": 0.017332620918750763,
+      "value_loss": 0.03414403647184372,
+      "entropy": -0.06374307721853256,
+      "sl_loss": 0.028255237266421318,
+      "encoder_grad_norm": 0.5485818982124329,
+      "actor_grad_norm": 0.18944083154201508,
+      "critic_grad_norm": 0.9272850751876831,
+      "lstm_grad_norm": 0.03990442305803299,
+      "lstm_updates": 1,
+      "minibatches": 1
+    },
+    {
+      "frames": 5568,
+      "update": 87,
+      "elapsed_s": 1117.166190264048,
+      "training_fps": 4.984039121459783,
+      "policy_loss": 0.02789321541786194,
+      "value_loss": 0.0223550982773304,
+      "entropy": -0.06530635058879852,
+      "sl_loss": 0.020832741633057594,
+      "encoder_grad_norm": 1.7973824739456177,
+      "actor_grad_norm": 0.6901076436042786,
+      "critic_grad_norm": 1.0690152645111084,
+      "lstm_grad_norm": 0.028566790744662285,
+      "lstm_updates": 1,
+      "minibatches": 1
+    },
+    {
+      "frames": 5632,
+      "update": 88,
+      "elapsed_s": 1129.0756465969607,
+      "training_fps": 4.988151161098055,
+      "policy_loss": 0.0002564936876296997,
+      "value_loss": 0.04086531698703766,
+      "entropy": -0.06319622695446014,
+      "sl_loss": 0.023117447271943092,
+      "encoder_grad_norm": 0.8101080656051636,
+      "actor_grad_norm": 0.2852537930011749,
+      "critic_grad_norm": 2.007488250732422,
+      "lstm_grad_norm": 0.028450941666960716,
+      "lstm_updates": 1,
+      "minibatches": 1
+    },
+    {
+      "frames": 5696,
+      "update": 89,
+      "elapsed_s": 1141.3927223349456,
+      "training_fps": 4.990394529157305,
+      "policy_loss": 0.02534693107008934,
+      "value_loss": 0.025563308969140053,
+      "entropy": -0.0666709691286087,
+      "sl_loss": 0.021226931363344193,
+      "encoder_grad_norm": 1.5808122158050537,
+      "actor_grad_norm": 0.47244077920913696,
+      "critic_grad_norm": 0.7111148238182068,
+      "lstm_grad_norm": 0.023510577157139778,
+      "lstm_updates": 1,
+      "minibatches": 1
+    },
+    {
+      "frames": 5760,
+      "update": 90,
+      "elapsed_s": 1153.2190983630717,
+      "training_fps": 4.994714365309965,
+      "policy_loss": 0.013470929116010666,
+      "value_loss": 0.004614876117557287,
+      "entropy": -0.07016360759735107,
+      "sl_loss": 0.02374880015850067,
+      "encoder_grad_norm": 0.9331744909286499,
+      "actor_grad_norm": 0.3348427712917328,
+      "critic_grad_norm": 0.47340840101242065,
+      "lstm_grad_norm": 0.034038398414850235,
+      "lstm_updates": 1,
+      "minibatches": 1
+    },
+    {
+      "frames": 5824,
+      "update": 91,
+      "elapsed_s": 1164.971475525992,
+      "training_fps": 4.999264032044724,
+      "policy_loss": 0.020641442388296127,
+      "value_loss": 0.004582171328365803,
+      "entropy": -0.07658015191555023,
+      "sl_loss": 0.018586765974760056,
+      "encoder_grad_norm": 1.0570229291915894,
+      "actor_grad_norm": 0.4020083248615265,
+      "critic_grad_norm": 0.5776636600494385,
+      "lstm_grad_norm": 0.03452450782060623,
+      "lstm_updates": 1,
+      "minibatches": 1
+    },
+    {
+      "frames": 5888,
+      "update": 92,
+      "elapsed_s": 1176.6515463311225,
+      "training_fps": 5.004030305154325,
+      "policy_loss": 0.006137192249298096,
+      "value_loss": 0.009085675701498985,
+      "entropy": -0.07670465111732483,
+      "sl_loss": 0.00935368426144123,
+      "encoder_grad_norm": 0.7988488078117371,
+      "actor_grad_norm": 0.2563129961490631,
+      "critic_grad_norm": 0.7029890418052673,
+      "lstm_grad_norm": 0.040405843406915665,
+      "lstm_updates": 1,
+      "minibatches": 1
+    },
+    {
+      "frames": 5952,
+      "update": 93,
+      "elapsed_s": 1188.9709608380217,
+      "training_fps": 5.006009559981212,
+      "policy_loss": 0.05199152231216431,
+      "value_loss": 0.9870792627334595,
+      "entropy": -0.0659656673669815,
+      "sl_loss": 0.018812183290719986,
+      "encoder_grad_norm": 0.9851464629173279,
+      "actor_grad_norm": 0.29805395007133484,
+      "critic_grad_norm": 7.292876243591309,
+      "lstm_grad_norm": 0.043618716299533844,
+      "lstm_updates": 1,
+      "minibatches": 1
+    },
+    {
+      "frames": 6016,
+      "update": 94,
+      "elapsed_s": 1201.0672860499471,
+      "training_fps": 5.008878408968427,
+      "policy_loss": 0.007287297397851944,
+      "value_loss": 0.027670174837112427,
+      "entropy": -0.06247274577617645,
+      "sl_loss": 0.027872608974575996,
+      "encoder_grad_norm": 0.999335765838623,
+      "actor_grad_norm": 0.41314926743507385,
+      "critic_grad_norm": 1.388304591178894,
+      "lstm_grad_norm": 0.04859071224927902,
+      "lstm_updates": 1,
+      "minibatches": 1
+    },
+    {
+      "frames": 6080,
+      "update": 95,
+      "elapsed_s": 1213.1096763480455,
+      "training_fps": 5.0119128672930815,
+      "policy_loss": 0.02974884584546089,
+      "value_loss": 0.03743593394756317,
+      "entropy": -0.06343775242567062,
+      "sl_loss": 0.027154086157679558,
+      "encoder_grad_norm": 0.8764637112617493,
+      "actor_grad_norm": 0.32441937923431396,
+      "critic_grad_norm": 1.0300763845443726,
+      "lstm_grad_norm": 0.04119838401675224,
+      "lstm_updates": 1,
+      "minibatches": 1
+    },
+    {
+      "frames": 6144,
+      "update": 96,
+      "elapsed_s": 1225.1354415100068,
+      "training_fps": 5.014955724899862,
+      "policy_loss": 0.027610141783952713,
+      "value_loss": 0.02463458850979805,
+      "entropy": -0.06828499585390091,
+      "sl_loss": 0.01845567673444748,
+      "encoder_grad_norm": 0.665166437625885,
+      "actor_grad_norm": 0.23969314992427826,
+      "critic_grad_norm": 0.7738370299339294,
+      "lstm_grad_norm": 0.027158042415976524,
+      "lstm_updates": 1,
+      "minibatches": 1
+    },
+    {
+      "frames": 6208,
+      "update": 97,
+      "elapsed_s": 1237.6683962200768,
+      "training_fps": 5.015883104053125,
+      "policy_loss": 0.012529296800494194,
+      "value_loss": 0.03577672317624092,
+      "entropy": -0.0655551329255104,
+      "sl_loss": 0.014350319281220436,
+      "encoder_grad_norm": 0.8274388909339905,
+      "actor_grad_norm": 0.29745420813560486,
+      "critic_grad_norm": 2.011385917663574,
+      "lstm_grad_norm": 0.034910041838884354,
+      "lstm_updates": 1,
+      "minibatches": 1
+    },
+    {
+      "frames": 6272,
+      "update": 98,
+      "elapsed_s": 1249.6421163461637,
+      "training_fps": 5.0190369827392605,
+      "policy_loss": 0.016548939049243927,
+      "value_loss": 0.011447270400822163,
+      "entropy": -0.07079830020666122,
+      "sl_loss": 0.02388286404311657,
+      "encoder_grad_norm": 0.8952194452285767,
+      "actor_grad_norm": 0.2964390814304352,
+      "critic_grad_norm": 0.18183718621730804,
+      "lstm_grad_norm": 0.04629857838153839,
+      "lstm_updates": 1,
+      "minibatches": 1
+    },
+    {
+      "frames": 6336,
+      "update": 99,
+      "elapsed_s": 1261.5590200701263,
+      "training_fps": 5.022357175121507,
+      "policy_loss": 0.007377514615654945,
+      "value_loss": 0.01172559428960085,
+      "entropy": -0.0690496414899826,
+      "sl_loss": 0.023207545280456543,
+      "encoder_grad_norm": 0.6517294049263,
+      "actor_grad_norm": 0.21068015694618225,
+      "critic_grad_norm": 1.207414150238037,
+      "lstm_grad_norm": 0.030493253841996193,
+      "lstm_updates": 1,
+      "minibatches": 1
+    },
+    {
+      "frames": 6400,
+      "update": 100,
+      "elapsed_s": 1273.4708807279821,
+      "training_fps": 5.025635131319692,
+      "policy_loss": 0.01940343528985977,
+      "value_loss": 0.014621935784816742,
+      "entropy": -0.0686754509806633,
+      "sl_loss": 0.02534353919327259,
+      "encoder_grad_norm": 0.8294883370399475,
+      "actor_grad_norm": 0.21166203916072845,
+      "critic_grad_norm": 1.2238702774047852,
+      "lstm_grad_norm": 0.027536310255527496,
+      "lstm_updates": 1,
+      "minibatches": 1,
+      "evaluation": {
+        "frames": 6400,
+        "update": 100,
+        "seed": 204348,
+        "episodes": [
+          {
+            "episode": 0,
+            "seed": 204348,
+            "steps": 253,
+            "reward": -1219.9057787805796,
+            "capture": false,
+            "escaped": true,
+            "collision": false,
+            "timeout": false,
+            "visibility_ratio": 0.383399209486166
+          }
+        ],
+        "capture_success_rate": 0.0,
+        "collision_rate": 0.0,
+        "escape_rate": 1.0,
+        "average_episode_reward": -1219.9057787805796,
+        "average_episode_length": 253.0,
+        "target_visibility_ratio": 0.383399209486166
+      }
+    },
+    {
+      "frames": 6464,
+      "update": 101,
+      "elapsed_s": 1332.3356794631109,
+      "training_fps": 4.85163018283262,
+      "policy_loss": -0.0006560534238815308,
+      "value_loss": 0.016818024218082428,
+      "entropy": -0.06802325695753098,
+      "sl_loss": 0.028188353404402733,
+      "encoder_grad_norm": 0.9752922058105469,
+      "actor_grad_norm": 0.26467353105545044,
+      "critic_grad_norm": 1.2144871950149536,
+      "lstm_grad_norm": 0.032351888716220856,
+      "lstm_updates": 1,
+      "minibatches": 1
+    },
+    {
+      "frames": 6528,
+      "update": 102,
+      "elapsed_s": 1344.8149796440266,
+      "training_fps": 4.854199347498429,
+      "policy_loss": 0.004309173673391342,
+      "value_loss": 0.009201683104038239,
+      "entropy": -0.07267017662525177,
+      "sl_loss": 0.028448617085814476,
+      "encoder_grad_norm": 0.5882708430290222,
+      "actor_grad_norm": 0.23401829600334167,
+      "critic_grad_norm": 0.9300982356071472,
+      "lstm_grad_norm": 0.031807735562324524,
+      "lstm_updates": 1,
+      "minibatches": 1
+    },
+    {
+      "frames": 6592,
+      "update": 103,
+      "elapsed_s": 1356.8340595189948,
+      "training_fps": 4.858368605126627,
+      "policy_loss": 0.008778326213359833,
+      "value_loss": 0.010537656955420971,
+      "entropy": -0.0755426436662674,
+      "sl_loss": 0.022699380293488503,
+      "encoder_grad_norm": 0.7877136468887329,
+      "actor_grad_norm": 0.26539620757102966,
+      "critic_grad_norm": 1.0722548961639404,
+      "lstm_grad_norm": 0.03604033589363098,
+      "lstm_updates": 1,
+      "minibatches": 1
+    },
+    {
+      "frames": 6656,
+      "update": 104,
+      "elapsed_s": 1368.8982655860018,
+      "training_fps": 4.862304353566076,
+      "policy_loss": 0.01705000177025795,
+      "value_loss": 0.02558407559990883,
+      "entropy": -0.06470173597335815,
+      "sl_loss": 0.022023644298315048,
+      "encoder_grad_norm": 0.7584207653999329,
+      "actor_grad_norm": 0.2675168812274933,
+      "critic_grad_norm": 1.7814475297927856,
+      "lstm_grad_norm": 0.02480396442115307,
+      "lstm_updates": 1,
+      "minibatches": 1
+    },
+    {
+      "frames": 6720,
+      "update": 105,
+      "elapsed_s": 1380.965580002172,
+      "training_fps": 4.8661603839306,
+      "policy_loss": -0.0036421623080968857,
+      "value_loss": 0.021418847143650055,
+      "entropy": -0.06220646947622299,
+      "sl_loss": 0.022660929709672928,
+      "encoder_grad_norm": 0.9952316880226135,
+      "actor_grad_norm": 0.3607116937637329,
+      "critic_grad_norm": 0.9543105959892273,
+      "lstm_grad_norm": 0.026759536936879158,
+      "lstm_updates": 1,
+      "minibatches": 1
+    },
+    {
+      "frames": 6784,
+      "update": 106,
+      "elapsed_s": 1393.4254594270606,
+      "training_fps": 4.86857761199084,
+      "policy_loss": 0.026514612138271332,
+      "value_loss": 0.004270693752914667,
+      "entropy": -0.06688189506530762,
+      "sl_loss": 0.023242348805069923,
+      "encoder_grad_norm": 0.7478058338165283,
+      "actor_grad_norm": 0.27715253829956055,
+      "critic_grad_norm": 0.362281858921051,
+      "lstm_grad_norm": 0.04220572113990784,
+      "lstm_updates": 1,
+      "minibatches": 1
+    },
+    {
+      "frames": 6848,
+      "update": 107,
+      "elapsed_s": 1405.2619237729814,
+      "training_fps": 4.873112891689727,
+      "policy_loss": 0.019710689783096313,
+      "value_loss": 0.020794998854398727,
+      "entropy": -0.07725413888692856,
+      "sl_loss": 0.02220177836716175,
+      "encoder_grad_norm": 0.6696969270706177,
+      "actor_grad_norm": 0.21678823232650757,
+      "critic_grad_norm": 1.1599708795547485,
+      "lstm_grad_norm": 0.03526581823825836,
+      "lstm_updates": 1,
+      "minibatches": 1
+    },
+    {
+      "frames": 6912,
+      "update": 108,
+      "elapsed_s": 1417.081354932161,
+      "training_fps": 4.877631035801958,
+      "policy_loss": 0.017432112246751785,
+      "value_loss": 0.01570132002234459,
+      "entropy": -0.07404878735542297,
+      "sl_loss": 0.021085266023874283,
+      "encoder_grad_norm": 0.7891945838928223,
+      "actor_grad_norm": 0.21436314284801483,
+      "critic_grad_norm": 1.4016019105911255,
+      "lstm_grad_norm": 0.038674306124448776,
+      "lstm_updates": 1,
+      "minibatches": 1
+    },
+    {
+      "frames": 6976,
+      "update": 109,
+      "elapsed_s": 1428.8415840331,
+      "training_fps": 4.882276715600557,
+      "policy_loss": 0.035703860223293304,
+      "value_loss": 0.05367046594619751,
+      "entropy": -0.08155711740255356,
+      "sl_loss": 0.01993229053914547,
+      "encoder_grad_norm": 0.8703799843788147,
+      "actor_grad_norm": 0.2854481339454651,
+      "critic_grad_norm": 2.9238600730895996,
+      "lstm_grad_norm": 0.028709009289741516,
+      "lstm_updates": 1,
+      "minibatches": 1
+    },
+    {
+      "frames": 7040,
+      "update": 110,
+      "elapsed_s": 1441.127696548123,
+      "training_fps": 4.885063283386902,
+      "policy_loss": 0.02448008954524994,
+      "value_loss": 0.09912915527820587,
+      "entropy": -0.07967491447925568,
+      "sl_loss": 0.024268437176942825,
+      "encoder_grad_norm": 0.7373310923576355,
+      "actor_grad_norm": 0.22822612524032593,
+      "critic_grad_norm": 3.870018243789673,
+      "lstm_grad_norm": 0.02781984768807888,
+      "lstm_updates": 1,
+      "minibatches": 1
+    },
+    {
+      "frames": 7104,
+      "update": 111,
+      "elapsed_s": 1453.0165129050147,
+      "training_fps": 4.88913920373911,
+      "policy_loss": 0.01183021068572998,
+      "value_loss": 0.05636324733495712,
+      "entropy": -0.06387721002101898,
+      "sl_loss": 0.03147033229470253,
+      "encoder_grad_norm": 0.653306782245636,
+      "actor_grad_norm": 0.21067532896995544,
+      "critic_grad_norm": 1.62152898311615,
+      "lstm_grad_norm": 0.043104980140924454,
+      "lstm_updates": 1,
+      "minibatches": 1
+    },
+    {
+      "frames": 7168,
+      "update": 112,
+      "elapsed_s": 1464.9516766150482,
+      "training_fps": 4.892994158684874,
+      "policy_loss": 0.02815403789281845,
+      "value_loss": 0.04260469228029251,
+      "entropy": -0.06557785719633102,
+      "sl_loss": 0.02547750622034073,
+      "encoder_grad_norm": 0.811057984828949,
+      "actor_grad_norm": 0.2932910919189453,
+      "critic_grad_norm": 1.490317702293396,
+      "lstm_grad_norm": 0.022381886839866638,
+      "lstm_updates": 1,
+      "minibatches": 1
+    },
+    {
+      "frames": 7232,
+      "update": 113,
+      "elapsed_s": 1476.931271146983,
+      "training_fps": 4.896639497131208,
+      "policy_loss": 0.020109690725803375,
+      "value_loss": 0.049452800303697586,
+      "entropy": -0.0664181262254715,
+      "sl_loss": 0.02197529375553131,
+      "encoder_grad_norm": 0.5751014947891235,
+      "actor_grad_norm": 0.16711661219596863,
+      "critic_grad_norm": 1.7516545057296753,
+      "lstm_grad_norm": 0.02252773381769657,
+      "lstm_updates": 1,
+      "minibatches": 1
+    },
+    {
+      "frames": 7296,
+      "update": 114,
+      "elapsed_s": 1488.972117827041,
+      "training_fps": 4.900024593773342,
+      "policy_loss": 0.015702929347753525,
+      "value_loss": 0.06418152153491974,
+      "entropy": -0.06728871911764145,
+      "sl_loss": 0.024048713967204094,
+      "encoder_grad_norm": 0.8168296813964844,
+      "actor_grad_norm": 0.21143104135990143,
+      "critic_grad_norm": 2.6018593311309814,
+      "lstm_grad_norm": 0.02440219558775425,
+      "lstm_updates": 1,
+      "minibatches": 1
+    },
+    {
+      "frames": 7360,
+      "update": 115,
+      "elapsed_s": 1501.2972040341701,
+      "training_fps": 4.902427031979839,
+      "policy_loss": 0.017717942595481873,
+      "value_loss": 0.048130810260772705,
+      "entropy": -0.07182137668132782,
+      "sl_loss": 0.02964089810848236,
+      "encoder_grad_norm": 0.8441535234451294,
+      "actor_grad_norm": 0.32428210973739624,
+      "critic_grad_norm": 1.9890371561050415,
+      "lstm_grad_norm": 0.03679991513490677,
+      "lstm_updates": 1,
+      "minibatches": 1
+    },
+    {
+      "frames": 7424,
+      "update": 116,
+      "elapsed_s": 1513.0229418680537,
+      "training_fps": 4.906733263194262,
+      "policy_loss": 0.019266227260231972,
+      "value_loss": 0.0828094333410263,
+      "entropy": -0.07385006546974182,
+      "sl_loss": 0.024996643885970116,
+      "encoder_grad_norm": 0.7028535604476929,
+      "actor_grad_norm": 0.21413005888462067,
+      "critic_grad_norm": 2.5507760047912598,
+      "lstm_grad_norm": 0.026148799806833267,
+      "lstm_updates": 1,
+      "minibatches": 1
+    },
+    {
+      "frames": 7488,
+      "update": 117,
+      "elapsed_s": 1524.7657240270637,
+      "training_fps": 4.91091836581014,
+      "policy_loss": 0.006819099187850952,
+      "value_loss": 0.030263356864452362,
+      "entropy": -0.07072710990905762,
+      "sl_loss": 0.023447155952453613,
+      "encoder_grad_norm": 0.5604848861694336,
+      "actor_grad_norm": 0.17176119983196259,
+      "critic_grad_norm": 1.2841750383377075,
+      "lstm_grad_norm": 0.023384179919958115,
+      "lstm_updates": 1,
+      "minibatches": 1
+    },
+    {
+      "frames": 7552,
+      "update": 118,
+      "elapsed_s": 1536.5550214841496,
+      "training_fps": 4.914890707732485,
+      "policy_loss": -0.0030005984008312225,
+      "value_loss": 0.03074493072926998,
+      "entropy": -0.06838387250900269,
+      "sl_loss": 0.02557559497654438,
+      "encoder_grad_norm": 0.7531872391700745,
+      "actor_grad_norm": 0.2607080638408661,
+      "critic_grad_norm": 1.2786420583724976,
+      "lstm_grad_norm": 0.027120107784867287,
+      "lstm_updates": 1,
+      "minibatches": 1
+    },
+    {
+      "frames": 7616,
+      "update": 119,
+      "elapsed_s": 1548.7887658299878,
+      "training_fps": 4.917391037898357,
+      "policy_loss": 0.015474777668714523,
+      "value_loss": 0.019340472295880318,
+      "entropy": -0.07023804634809494,
+      "sl_loss": 0.0235646553337574,
+      "encoder_grad_norm": 0.8786128759384155,
+      "actor_grad_norm": 0.2907375693321228,
+      "critic_grad_norm": 0.3464561998844147,
+      "lstm_grad_norm": 0.03688840568065643,
+      "lstm_updates": 1,
+      "minibatches": 1
+    },
+    {
+      "frames": 7680,
+      "update": 120,
+      "elapsed_s": 1560.5139358821325,
+      "training_fps": 4.921455567055237,
+      "policy_loss": 0.0093936026096344,
+      "value_loss": 0.029137784615159035,
+      "entropy": -0.06341370940208435,
+      "sl_loss": 0.028630226850509644,
+      "encoder_grad_norm": 0.9607534408569336,
+      "actor_grad_norm": 0.367442786693573,
+      "critic_grad_norm": 0.8954654932022095,
+      "lstm_grad_norm": 0.06654496490955353,
+      "lstm_updates": 1,
+      "minibatches": 1
+    },
+    {
+      "frames": 7744,
+      "update": 121,
+      "elapsed_s": 1572.2667106180452,
+      "training_fps": 4.925372994494992,
+      "policy_loss": 0.004402082413434982,
+      "value_loss": 0.0060172053053975105,
+      "entropy": -0.07271072268486023,
+      "sl_loss": 0.0143532520160079,
+      "encoder_grad_norm": 0.8743534684181213,
+      "actor_grad_norm": 0.37606343626976013,
+      "critic_grad_norm": 0.18788394331932068,
+      "lstm_grad_norm": 0.04222748801112175,
+      "lstm_updates": 1,
+      "minibatches": 1
+    },
+    {
+      "frames": 7808,
+      "update": 122,
+      "elapsed_s": 1584.4002858439926,
+      "training_fps": 4.928047580964918,
+      "policy_loss": 0.028359979391098022,
+      "value_loss": 1.5761337280273438,
+      "entropy": -0.07202191650867462,
+      "sl_loss": 0.00649540638551116,
+      "encoder_grad_norm": 1.04892897605896,
+      "actor_grad_norm": 0.34380456805229187,
+      "critic_grad_norm": 11.061256408691406,
+      "lstm_grad_norm": 0.0339125320315361,
+      "lstm_updates": 1,
+      "minibatches": 1
+    },
+    {
+      "frames": 7872,
+      "update": 123,
+      "elapsed_s": 1596.1586496471427,
+      "training_fps": 4.93184057681235,
+      "policy_loss": 0.0188656747341156,
+      "value_loss": 0.039061903953552246,
+      "entropy": -0.0679478645324707,
+      "sl_loss": 0.028338944539427757,
+      "encoder_grad_norm": 0.8105533123016357,
+      "actor_grad_norm": 0.24712222814559937,
+      "critic_grad_norm": 1.1657823324203491,
+      "lstm_grad_norm": 0.048376746475696564,
+      "lstm_updates": 1,
+      "minibatches": 1
+    },
+    {
+      "frames": 7936,
+      "update": 124,
+      "elapsed_s": 1608.0289293681271,
+      "training_fps": 4.9352345918731695,
+      "policy_loss": 0.02690240740776062,
+      "value_loss": 0.040231358259916306,
+      "entropy": -0.07449747622013092,
+      "sl_loss": 0.023134076967835426,
+      "encoder_grad_norm": 0.8400816321372986,
+      "actor_grad_norm": 0.2115960717201233,
+      "critic_grad_norm": 1.670577883720398,
+      "lstm_grad_norm": 0.028494201600551605,
+      "lstm_updates": 1,
+      "minibatches": 1
+    },
+    {
+      "frames": 8000,
+      "update": 125,
+      "elapsed_s": 1619.9845923620742,
+      "training_fps": 4.93831857091138,
+      "policy_loss": 0.0447111576795578,
+      "value_loss": 0.016493499279022217,
+      "entropy": -0.06830696761608124,
+      "sl_loss": 0.022515838965773582,
+      "encoder_grad_norm": 1.890037178993225,
+      "actor_grad_norm": 0.7021955251693726,
+      "critic_grad_norm": 0.6921831965446472,
+      "lstm_grad_norm": 0.03430383652448654,
+      "lstm_updates": 1,
+      "minibatches": 1
+    },
+    {
+      "frames": 8064,
+      "update": 126,
+      "elapsed_s": 1632.0214439411648,
+      "training_fps": 4.9411115440493125,
+      "policy_loss": 0.011970847845077515,
+      "value_loss": 0.02767961658537388,
+      "entropy": -0.06734474003314972,
+      "sl_loss": 0.019210103899240494,
+      "encoder_grad_norm": 0.5331703424453735,
+      "actor_grad_norm": 0.1723158359527588,
+      "critic_grad_norm": 0.6901732087135315,
+      "lstm_grad_norm": 0.03875285014510155,
+      "lstm_updates": 1,
+      "minibatches": 1
+    },
+    {
+      "frames": 8128,
+      "update": 127,
+      "elapsed_s": 1644.440297326073,
+      "training_fps": 4.94271516563516,
+      "policy_loss": 0.0038977712392807007,
+      "value_loss": 0.024544380605220795,
+      "entropy": -0.06644731760025024,
+      "sl_loss": 0.02025076374411583,
+      "encoder_grad_norm": 0.8541391491889954,
+      "actor_grad_norm": 0.3142380714416504,
+      "critic_grad_norm": 1.3849235773086548,
+      "lstm_grad_norm": 0.03899228572845459,
+      "lstm_updates": 1,
+      "minibatches": 1
+    },
+    {
+      "frames": 8192,
+      "update": 128,
+      "elapsed_s": 1656.299345046049,
+      "training_fps": 4.945965848729298,
+      "policy_loss": 0.012302450835704803,
+      "value_loss": 0.028247902169823647,
+      "entropy": -0.06581605970859528,
+      "sl_loss": 0.02511800080537796,
+      "encoder_grad_norm": 0.8253986239433289,
+      "actor_grad_norm": 0.2520920932292938,
+      "critic_grad_norm": 1.9493439197540283,
+      "lstm_grad_norm": 0.025900254026055336,
+      "lstm_updates": 1,
+      "minibatches": 1
+    },
+    {
+      "frames": 8256,
+      "update": 129,
+      "elapsed_s": 1668.2284042639658,
+      "training_fps": 4.948962609324555,
+      "policy_loss": 0.013135932385921478,
+      "value_loss": 0.02496999129652977,
+      "entropy": -0.06562894582748413,
+      "sl_loss": 0.02539370022714138,
+      "encoder_grad_norm": 0.9453040361404419,
+      "actor_grad_norm": 0.3523751199245453,
+      "critic_grad_norm": 1.830440878868103,
+      "lstm_grad_norm": 0.031070543453097343,
+      "lstm_updates": 1,
+      "minibatches": 1
+    },
+    {
+      "frames": 8320,
+      "update": 130,
+      "elapsed_s": 1680.2282851971686,
+      "training_fps": 4.951708092267814,
+      "policy_loss": 0.014673549681901932,
+      "value_loss": 0.06398232281208038,
+      "entropy": -0.06797309219837189,
+      "sl_loss": 0.023104798048734665,
+      "encoder_grad_norm": 0.7112149000167847,
+      "actor_grad_norm": 0.2898583710193634,
+      "critic_grad_norm": 2.646300792694092,
+      "lstm_grad_norm": 0.0240340456366539,
+      "lstm_updates": 1,
+      "minibatches": 1
+    },
+    {
+      "frames": 8384,
+      "update": 131,
+      "elapsed_s": 1692.6489146470558,
+      "training_fps": 4.9531830991681325,
+      "policy_loss": 0.008992921561002731,
+      "value_loss": 0.011502983048558235,
+      "entropy": -0.0659986212849617,
+      "sl_loss": 0.018389645963907242,
+      "encoder_grad_norm": 0.7192666530609131,
+      "actor_grad_norm": 0.212052121758461,
+      "critic_grad_norm": 0.8668280839920044,
+      "lstm_grad_norm": 0.05134619399905205,
+      "lstm_updates": 1,
+      "minibatches": 1
+    },
+    {
+      "frames": 8448,
+      "update": 132,
+      "elapsed_s": 1704.7079684790224,
+      "training_fps": 4.95568751537646,
+      "policy_loss": 0.011167734861373901,
+      "value_loss": 0.028310514986515045,
+      "entropy": -0.06855721771717072,
+      "sl_loss": 0.027224410325288773,
+      "encoder_grad_norm": 0.7712124586105347,
+      "actor_grad_norm": 0.26002389192581177,
+      "critic_grad_norm": 0.21047692000865936,
+      "lstm_grad_norm": 0.027069050818681717,
+      "lstm_updates": 1,
+      "minibatches": 1
+    },
+    {
+      "frames": 8512,
+      "update": 133,
+      "elapsed_s": 1716.8906431801151,
+      "training_fps": 4.95779974762168,
+      "policy_loss": 0.011686481535434723,
+      "value_loss": 0.03299170732498169,
+      "entropy": -0.06417103111743927,
+      "sl_loss": 0.019544249400496483,
+      "encoder_grad_norm": 0.7062134146690369,
+      "actor_grad_norm": 0.2269187718629837,
+      "critic_grad_norm": 1.1715797185897827,
+      "lstm_grad_norm": 0.022018490359187126,
+      "lstm_updates": 1,
+      "minibatches": 1
+    },
+    {
+      "frames": 8576,
+      "update": 134,
+      "elapsed_s": 1729.2766876460519,
+      "training_fps": 4.95929891239611,
+      "policy_loss": 0.011360790580511093,
+      "value_loss": 3.780132293701172,
+      "entropy": -0.06693217903375626,
+      "sl_loss": 0.018582412973046303,
+      "encoder_grad_norm": 0.6378461122512817,
+      "actor_grad_norm": 0.21329066157341003,
+      "critic_grad_norm": 16.545597076416016,
+      "lstm_grad_norm": 0.04130590707063675,
+      "lstm_updates": 1,
+      "minibatches": 1
+    },
+    {
+      "frames": 8640,
+      "update": 135,
+      "elapsed_s": 1741.0679329670966,
+      "training_fps": 4.962471499686541,
+      "policy_loss": 0.013212945312261581,
+      "value_loss": 0.01157316379249096,
+      "entropy": -0.0697052925825119,
+      "sl_loss": 0.018727077171206474,
+      "encoder_grad_norm": 0.9489386081695557,
+      "actor_grad_norm": 0.26996785402297974,
+      "critic_grad_norm": 0.9716747403144836,
+      "lstm_grad_norm": 0.03115612082183361,
+      "lstm_updates": 1,
+      "minibatches": 1
+    },
+    {
+      "frames": 8704,
+      "update": 136,
+      "elapsed_s": 1752.8323138621636,
+      "training_fps": 4.965677508368269,
+      "policy_loss": 0.018480688333511353,
+      "value_loss": 0.049258869141340256,
+      "entropy": -0.06832834333181381,
+      "sl_loss": 0.02066521719098091,
+      "encoder_grad_norm": 1.2337313890457153,
+      "actor_grad_norm": 0.4303136169910431,
+      "critic_grad_norm": 0.7819576263427734,
+      "lstm_grad_norm": 0.020068472251296043,
+      "lstm_updates": 1,
+      "minibatches": 1
+    },
+    {
+      "frames": 8768,
+      "update": 137,
+      "elapsed_s": 1764.630455172155,
+      "training_fps": 4.968745705641015,
+      "policy_loss": 0.04034984111785889,
+      "value_loss": 0.049194104969501495,
+      "entropy": -0.07252974808216095,
+      "sl_loss": 0.01928000897169113,
+      "encoder_grad_norm": 0.910899817943573,
+      "actor_grad_norm": 0.2135705053806305,
+      "critic_grad_norm": 1.6239523887634277,
+      "lstm_grad_norm": 0.02431873232126236,
+      "lstm_updates": 1,
+      "minibatches": 1
+    },
+    {
+      "frames": 8832,
+      "update": 138,
+      "elapsed_s": 1776.868196615018,
+      "training_fps": 4.970543123663866,
+      "policy_loss": 0.012436799705028534,
+      "value_loss": 0.045939378440380096,
+      "entropy": -0.0679439902305603,
+      "sl_loss": 0.020624574273824692,
+      "encoder_grad_norm": 0.5380269885063171,
+      "actor_grad_norm": 0.20574940741062164,
+      "critic_grad_norm": 0.42313113808631897,
+      "lstm_grad_norm": 0.021323606371879578,
+      "lstm_updates": 1,
+      "minibatches": 1
+    },
+    {
+      "frames": 8896,
+      "update": 139,
+      "elapsed_s": 1788.6285662499722,
+      "training_fps": 4.97364302706449,
+      "policy_loss": 0.0188785120844841,
+      "value_loss": 0.04578399658203125,
+      "entropy": -0.0650370642542839,
+      "sl_loss": 0.021097632125020027,
+      "encoder_grad_norm": 0.8375392556190491,
+      "actor_grad_norm": 0.31119000911712646,
+      "critic_grad_norm": 2.4127445220947266,
+      "lstm_grad_norm": 0.040735770016908646,
+      "lstm_updates": 1,
+      "minibatches": 1
+    },
+    {
+      "frames": 8960,
+      "update": 140,
+      "elapsed_s": 1800.4362118651625,
+      "training_fps": 4.976571753570883,
+      "policy_loss": 0.019133880734443665,
+      "value_loss": 0.04281582683324814,
+      "entropy": -0.06228071078658104,
+      "sl_loss": 0.023117126896977425,
+      "encoder_grad_norm": 0.7055046558380127,
+      "actor_grad_norm": 0.24251559376716614,
+      "critic_grad_norm": 1.7669708728790283,
+      "lstm_grad_norm": 0.030453061684966087,
+      "lstm_updates": 1,
+      "minibatches": 1
+    },
+    {
+      "frames": 9024,
+      "update": 141,
+      "elapsed_s": 1812.1996767991222,
+      "training_fps": 4.97958371403711,
+      "policy_loss": 0.01089654490351677,
+      "value_loss": 0.016261551529169083,
+      "entropy": -0.06505689024925232,
+      "sl_loss": 0.02228192612528801,
+      "encoder_grad_norm": 1.2040070295333862,
+      "actor_grad_norm": 0.3803577721118927,
+      "critic_grad_norm": 1.241959810256958,
+      "lstm_grad_norm": 0.027133066207170486,
+      "lstm_updates": 1,
+      "minibatches": 1
+    },
+    {
+      "frames": 9088,
+      "update": 142,
+      "elapsed_s": 1823.9685666740406,
+      "training_fps": 4.982542003051776,
+      "policy_loss": 0.011081315577030182,
+      "value_loss": 0.01973884180188179,
+      "entropy": -0.0648093968629837,
+      "sl_loss": 0.021986255422234535,
+      "encoder_grad_norm": 0.7467570900917053,
+      "actor_grad_norm": 0.21153393387794495,
+      "critic_grad_norm": 1.0448501110076904,
+      "lstm_grad_norm": 0.02221396006643772,
+      "lstm_updates": 1,
+      "minibatches": 1
+    },
+    {
+      "frames": 9152,
+      "update": 143,
+      "elapsed_s": 1836.1438046060503,
+      "training_fps": 4.984359053250902,
+      "policy_loss": 0.00010781362652778625,
+      "value_loss": 0.03193296864628792,
+      "entropy": -0.06773542612791061,
+      "sl_loss": 0.016024261713027954,
+      "encoder_grad_norm": 0.7061108946800232,
+      "actor_grad_norm": 0.20705220103263855,
+      "critic_grad_norm": 0.5377693772315979,
+      "lstm_grad_norm": 0.020255768671631813,
+      "lstm_updates": 1,
+      "minibatches": 1
+    },
+    {
+      "frames": 9216,
+      "update": 144,
+      "elapsed_s": 1847.9388335091062,
+      "training_fps": 4.987178053365884,
+      "policy_loss": 0.016313914209604263,
+      "value_loss": 0.05907990783452988,
+      "entropy": -0.07144252955913544,
+      "sl_loss": 0.020384622737765312,
+      "encoder_grad_norm": 0.5828067660331726,
+      "actor_grad_norm": 0.2262188345193863,
+      "critic_grad_norm": 2.140071153640747,
+      "lstm_grad_norm": 0.01904519647359848,
+      "lstm_updates": 1,
+      "minibatches": 1
+    },
+    {
+      "frames": 9280,
+      "update": 145,
+      "elapsed_s": 1859.8093270079698,
+      "training_fps": 4.989758822443042,
+      "policy_loss": 0.00933336466550827,
+      "value_loss": 0.010921754874289036,
+      "entropy": -0.07447922229766846,
+      "sl_loss": 0.021742964163422585,
+      "encoder_grad_norm": 1.1081782579421997,
+      "actor_grad_norm": 0.48762232065200806,
+      "critic_grad_norm": 0.29270273447036743,
+      "lstm_grad_norm": 0.017931737005710602,
+      "lstm_updates": 1,
+      "minibatches": 1
+    },
+    {
+      "frames": 9344,
+      "update": 146,
+      "elapsed_s": 1871.8161518431734,
+      "training_fps": 4.991943245471294,
+      "policy_loss": 0.005461439490318298,
+      "value_loss": 0.014246857725083828,
+      "entropy": -0.07208399474620819,
+      "sl_loss": 0.022050222381949425,
+      "encoder_grad_norm": 0.60758376121521,
+      "actor_grad_norm": 0.14410805702209473,
+      "critic_grad_norm": 0.22818820178508759,
+      "lstm_grad_norm": 0.027752405032515526,
+      "lstm_updates": 1,
+      "minibatches": 1
+    },
+    {
+      "frames": 9408,
+      "update": 147,
+      "elapsed_s": 1884.2509957521688,
+      "training_fps": 4.992965384268827,
+      "policy_loss": 0.008946456015110016,
+      "value_loss": 0.041711095720529556,
+      "entropy": -0.06481769680976868,
+      "sl_loss": 0.022673003375530243,
+      "encoder_grad_norm": 1.1916228532791138,
+      "actor_grad_norm": 0.4869385063648224,
+      "critic_grad_norm": 1.8359267711639404,
+      "lstm_grad_norm": 0.051911987364292145,
+      "lstm_updates": 1,
+      "minibatches": 1
+    },
+    {
+      "frames": 9472,
+      "update": 148,
+      "elapsed_s": 1896.0578870819882,
+      "training_fps": 4.995628066482691,
+      "policy_loss": 0.005505792796611786,
+      "value_loss": 0.03825520724058151,
+      "entropy": -0.06097248196601868,
+      "sl_loss": 0.031402360647916794,
+      "encoder_grad_norm": 0.7759060263633728,
+      "actor_grad_norm": 0.2233981341123581,
+      "critic_grad_norm": 2.138792037963867,
+      "lstm_grad_norm": 0.045846421271562576,
+      "lstm_updates": 1,
+      "minibatches": 1
+    },
+    {
+      "frames": 9536,
+      "update": 149,
+      "elapsed_s": 1907.8509467490949,
+      "training_fps": 4.99829402953362,
+      "policy_loss": 0.010232672095298767,
+      "value_loss": 0.013701364398002625,
+      "entropy": -0.05869225412607193,
+      "sl_loss": 0.021492917090654373,
+      "encoder_grad_norm": 0.9206963777542114,
+      "actor_grad_norm": 0.32781755924224854,
+      "critic_grad_norm": 1.0930191278457642,
+      "lstm_grad_norm": 0.02409103326499462,
+      "lstm_updates": 1,
+      "minibatches": 1
+    },
+    {
+      "frames": 9600,
+      "update": 150,
+      "elapsed_s": 1919.7762352100108,
+      "training_fps": 5.000582786607664,
+      "policy_loss": 0.005886506289243698,
+      "value_loss": 0.020954832434654236,
+      "entropy": -0.0590783916413784,
+      "sl_loss": 0.018957749009132385,
+      "encoder_grad_norm": 0.6402183175086975,
+      "actor_grad_norm": 0.27665475010871887,
+      "critic_grad_norm": 1.2038854360580444,
+      "lstm_grad_norm": 0.023987095803022385,
+      "lstm_updates": 1,
+      "minibatches": 1,
+      "evaluation": {
+        "frames": 9600,
+        "update": 150,
+        "seed": 254348,
+        "episodes": [
+          {
+            "episode": 0,
+            "seed": 254348,
+            "steps": 104,
+            "reward": -969.7709817886353,
+            "capture": false,
+            "escaped": false,
+            "collision": true,
+            "timeout": false,
+            "visibility_ratio": 0.4375
+          }
+        ],
+        "capture_success_rate": 0.0,
+        "collision_rate": 1.0,
+        "escape_rate": 0.0,
+        "average_episode_reward": -969.7709817886353,
+        "average_episode_length": 104.0,
+        "target_visibility_ratio": 0.4375
+      }
+    },
+    {
+      "frames": 9664,
+      "update": 151,
+      "elapsed_s": 1952.04550152109,
+      "training_fps": 4.950704268637855,
+      "policy_loss": 0.023527061566710472,
+      "value_loss": 0.009882725775241852,
+      "entropy": -0.059004731476306915,
+      "sl_loss": 0.02353435568511486,
+      "encoder_grad_norm": 0.8530712127685547,
+      "actor_grad_norm": 0.291735976934433,
+      "critic_grad_norm": 0.45396870374679565,
+      "lstm_grad_norm": 0.02999134548008442,
+      "lstm_updates": 1,
+      "minibatches": 1
+    },
+    {
+      "frames": 9728,
+      "update": 152,
+      "elapsed_s": 1963.8783073399682,
+      "training_fps": 4.953463746130418,
+      "policy_loss": 0.030832242220640182,
+      "value_loss": 0.021639084443449974,
+      "entropy": -0.06485380232334137,
+      "sl_loss": 0.027633266523480415,
+      "encoder_grad_norm": 0.7967885136604309,
+      "actor_grad_norm": 0.2610003650188446,
+      "critic_grad_norm": 1.7163963317871094,
+      "lstm_grad_norm": 0.062127742916345596,
+      "lstm_updates": 1,
+      "minibatches": 1
+    },
+    {
+      "frames": 9792,
+      "update": 153,
+      "elapsed_s": 1975.82235584897,
+      "training_fps": 4.955911125854565,
+      "policy_loss": 0.012441975995898247,
+      "value_loss": 0.01972280628979206,
+      "entropy": -0.06237991899251938,
+      "sl_loss": 0.019802050665020943,
+      "encoder_grad_norm": 0.9678145051002502,
+      "actor_grad_norm": 0.3065267503261566,
+      "critic_grad_norm": 1.7005456686019897,
+      "lstm_grad_norm": 0.0506926029920578,
+      "lstm_updates": 1,
+      "minibatches": 1
+    },
+    {
+      "frames": 9856,
+      "update": 154,
+      "elapsed_s": 1987.6837549239863,
+      "training_fps": 4.958535266171628,
+      "policy_loss": 0.013605596497654915,
+      "value_loss": 0.03214025869965553,
+      "entropy": -0.0591592863202095,
+      "sl_loss": 0.012172635644674301,
+      "encoder_grad_norm": 1.0125077962875366,
+      "actor_grad_norm": 0.377941370010376,
+      "critic_grad_norm": 0.8277810215950012,
+      "lstm_grad_norm": 0.019012371078133583,
+      "lstm_updates": 1,
+      "minibatches": 1
+    },
+    {
+      "frames": 9920,
+      "update": 155,
+      "elapsed_s": 1999.707193443086,
+      "training_fps": 4.9607262647308525,
+      "policy_loss": 0.022218123078346252,
+      "value_loss": 0.034171268343925476,
+      "entropy": -0.06143030524253845,
+      "sl_loss": 0.01181976217776537,
+      "encoder_grad_norm": 0.7482798099517822,
+      "actor_grad_norm": 0.23828069865703583,
+      "critic_grad_norm": 1.1008514165878296,
+      "lstm_grad_norm": 0.01960516721010208,
+      "lstm_updates": 1,
+      "minibatches": 1
+    },
+    {
+      "frames": 9984,
+      "update": 156,
+      "elapsed_s": 2011.981741338037,
+      "training_fps": 4.962271670347513,
+      "policy_loss": 0.013224292546510696,
+      "value_loss": 0.01901021972298622,
+      "entropy": -0.06280305236577988,
+      "sl_loss": 0.02300705388188362,
+      "encoder_grad_norm": 0.6356544494628906,
+      "actor_grad_norm": 0.2590990662574768,
+      "critic_grad_norm": 1.286980390548706,
+      "lstm_grad_norm": 0.05614086240530014,
+      "lstm_updates": 1,
+      "minibatches": 1
+    },
+    {
+      "frames": 10000,
+      "update": 157,
+      "elapsed_s": 2015.003651818959,
+      "training_fps": 4.962770160741139,
+      "policy_loss": 0.0014290735125541687,
+      "value_loss": 0.003984613344073296,
+      "entropy": -0.058872781693935394,
+      "sl_loss": 0.015367493033409119,
+      "encoder_grad_norm": 1.443885326385498,
+      "actor_grad_norm": 0.5330902934074402,
+      "critic_grad_norm": 0.6122393608093262,
+      "lstm_grad_norm": 0.04435127228498459,
+      "lstm_updates": 1,
+      "minibatches": 1
+    }
+  ],
+  "evaluations": [
+    {
+      "frames": 3200,
+      "update": 50,
+      "seed": 154348,
+      "episodes": [
+        {
+          "episode": 0,
+          "seed": 154348,
+          "steps": 280,
+          "reward": -293.94775139167905,
+          "capture": false,
+          "escaped": false,
+          "collision": false,
+          "timeout": true,
+          "visibility_ratio": 0.5642857142857143
+        }
+      ],
+      "capture_success_rate": 0.0,
+      "collision_rate": 0.0,
+      "escape_rate": 0.0,
+      "average_episode_reward": -293.94775139167905,
+      "average_episode_length": 280.0,
+      "target_visibility_ratio": 0.5642857142857143
+    },
+    {
+      "frames": 6400,
+      "update": 100,
+      "seed": 204348,
+      "episodes": [
+        {
+          "episode": 0,
+          "seed": 204348,
+          "steps": 253,
+          "reward": -1219.9057787805796,
+          "capture": false,
+          "escaped": true,
+          "collision": false,
+          "timeout": false,
+          "visibility_ratio": 0.383399209486166
+        }
+      ],
+      "capture_success_rate": 0.0,
+      "collision_rate": 0.0,
+      "escape_rate": 1.0,
+      "average_episode_reward": -1219.9057787805796,
+      "average_episode_length": 253.0,
+      "target_visibility_ratio": 0.383399209486166
+    },
+    {
+      "frames": 9600,
+      "update": 150,
+      "seed": 254348,
+      "episodes": [
+        {
+          "episode": 0,
+          "seed": 254348,
+          "steps": 104,
+          "reward": -969.7709817886353,
+          "capture": false,
+          "escaped": false,
+          "collision": true,
+          "timeout": false,
+          "visibility_ratio": 0.4375
+        }
+      ],
+      "capture_success_rate": 0.0,
+      "collision_rate": 1.0,
+      "escape_rate": 0.0,
+      "average_episode_reward": -969.7709817886353,
+      "average_episode_length": 104.0,
+      "target_visibility_ratio": 0.4375
+    }
+  ],
+  "training_elapsed_s": 2015.0183729799464,
+  "training_fps": 4.962733901668971
+}
+2026-11-19T15:42:38Z [7,844ms] [Warning] [omni.physx.plugin] Detected an articulation at /World/Pursuit/Drone_0 with more than 4 velocity iterations being added to a TGS scene.The related behavior changed recently, please consult the changelog. This warning will only print once.
+[2025.309s] Simulation App Shutting Down

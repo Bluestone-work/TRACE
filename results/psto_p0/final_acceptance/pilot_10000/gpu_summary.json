@@ -1,0 +1,28 @@
+{
+  "gpu_0": {
+    "samples": 297,
+    "utilization_gpu_pct": {
+      "min": 4.0,
+      "max": 40.0,
+      "mean": 10.202020202020202
+    },
+    "memory_used_mib": {
+      "min": 3579.0,
+      "max": 6113.0,
+      "mean": 6087.367003367003
+    }
+  },
+  "gpu_1": {
+    "samples": 297,
+    "utilization_gpu_pct": {
+      "min": 0.0,
+      "max": 100.0,
+      "mean": 19.90909090909091
+    },
+    "memory_used_mib": {
+      "min": 833.0,
+      "max": 29154.0,
+      "mean": 4198.292929292929
+    }
+  }
+}

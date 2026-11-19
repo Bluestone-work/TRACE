@@ -3,6 +3,8 @@
 import argparse
 import csv
 import json
+import hashlib
+import subprocess
 from pathlib import Path
 
 import numpy as np
@@ -21,6 +23,26 @@ def unique_dir(path):
     return out
 
 
+def git_sha():
+    try:
+        return subprocess.check_output(["git", "rev-parse", "HEAD"], text=True).strip()
+    except Exception:
+        return "unknown"
+
+
+def file_sha256(path):
+    if not path:
+        return None
+    p = Path(path)
+    if not p.is_file():
+        return None
+    digest = hashlib.sha256()
+    with p.open("rb") as handle:
+        for block in iter(lambda: handle.read(1024 * 1024), b""):
+            digest.update(block)
+    return digest.hexdigest()
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--episodes", type=int, default=10)
@@ -30,8 +52,12 @@ def main():
     ap.add_argument("--headless", action="store_true")
     ap.add_argument("--controller", choices=("fixed", "mappo"), default="fixed")
     ap.add_argument("--checkpoint", help="MAPPO checkpoint; required with --controller mappo")
+    ap.add_argument("--config", default="configs/psto/trace_native_pilot.yaml")
     args = ap.parse_args()
     out = unique_dir(args.out)
+    config_path = Path(args.config)
+    if config_path.is_file():
+        (out / "config_snapshot.yaml").write_text(config_path.read_text(encoding="utf-8"), encoding="utf-8")
     from isaacsim import SimulationApp
     app = SimulationApp({"headless": bool(args.headless), "multi_gpu": False})
     env = None
@@ -132,9 +158,11 @@ def main():
     with (out / "trajectories.csv").open("w", newline="") as handle:
         fields = trajectory_rows[0].keys() if trajectory_rows else ["episode"]
         writer = csv.DictWriter(handle, fieldnames=fields); writer.writeheader(); writer.writerows(trajectory_rows)
-    result = {"status": execution_status, "test_scope": "MAPPO policy rollout" if args.controller == "mappo" else "fixed-action environment rollout",
+    result = {"status": execution_status, "git_sha": git_sha(), "config": str(config_path.resolve()),
+        "test_scope": "MAPPO policy rollout" if args.controller == "mappo" else "fixed-action environment rollout",
         "task_performance_status": "evaluated" if args.controller == "mappo" else "not_evaluated",
-        "controller": args.controller, "checkpoint": args.checkpoint, "episodes_requested": args.episodes, "episodes_completed": len(episode_rows),
+        "controller": args.controller, "checkpoint": args.checkpoint, "checkpoint_sha256": file_sha256(args.checkpoint),
+        "episodes_requested": args.episodes, "episodes_completed": len(episode_rows),
         "steps_per_episode_limit": args.steps, "policy_hz": 30., "episode_duration_s": args.steps / 30.,
         "failures": failures, "episodes_csv": str(out / "episodes.csv"),
         "trajectories_csv": str(out / "trajectories.csv"),
@@ -142,7 +170,13 @@ def main():
         "escape_count": int(sum(r["escaped"] for r in episode_rows)),
         "collision_count": int(sum(r["collision"] for r in episode_rows)),
         "timeout_count": int(sum(r["timeout"] for r in episode_rows)),
-        "mean_steps": float(np.mean([r["steps"] for r in episode_rows])) if episode_rows else 0.}
+        "mean_steps": float(np.mean([r["steps"] for r in episode_rows])) if episode_rows else 0.,
+        "capture_success_rate": float(np.mean([r["capture"] for r in episode_rows])) if episode_rows else 0.,
+        "collision_rate": float(np.mean([r["collision"] for r in episode_rows])) if episode_rows else 0.,
+        "escape_rate": float(np.mean([r["escaped"] for r in episode_rows])) if episode_rows else 0.,
+        "average_episode_reward": float(np.mean([r["reward"] for r in episode_rows])) if episode_rows else 0.,
+        "average_episode_length": float(np.mean([r["steps"] for r in episode_rows])) if episode_rows else 0.,
+        "target_visibility_ratio": float(np.mean([r["visibility_ratio"] for r in episode_rows])) if episode_rows else 0.}
     (out / "episodes.json").write_text(json.dumps(result, indent=2))
     print(json.dumps(result, indent=2), flush=True)
     if env is not None:

@@ -12,6 +12,14 @@ if str(_NAV) not in sys.path: sys.path.insert(0,str(_NAV))
 from quadrotor_dynamics import QuadrotorActuator
 from rotor_flight import RotorFlight
 import math
+
+def _portable_rng_state(rng):
+ def convert(value):
+  if isinstance(value, dict): return {k: convert(v) for k, v in value.items()}
+  if isinstance(value, np.ndarray): return value.tolist()
+  if isinstance(value, np.generic): return value.item()
+  return value
+ return convert(rng.bit_generator.state)
 class PSTOVehicle(RotorFlight):
  def __init__(self,world,path,physics_dt):
   from isaacsim.core.prims import RigidPrim,SingleArticulation
@@ -111,3 +119,33 @@ class PSTOPursuitScene:
    v._scene_lidar_epoch += 1; v._lidar_cache_epoch=-1; v._lidar_cache=None
   return np.stack([v.position for v in self.vehicles])
  def close(self): self.world.clear_instance()
+ def state_dict(self):
+  """Serialize scene randomization state for deterministic checkpoint resume."""
+  return {
+   'seed': int(self.seed),
+   'positions': np.asarray(self.positions, np.float32).copy(),
+   'initial_positions': np.asarray(self.initial_positions, np.float32).copy(),
+   'obstacle_positions': np.asarray(self.obstacle_positions, np.float32).copy(),
+   'obstacle_scales': np.asarray(self.obstacle_scales, np.float32).copy(),
+   'obstacle_layout': list(self.obstacle_layout),
+   'rng_state': _portable_rng_state(self.rng),
+  }
+ def load_state_dict(self, state):
+  """Restore scene RNG/layout after a checkpoint load without random draws."""
+  if state is None:
+   return
+  self.seed = int(state.get('seed', self.seed))
+  if state.get('positions') is not None:
+   self.positions = np.asarray(state['positions'], np.float32).copy()
+  if state.get('initial_positions') is not None:
+   self.initial_positions = np.asarray(state['initial_positions'], np.float32).copy()
+  if state.get('obstacle_positions') is not None:
+   self.obstacle_positions = np.asarray(state['obstacle_positions'], np.float32).copy()
+  if state.get('obstacle_scales') is not None:
+   self.obstacle_scales = [np.asarray(x, np.float32).copy() for x in state['obstacle_scales']]
+  if state.get('obstacle_layout') is not None:
+   self.obstacle_layout = list(state['obstacle_layout'])
+  if state.get('rng_state') is not None:
+   self.rng.bit_generator.state = state['rng_state']
+  for obstacle, op in zip(self.obstacles, self.obstacle_positions):
+   obstacle.set_world_pose(position=np.asarray(op, np.float32))

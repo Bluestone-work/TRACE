@@ -116,6 +116,14 @@ def test_time_scale_configs_are_explicit_and_consistent():
  assert native['environment']['episode_duration']==native['environment']['max_episode_steps']/native['environment']['policy_hz']
  assert official['experiment_name']!=native['experiment_name']
 
+def test_rng_checkpoint_state_is_json_portable():
+ from trace.pursuit.env import _portable_rng_state
+ from trace.pursuit.scene import _portable_rng_state as scene_rng_state
+ import json
+ r=np.random.default_rng(17); state=_portable_rng_state(r); state2=scene_rng_state(r)
+ json.dumps(state); json.dumps(state2)
+ assert isinstance(state['state'],dict) and isinstance(state['state']['state'],int)
+
 def test_visibility_rejects_target_beyond_sensor_range():
  from trace.pursuit.visibility import target_visible
  assert not target_visible(np.array([0.,0.,2.]),np.array([1.,0,0,0.]),np.array([10.5,0.,2.]),np.zeros((24,480),np.float32))
