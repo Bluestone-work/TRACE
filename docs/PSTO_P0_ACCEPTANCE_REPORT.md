@@ -86,6 +86,8 @@ GAE 使用两个 mask：`terminated` 只控制 TD bootstrap；`episode_end` 控�
 
 代码随后提交为本地 commit `90abbb6`（未 Push），并在该 commit 上再次完成了 1 帧 native PhysX PPO smoke；结果见 `results/psto_p0/post_commit_smoke/`，JSON 中记录了该 SHA 和 Isaac Sim 6.0.1 build。
 
+评估入口也已改为读取同一 YAML 时间尺度、按 episode 使用独立 seed，并在输出旁保存配置快照。当前 post-commit checkpoint 的 1 episode/2 step 评估实际返回 `status=pass`、visibility ratio `0.5`、无终止事件；由于只有 2 步，ADE/FDE 尚无有效延迟窗口，这只是入口 smoke。
+
 ## 十 Episode 实际结果
 
 ```bash
