@@ -85,3 +85,15 @@ PPO/LSTM updates, checkpoint save/resume and metadata recording; use
 script is an environment safety check only. To evaluate a learned policy, pass
 `--controller mappo --checkpoint <path>` to `scripts/test_psto_episodes.py` or use
 `scripts/eval_psto.py`.
+
+To record an actual Isaac Sim RTX camera view of the three PhysX Hummingbirds:
+
+```bash
+/home/wj/isaacsim/python.sh scripts/record_psto_render.py \
+  --headless --steps 30 --resolution 1280 720 \
+  --out results/psto_p0/isaac_render/psto_close
+```
+
+This writes `psto_close.gif` and two PNG keyframes. The recorder uses the real
+Hummingbird USD articulations and RotorFlight/PhysX dynamics; its short playback
+controller is for visual inspection and is not a MAPPO performance evaluation.
