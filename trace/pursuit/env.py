@@ -16,10 +16,14 @@ def build_global_state_84(positions,quaternions,velocities,angular_velocities,pr
  assert out.shape==(84,),out.shape
  return out
 class PSTOPursuitEnv:
- def __init__(self,scene=None,max_episode_steps=280,seed=4348,with_lidar=True):
-  self.scene=scene or PSTOPursuitScene(); self.max_episode_steps=max_episode_steps; self.with_lidar=with_lidar; self.lidar_adapter=PSTOLidarAdapter(); self.rng=np.random.default_rng(seed); self.step_count=0; self.prev_actions=np.zeros((3,3),np.float32); self.observed_evader_history=[]; self.observed_evader_times=[]; self.ground_truth_evader_history=[]; self.policy_lstm=None; self.last_lidar=np.zeros((2,24,480),np.float32); self.last_lidar_down=np.zeros((2,6,120),np.float32); self.last_evader_lidar=np.zeros((24,480),np.float32)
+ def __init__(self,scene=None,max_episode_steps=280,seed=4348,with_lidar=True,physics_dt=1/240,policy_hz=30.,num_obstacles=18,randomize_resets=False,randomize_obstacles=False):
+  self.seed=int(seed); self.randomize_resets=bool(randomize_resets); self.randomize_obstacles=bool(randomize_obstacles); self.scene=scene or PSTOPursuitScene(physics_dt=physics_dt,policy_hz=policy_hz,num_obstacles=num_obstacles,seed=self.seed,randomize_resets=self.randomize_resets,randomize_obstacles=self.randomize_obstacles); self.max_episode_steps=max_episode_steps; self.with_lidar=with_lidar; self.lidar_adapter=PSTOLidarAdapter(); self.rng=np.random.default_rng(self.seed); self.step_count=0; self.episode_index=0; self.prev_actions=np.zeros((3,3),np.float32); self.observed_evader_history=[]; self.observed_evader_times=[]; self.ground_truth_evader_history=[]; self.policy_lstm=None; self.last_lidar=np.zeros((2,24,480),np.float32); self.last_lidar_down=np.zeros((2,6,120),np.float32); self.last_evader_lidar=np.zeros((24,480),np.float32)
  def set_policy_lstm(self,module): self.policy_lstm=module
- def reset(self): self.step_count=0; self.prev_actions.fill(0); self.observed_evader_history=[]; self.observed_evader_times=[]; self.ground_truth_evader_history=[]; self.scene.reset(); return self.observe()
+ def reset(self,seed=None):
+  self.step_count=0; self.episode_index+=1; self.prev_actions.fill(0); self.observed_evader_history=[]; self.observed_evader_times=[]; self.ground_truth_evader_history=[]
+  if seed is not None:
+   self.seed=int(seed); self.rng=np.random.default_rng(self.seed)
+  self.scene.reset(randomize=self.randomize_resets,seed=seed,randomize_obstacles=self.randomize_obstacles); return self.observe()
  def _root(self):
   p=np.stack([v.position for v in self.scene.vehicles]); q=np.stack([v.orientation for v in self.scene.vehicles]); v=np.stack([v.velocity for v in self.scene.vehicles]); w=np.stack([v.angular_velocity for v in self.scene.vehicles]); return p,q,v,w
  def _central(self,p,q,v,w,down):

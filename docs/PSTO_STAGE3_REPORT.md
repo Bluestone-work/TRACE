@@ -55,3 +55,7 @@ A dedicated real Isaac Sim timeout smoke run used `--max_episode_steps 1` for tw
 - The fixed cuboid obstacle field is an Isaac Sim 6 adapter, not a byte-for-byte OmniDrones `TerrainImporter` reproduction. It supplies real collision geometry and LiDAR occlusion, but terrain-generation parity remains future work.
 - The physical adapter is single-world (`--num_envs 1`); vectorized multi-environment training is not claimed.
 - Long-horizon trained-policy metrics are not reported here because only a short parameter-update smoke run was requested. No fabricated success rate is included.
+
+## P0 acceptance follow-up
+
+The reproducibility and pre-training checks are tracked in [PSTO_P0_ACCEPTANCE_REPORT.md](PSTO_P0_ACCEPTANCE_REPORT.md). Use the independent `official_reproduction` and `trace_native` YAML files for all new runs; each run writes a config snapshot and software metadata beside its checkpoint.

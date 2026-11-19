@@ -54,7 +54,7 @@ def _orthogonal(m):
 
 @dataclass
 class MAPPOConfig:
- gamma:float=.995; gae_lambda:float=.95; clip_ratio:float=.1; value_clip_ratio:float=.1; entropy_coef:float=.01; actor_lr:float=6e-5; critic_lr:float=6e-5; encoder_lr:float=6e-5; sl_lr:float=8e-5; max_grad_norm:float=1.; lstm_max_grad_norm:float=1.; training_epoch_num:int=4; num_minibatches:int=1; sl_future_len:int=10; action_limit:float=.8; scheduler_steps:int=600; lstm_observation_drop_prob:float=.25; lstm_occlusion_prob:float=.35; lstm_max_occlusion_len:int=4
+ gamma:float=.995; gae_lambda:float=.95; clip_ratio:float=.1; value_clip_ratio:float=.1; value_loss_coef:float=1.; entropy_coef:float=.01; actor_lr:float=6e-5; critic_lr:float=6e-5; encoder_lr:float=6e-5; sl_lr:float=8e-5; max_grad_norm:float=1.; lstm_max_grad_norm:float=1.; training_epoch_num:int=4; num_minibatches:int=1; sl_future_len:int=10; action_limit:float=.8; scheduler_steps:int=600; warmup_steps:int=0; scheduler:str='cosine'; lstm_update_frequency:int=1; lstm_observation_drop_prob:float=.25; lstm_occlusion_prob:float=.35; lstm_max_occlusion_len:int=4
 
 class RolloutStorage:
  """Explicit on-policy storage used by train_psto and unit tests."""
@@ -72,7 +72,15 @@ class PSTOMAPPO(nn.Module):
   self.encoder.apply(_orthogonal); self.actor.apply(_orthogonal); self.critic_encoder.apply(_orthogonal); self.critic.apply(_orthogonal)
   self.lstm=TrajectoryPredictor(4,64,c.sl_future_len*3).to(self.device); self.value_norm=ValueNorm(1).to(self.device)
   self.encoder_opt=torch.optim.AdamW(self.encoder.parameters(),lr=c.encoder_lr,weight_decay=2e-4); self.actor_opt=torch.optim.AdamW(self.actor.parameters(),lr=c.actor_lr,weight_decay=2e-4); self.critic_encoder_opt=torch.optim.AdamW(self.critic_encoder.parameters(),lr=c.critic_lr,weight_decay=1e-4); self.critic_opt=torch.optim.AdamW(self.critic.parameters(),lr=c.critic_lr,weight_decay=1e-4); self.lstm_opt=torch.optim.Adam(self.lstm.parameters(),lr=c.sl_lr)
-  self.encoder_scheduler=torch.optim.lr_scheduler.CosineAnnealingLR(self.encoder_opt,max(c.scheduler_steps,1),eta_min=3e-6); self.actor_scheduler=torch.optim.lr_scheduler.CosineAnnealingLR(self.actor_opt,max(c.scheduler_steps,1),eta_min=3e-6); self.critic_encoder_scheduler=torch.optim.lr_scheduler.ConstantLR(self.critic_encoder_opt,1.0); self.critic_scheduler=torch.optim.lr_scheduler.ConstantLR(self.critic_opt,1.0); self.lstm_scheduler=torch.optim.lr_scheduler.StepLR(self.lstm_opt,1000,.95)
+  self.encoder_scheduler=self._make_scheduler(self.encoder_opt,c); self.actor_scheduler=self._make_scheduler(self.actor_opt,c); self.critic_encoder_scheduler=self._make_scheduler(self.critic_encoder_opt,c); self.critic_scheduler=self._make_scheduler(self.critic_opt,c); self.lstm_scheduler=torch.optim.lr_scheduler.StepLR(self.lstm_opt,1000,.95)
+ def _make_scheduler(self,opt,c):
+  warmup=max(int(c.warmup_steps),0); total=max(int(c.scheduler_steps),warmup+1)
+  def rate(step):
+   if warmup and step < warmup: return float(step+1)/float(warmup)
+   if c.scheduler in ('constant','none'): return 1.
+   progress=min(max((step-warmup)/max(total-warmup,1),0.),1.)
+   return max(3e-6/opt.defaults['lr'], .5*(1.+float(torch.cos(torch.tensor(torch.pi*progress)))))
+  return torch.optim.lr_scheduler.LambdaLR(opt,rate)
  def _dist(self,image,state): return IndependentBeta(*self.actor(self.encoder(image,state)))
  def act(self,image,state,central=None,deterministic=False):
   dist=self._dist(image,state); a=dist.base_dist.mean if deterministic else dist.rsample(); lp=dist.log_prob(a); v=self.critic(self.critic_encoder(central)) if central is not None else None; return a,lp,v
@@ -142,15 +150,16 @@ class PSTOMAPPO(nn.Module):
     oldv_raw=self.value_norm.denormalize(oldv_mb); newv_raw=self.value_norm.denormalize(newv)
     clipped_raw=oldv_raw+(newv_raw-oldv_raw).clamp(-self.value_clip_ratio,self.value_clip_ratio)
     value_loss=torch.max(F.huber_loss(newv,flat_ret[ids],delta=10.),F.huber_loss(self.value_norm.normalize(clipped_raw),flat_ret[ids],delta=10.))
-    loss=policy_loss-self.entropy_coef*entropy+value_loss
+    loss=policy_loss-self.entropy_coef*entropy+self.cfg.value_loss_coef*value_loss
     for opt in (self.encoder_opt,self.actor_opt,self.critic_encoder_opt,self.critic_opt): opt.zero_grad(set_to_none=True)
     loss.backward()
     eg=nn.utils.clip_grad_norm_(self.encoder.parameters(),self.cfg.max_grad_norm); ag=nn.utils.clip_grad_norm_(self.actor.parameters(),self.cfg.max_grad_norm); ceg=nn.utils.clip_grad_norm_(self.critic_encoder.parameters(),self.cfg.max_grad_norm); cg=nn.utils.clip_grad_norm_(self.critic.parameters(),self.cfg.max_grad_norm)
     self.encoder_opt.step(); self.actor_opt.step(); self.critic_encoder_opt.step(); self.critic_opt.step()
     sl=torch.tensor(0.,device=self.device); lg=torch.tensor(0.,device=self.device)
-    if 'history' in rollout and 'future' in rollout:
+    if 'history' in rollout and 'future' in rollout and not self._last_lstm_update and getattr(self, '_update_count', 0) % max(int(self.cfg.lstm_update_frequency), 1) == 0:
      h=rollout['history'].to(self.device); f=rollout['future'].to(self.device); mask=rollout.get('history_mask',torch.ones(h.shape[:2],dtype=torch.bool,device=self.device)).to(self.device); dt=rollout.get('agent_dt',torch.full((h.shape[0],1),1/30,device=self.device)).to(self.device); dt=dt.unsqueeze(1) if dt.ndim==2 else dt; dt=dt.expand(-1,h.shape[1],-1); h,mask,dt=self._augment_lstm_history(h,mask,dt); pred=self.lstm(torch.cat((h,dt),-1),mask=mask); sl=F.mse_loss(pred,f.reshape(f.shape[0],-1)); self.lstm_opt.zero_grad(set_to_none=True); sl.backward(); lg=nn.utils.clip_grad_norm_(self.lstm.parameters(),self.cfg.lstm_max_grad_norm); self.lstm_opt.step(); self._last_lstm_update=True; last_sl,last_lg=sl.detach(),lg.detach()
     logs.append((policy_loss.detach(),value_loss.detach(),entropy.detach(),eg,ag,ceg,cg))
+  self._update_count=getattr(self, '_update_count', 0)+1
   vals=torch.stack([x[0] for x in logs]); vls=torch.stack([x[1] for x in logs]); ents=torch.stack([x[2] for x in logs]); grads=[x[3:] for x in logs]
   return {'policy_loss':float(vals.mean()),'value_loss':float(vls.mean()),'entropy':float(ents.mean()),'sl_loss':float(last_sl),'encoder_grad_norm':float(torch.stack([x[0] for x in grads]).mean()),'actor_grad_norm':float(torch.stack([x[1] for x in grads]).mean()),'critic_grad_norm':float(torch.stack([x[3] for x in grads]).mean()),'lstm_grad_norm':float(last_lg)}
  def step_schedulers(self):

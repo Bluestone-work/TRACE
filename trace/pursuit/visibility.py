@@ -4,7 +4,7 @@ import numpy as np
 
 def target_visible(observer_pos,observer_quat,target_pos,proximity,range_m=10.,hres=.75,vbeams=24,vfov=(-10.,20.),max_distance=15.,alignment_threshold=.7,obstacle_clearance=.5):
  rel=np.asarray(target_pos,dtype=np.float64)-np.asarray(observer_pos,dtype=np.float64); distance=float(np.linalg.norm(rel))
- if not np.isfinite(distance) or distance>=max_distance:return False
+ if not np.isfinite(distance) or distance>=max_distance or distance>range_m:return False
  q=np.asarray(observer_quat,dtype=np.float64); q=q/max(np.linalg.norm(q),1e-9); w,x,y,z=q; qc=np.array([w,-x,-y,-z]); t=2*np.cross(qc[1:],rel); body=rel+qc[0]*t+np.cross(qc[1:],t); target_dir=body/max(np.linalg.norm(body),1e-9)
  scan=np.asarray(proximity,dtype=np.float64); hit_distance=range_m-scan; valid=np.isfinite(hit_distance)&(scan>1e-5)&(hit_distance<range_m-1e-5)
  if not valid.any(): return True

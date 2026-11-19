@@ -1,5 +1,9 @@
 # NavRL / Isaac Sim 6.0.1
 
+PSTO 的三机追逃迁移、两套时间尺度配置和训练前验收见
+[PSTO_P0_ACCEPTANCE_REPORT.md](PSTO_P0_ACCEPTANCE_REPORT.md)。它通过独立的
+`scripts/train_psto.py --config ...` 启动，不改变下面 NavRL baseline 的默认启动方式。
+
 本目录使用本机 `/home/wj/isaacsim`（Python 3.12），保留 NavRL 的三维速度动作和
 8 维状态、36×4 LiDAR、动态障碍输入形状。原 `isaac-training` 与 `quick-demos`
 源文件未修改。默认已切换为旋翼动力学；早期的直接位姿适配仅保留为对照模式。

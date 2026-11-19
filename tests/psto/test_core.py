@@ -95,3 +95,18 @@ def test_observation_history_does_not_fill_occlusions_and_keeps_dt():
  e=PSTOPursuitEnv.__new__(PSTOPursuitEnv); e.step_count=6; e.observed_evader_history=[np.array([1.,0.,2.]),np.array([2.,0.,2.])]; e.observed_evader_times=[0.,3.]
  h,m,dt=e._history_tensors(); assert m[:2].all() and not m[2:].any(); assert np.allclose(h[1].numpy(),[2.,0.,2.]); assert np.allclose(dt[:2].numpy().ravel(),[3/30.,3/30.])
  e.observed_evader_history=e.observed_evader_history[:1]; e.observed_evader_times=e.observed_evader_times[:1]; _,_,single_dt=e._history_tensors(); assert np.isclose(float(single_dt[0,0]),6/30.)
+
+def test_time_scale_configs_are_explicit_and_consistent():
+ import pathlib, yaml
+ root=pathlib.Path(__file__).parents[2]
+ official=yaml.safe_load((root/'configs/psto/official_reproduction.yaml').read_text())
+ native=yaml.safe_load((root/'configs/psto/trace_native.yaml').read_text())
+ assert official['environment']['policy_hz']==10. and official['environment']['frame_skip']==10
+ assert official['environment']['episode_duration']==official['environment']['max_episode_steps']/official['environment']['policy_hz']
+ assert native['environment']['policy_hz']==30. and native['environment']['frame_skip']==8
+ assert native['environment']['episode_duration']==native['environment']['max_episode_steps']/native['environment']['policy_hz']
+ assert official['experiment_name']!=native['experiment_name']
+
+def test_visibility_rejects_target_beyond_sensor_range():
+ from trace.pursuit.visibility import target_visible
+ assert not target_visible(np.array([0.,0.,2.]),np.array([1.,0,0,0.]),np.array([10.5,0.,2.]),np.zeros((24,480),np.float32))
