@@ -112,6 +112,8 @@ MAPPO 控制器也已实际接入脚本：
 
 该 smoke 输出 `test_scope=MAPPO policy rollout`、`task_performance_status=evaluated`；它仍然不是收敛性能声明。
 
+轨迹预览 GIF 已保存为 `results/psto_p0/episodes_10_collision_audit/psto_episode0.gif` 和 `results/psto_p0/mappo_episode_smoke/psto_mappo_smoke.gif`。这是由真实 PhysX 状态 CSV 生成的俯视/高度轨迹动画，不代表 Isaac Sim 相机渲染质量。
+
 ## 尚未完成
 
 - 没有进行长时间 MAPPO 收敛、多 seed 论文指标或正式模型性能声明。
