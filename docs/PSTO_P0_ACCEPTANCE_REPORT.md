@@ -84,6 +84,8 @@ GAE 使用两个 mask：`terminated` 只控制 TD bootstrap；`episode_end` 控�
 
 使用 `--max_episode_steps 1 --total_frames 2` 的真实 PhysX timeout smoke 记录了 `terminated_steps=0`、`truncated_steps=2`，并完成了有限的 PPO 更新；结果在 `results/psto_p0/smoke/timeout/`。
 
+代码随后提交为本地 commit `90abbb6`（未 Push），并在该 commit 上再次完成了 1 帧 native PhysX PPO smoke；结果见 `results/psto_p0/post_commit_smoke/`，JSON 中记录了该 SHA 和 Isaac Sim 6.0.1 build。
+
 ## 十 Episode 实际结果
 
 ```bash
