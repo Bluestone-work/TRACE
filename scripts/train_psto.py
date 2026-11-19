@@ -165,6 +165,7 @@ def main():
             obs = env.reset()
         frames = int(resume_progress.get("frames", 0)) if args.resume else 0
         updates = int(resume_progress.get("updates", policy._update_count)) if args.resume else 0
+        start_frames = frames
         terminated_count = truncated_count = 0
         logs = []
         evaluations = list(resume_progress.get("evaluations", [])) if args.resume else []
@@ -256,7 +257,7 @@ def main():
                 "supervised_valid": torch.as_tensor(supervised_valid, dtype=torch.bool)})
             log = policy.update(rollout); policy.step_schedulers(); updates += 1
             log_row = {"frames": frames, "update": updates, "elapsed_s": time.perf_counter() - train_start,
-                "training_fps": frames / max(time.perf_counter() - train_start, 1e-9),
+                "training_fps": (frames - start_frames) / max(time.perf_counter() - train_start, 1e-9),
                 "gpu": gpu_snapshot(), **log}
             logs.append(log_row)
             if evaluation_interval > 0 and num_eval_episodes > 0 and updates % evaluation_interval == 0:
@@ -280,7 +281,7 @@ def main():
             "terminated_steps": terminated_count, "truncated_steps": truncated_count,
             "checkpoint": str(checkpoint), "logs": logs, "evaluations": evaluations,
             "training_elapsed_s": time.perf_counter() - train_start,
-            "training_fps": frames / max(time.perf_counter() - train_start, 1e-9)}
+            "training_fps": (frames - start_frames) / max(time.perf_counter() - train_start, 1e-9)}
     except Exception as exc:
         import traceback
         traceback.print_exc()
