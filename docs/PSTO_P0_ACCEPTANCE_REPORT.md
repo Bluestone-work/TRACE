@@ -16,7 +16,7 @@ P0 当前为 **BLOCKED**。时间尺度、种子接口、配置追溯、GAE/time
 
 训练入口同时初始化 Python、NumPy、Torch CPU 和 CUDA（可用时），并将 seed 传入 `PSTOPursuitEnv`/`PSTOPursuitScene`。Scene 使用独立 NumPy RNG；`reset(seed=...)` 可以重建 episode 初始状态，`randomize_resets` 控制无人机位置扰动，`randomize_obstacles` 控制障碍物布局扰动。默认配置关闭随机化以保持官方初始排列，评估脚本显式打开并使用 `seed + episode`。
 
-状态：**PASS（接口和十个不同 seed 的真实场景已复核）**。十个 Episode 使用 seed 4348–4357，平均 64.3 步；捕获 0、逃逸 0、碰撞 10、timeout 0。这个结果证明 reset/标记链路工作，但也暴露出当前固定动作验收策略的碰撞率问题，不能当作策略性能。
+状态：**PASS（接口和真实场景已复核）**。`test_psto_episodes.py` 额外对同一 seed 的两次 reset 和不同 seed 的 reset 做了位置/障碍布局断言；实际 seed-contract smoke 为 `status=pass`。十个 Episode 使用 seed 4348–4357，平均 64.3 步；捕获 0、逃逸 0、碰撞 10、timeout 0。这个结果证明 reset/标记链路工作，但也暴露出当前固定动作验收策略的碰撞率问题，不能当作策略性能。
 
 ## P0-3 配置和实验记录
 

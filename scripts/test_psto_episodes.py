@@ -38,6 +38,16 @@ def main():
         from trace.pursuit.env import PSTOPursuitEnv
         env = PSTOPursuitEnv(max_episode_steps=args.steps, seed=args.seed,
             randomize_resets=True, randomize_obstacles=True)
+        # Verify the seed contract before collecting episodes: the same seed must
+        # reconstruct reset poses, while a different seed must change them.
+        env.reset(seed=args.seed)
+        same_a = np.stack([v.position for v in env.scene.vehicles]).copy()
+        env.reset(seed=args.seed)
+        same_b = np.stack([v.position for v in env.scene.vehicles]).copy()
+        env.reset(seed=args.seed + 1)
+        different = np.stack([v.position for v in env.scene.vehicles]).copy()
+        if not np.allclose(same_a, same_b): failures.append("same_seed_reset_not_reproducible")
+        if np.allclose(same_a, different): failures.append("different_seed_reset_not_randomized")
         for episode in range(args.episodes):
             episode_seed = args.seed + episode
             obs = env.reset(seed=episode_seed)
