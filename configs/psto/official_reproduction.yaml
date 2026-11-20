@@ -1,5 +1,11 @@
 experiment_name: official_reproduction
-source: upstream/psto-aav-pursuit/configs/train.yaml
+source: upstream/psto-aav-pursuit-official/configs/train.yaml
+official_commit: 764e2a156f4f74fc3d24a25dfaa6871c57ec7944
+runtime:
+  isaac_sim: "4.1.0"
+  python: "3.10"
+  omnidrones: "external editable install"
+  torchrl: "0.3.1"
 seed: 4348
 environment:
   physics_dt: 0.01

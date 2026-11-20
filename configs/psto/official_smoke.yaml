@@ -1,0 +1,15 @@
+# Bounded probe for the HITSZ-MAS PSTO release. This is intentionally separate
+# from the Isaac Sim 6 TRACE configs and never uses the 9.8B-frame setting.
+official_commit: 764e2a156f4f74fc3d24a25dfaa6871c57ec7944
+runtime:
+  isaac_sim: "4.1.0"
+  python: "3.10"
+  omnidrones: "external editable install"
+  torchrl: "0.3.1"
+  num_envs: 1
+  frame_skip: 10
+  physics_dt: 0.01
+  policy_hz: 10.0
+  max_episode_steps: 280
+  smoke_frames: 10
+  headless: true

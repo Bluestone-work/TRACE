@@ -1,0 +1,19 @@
+{
+  "episodes": 20,
+  "collision_episodes": 14,
+  "class_counts": {
+    "pursuer_obstacle": 14,
+    "capture": 5,
+    "timeout": 1
+  },
+  "source_episodes": "results/psto_p0/long_train_100k/eval20/episodes.csv",
+  "source_trajectories": "results/psto_p0/long_train_100k/eval20/trajectories.csv",
+  "policy_hz": 30.0,
+  "pre_event_window_steps": 60,
+  "evidence_limitations": {
+    "physx_contact_impulse": true,
+    "lidar_min_distance": true,
+    "reward_breakdown": true,
+    "target_visibility_per_step": true
+  }
+}
