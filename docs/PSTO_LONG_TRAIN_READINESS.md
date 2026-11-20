@@ -197,7 +197,8 @@ All 20 episodes completed with no script failures:
 | Capture success rate | 0.25 (5/20) |
 | Collision rate | 0.70 (14/20) |
 | Escape rate | 0.00 (0/20) |
-| Timeout rate | 0.10 (2/20) |
+| Timeout flag | 0.10 (2/20; one coincides with a terminal collision) |
+| Genuine truncation | 0.05 (1/20) |
 | Average episode reward | -233.3886 |
 | Average episode length | 149.95 policy steps |
 | Target visibility ratio | 0.54005 |
@@ -205,6 +206,9 @@ All 20 episodes completed with no script failures:
 The machine-readable result is [episodes.json](../results/psto_p0/long_train_100k/eval20/episodes.json),
 with raw trajectories in [trajectories.csv](../results/psto_p0/long_train_100k/eval20/trajectories.csv)
 and episode rows in [episodes.csv](../results/psto_p0/long_train_100k/eval20/episodes.csv).
+The CSV also records `terminated` and `truncated` separately; the genuine
+timeout count above uses `truncated`, so the collision at the 280-step boundary
+is not counted as a timeout termination.
 
 ## Remaining blockers
 
