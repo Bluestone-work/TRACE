@@ -1,14 +1,15 @@
 # PSTO long-training readiness
 
 **Decision: NO-GO for a paper-scale long run.**  The training loop is now a real
-Isaac Sim 6.0.1 MAPPO/LSTM loop and the 10,000-frame pilot completed, but the
-policy has not demonstrated reliable pursuit: the 20-episode physical audit
-captured 1/20 episodes and collided with an obstacle in 19/20 episodes.  The
-pilot evaluations also contain an escape and a collision.  These results are
+Isaac Sim 6.0.1 MAPPO/LSTM loop and the 100,000-frame exploratory continuation
+completed without numerical failure.  The final 20-episode physical audit
+captured 5/20 episodes, but collided in 14/20 episodes.  The policy therefore
+has not demonstrated reliable collision-safe pursuit.  These results are
 reported as task performance, not hidden behind a smoke-test `pass` status.
 
-The validation was run from Git `aed43a95064b6726e086778c819859ff973163d2`
-with uncommitted working-tree changes.  The Isaac command used the local
+The earlier validation was run from Git `aed43a95064b6726e086778c819859ff973163d2`.
+The final continuation and evaluation were run from Git
+`a34c2ad05888f95db282dffa30cac769ecfdb004`.  The Isaac command used the local
 6.0.1 installation and its compatible Torch bundle:
 
 ```bash
@@ -151,15 +152,70 @@ the record is [checkpoint.json](../results/psto_p0/final_acceptance/checkpoint_t
 This one-frame run is instrumentation evidence only and is not used as a
 training or convergence result.
 
+## Exploratory 100,000-frame continuation
+
+After the pilot, the policy was continued from the 10,000-frame checkpoint in
+Isaac Sim 6.0.1. This was a bounded single-environment exploratory run, not a
+claim of equivalence to the upstream 1,024-environment training setup:
+
+```bash
+PYTHONPATH=/home/wj/isaacsim/extsDeprecated/omni.isaac.ml_archive/pip_prebundle:$PWD \
+  /home/wj/isaacsim/python.sh scripts/train_psto.py \
+  --config configs/psto/trace_native_long.yaml --headless --seed 4348 \
+  --total_frames 100000 --rollout_steps 64 --training_epoch_num 1 \
+  --num_minibatches 1 --checkpoint_interval 25 --evaluation_interval 50 \
+  --num_eval_episodes 1 --checkpoint results/psto_p0/long_train_100k/checkpoint.pt \
+  --resume
+```
+
+The continuation ended with `status=pass`, **100,000 cumulative frames**,
+**1,564 updates**, **17,807.92 s** elapsed and **5.6155 cumulative
+frames/s**. The final checkpoint records 67 genuinely terminated steps and
+269 truncated steps. Actor, critic, encoder and LSTM losses and gradient
+norms remained finite throughout. The complete records are in
+[checkpoint.json](../results/psto_p0/long_train_100k/checkpoint.json),
+[train.log](../results/psto_p0/long_train_100k/train.log),
+[config_snapshot.yaml](../results/psto_p0/long_train_100k/config_snapshot.yaml),
+and [run_manifest.json](../results/psto_p0/long_train_100k/run_manifest.json).
+
+The final checkpoint was evaluated with 20 independently seeded randomized
+PhysX episodes (280 policy steps maximum):
+
+```bash
+PYTHONPATH=/home/wj/isaacsim/extsDeprecated/omni.isaac.ml_archive/pip_prebundle:$PWD \
+  /home/wj/isaacsim/python.sh scripts/test_psto_episodes.py \
+  --episodes 20 --steps 280 --seed 50000 --controller mappo \\
+  --checkpoint results/psto_p0/long_train_100k/checkpoint.pt \
+  --config configs/psto/trace_native_long.yaml --headless \
+  --out results/psto_p0/long_train_100k/eval20
+```
+
+All 20 episodes completed with no script failures:
+
+| metric | result |
+| --- | ---: |
+| Capture success rate | 0.25 (5/20) |
+| Collision rate | 0.70 (14/20) |
+| Escape rate | 0.00 (0/20) |
+| Timeout rate | 0.10 (2/20) |
+| Average episode reward | -233.3886 |
+| Average episode length | 149.95 policy steps |
+| Target visibility ratio | 0.54005 |
+
+The machine-readable result is [episodes.json](../results/psto_p0/long_train_100k/eval20/episodes.json),
+with raw trajectories in [trajectories.csv](../results/psto_p0/long_train_100k/eval20/trajectories.csv)
+and episode rows in [episodes.csv](../results/psto_p0/long_train_100k/eval20/episodes.csv).
+
 ## Remaining blockers
 
 The code and physical training path are ready for controlled experiments, but
 the acceptance gate for a long research run is not met:
 
-1. The tested MAPPO checkpoint has a 95% obstacle-collision rate and only 5%
-   capture success across 20 randomized episodes.
-2. The 10,000-frame pilot has only one evaluation episode per checkpoint and
-   shows timeout, escape and collision outcomes without a capture.
+1. The final 100,000-frame continuation still has a 70% collision rate and
+   only 25% capture success across 20 randomized episodes.
+2. The 10,000-frame pilot had only one evaluation episode per checkpoint and
+   showed timeout, escape and collision outcomes without a capture; the longer
+   continuation improved the aggregate result but did not establish robustness.
 3. The adapter remains one physical environment (`num_envs=1`), so these
    numbers cannot be described as an upstream 1024-environment reproduction.
 4. The GitHub Actions workflow was fixed and the local 20-test suite passes,
