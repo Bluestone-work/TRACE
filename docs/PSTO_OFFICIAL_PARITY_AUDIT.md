@@ -13,6 +13,8 @@ means the dimensions or formula are similar but the runtime path differs.
 `DIFFERENT` means the behavior or dependency is materially different.
 `UNKNOWN` means the official runtime was not available for a direct test.
 
+The audit artifacts and tests are delivered at final TRACE commit `c26a8a2`.
+
 | Module | Official implementation | TRACE implementation | Status | Difference and impact | Evidence |
 |---|---|---|---|---|---|
 | Official source | OmniDrones/Isaac Sim paper code | Isaac Sim 6 adapter | DIFFERENT | The official release documents Isaac Sim 4.1.0, Python 3.10, OmniDrones, TorchRL 0.3.1. TRACE runs Python 3.12/Isaac 6.0.1. | `upstream/psto-aav-pursuit-official/ENVIRONMENT.md:5-19`; `trace/pursuit/scene.py:70-88` |
